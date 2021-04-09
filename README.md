@@ -245,6 +245,12 @@ python -m q2_mkrefb [args]
 
   
 
+`-ado`, `--access_dict_output` ACCESS_DICT_OUTPUT
+
+Ou access dict output est egale à ...
+
+
+
 # Importation pour module
 
 
