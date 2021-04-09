@@ -57,7 +57,7 @@ l'installation direct d'un package avec Pypi peut poser certains problèmes de v
 
 ### Dépôt direct du package en librairie
 
-Si vous souhaitez installer le package or connexion, vous pouvez utiliser cette méthode un peu moins "conventionnelle". Commencez par télécharger préalablement le répertoire "q2_mkrefdb" présent dans [src](./src). Une fois le répertoire (package) récupéré, placer dans votre librairie python avec les autres package que vous utilisez déjà en python. Généralement une grande partie des packages python se trouvent dans le répertoire "site-packages". Vous pouvez trouvez la position de ce répertoire en lançant la commande suivante avec python:
+Si vous souhaitez installer le package or connexion, vous pouvez utiliser cette méthode un peu moins "conventionnelle". Commencez par télécharger préalablement le répertoire "q2_mkrefdb" présent dans [src](./src). Une fois le répertoire (package) récupéré, placer dans votre librairie python avec les autres package que vous utilisez déjà en python. Généralement une grande partie des packages python se trouvent dans le répertoire "site-packages". Vous pouvez trouvez la position de ce répertoire en lançant la commande suivante avec `python`:
 
 ```python
 import anymodule
@@ -163,7 +163,8 @@ python -m q2_mkrefb [args]
  
 
 ```shell
--f {taxon,global}, --filtering_type {taxon,global}
+-f, --filtering_type {taxon,global}
+# Filtering by taxon or globally
 ```
 
  
@@ -244,13 +245,6 @@ python -m q2_mkrefb [args]
 ```
 
   
-
-* `-ado`, `--access_dict_output` ACCESS_DICT_OUTPUT
-  * Ou access dict output est egale à lz somme du coarhbn, shjbzjnqlkcaqlk,
-
-
-
-
 
 # Importation pour module
 
