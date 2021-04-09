@@ -77,84 +77,173 @@ python -m q2_mkrefb [args]
 ### Arguments obligatoires
 
 ```shell
--i or --sequences_input SEQUENCES_INPUT
+-i, --sequences_input SEQUENCES_INPUT
 # File path to the raw sequences FASTA file to treat 
 ```
 
+
+
  ```shell
--db or --source_database {ncbi,ebi,ddbj}
+-db, --source_database {ncbi,ebi,ddbj}
 # Name of the database from which the FASTA file was obtained.
  ```
 
 
+
+```shell
+-fp, --forward_primer FORWARD_PRIMER
+# File path to the forward primer FASTA file.
+```
+
  
-  -fp FORWARD_PRIMER, --forward_primer FORWARD_PRIMER
-                        File path to the forward primer FASTA file.
-  -fmt FW_MISMATCH_TOL, --fw_mismatch_tol FW_MISMATCH_TOL
-                        Number of mismatch which are accepted for the forward primer annealing.
-  -rp REVERSE_PRIMER, --reverse_primer REVERSE_PRIMER
-                        File path to the reverse primer FASTA file.
-  -rmt RV_MISMATCH_TOL, --rv_mismatch_tol RV_MISMATCH_TOL
-                        Number of mismatch which are accepted for the reverse primer annealing.
+
+```shell
+-rp, --reverse_primer REVERSE_PRIMER
+# File path to the reverse primer FASTA file.
+```
+
+ 
+
+### Arguments optionnels
+
+```shell
+-fmt, --fw_mismatch_tol FW_MISMATCH_TOL
+# Number of mismatch which are accepted for the forward primer annealing.
+```
+
+  
+
+```shell
+-rmt, --rv_mismatch_tol RV_MISMATCH_TOL
+# Number of mismatch which are accepted for the reverse primer annealing.
+```
+
+ 
+
+```shell
+-inf, --infos_file INFOS_FILE
+# Informations file in which all the files treatments are recorded.
+```
 
 
 
-## Options
+```shell
+-dit, --displ_inf_terminal
+# Display information file in terminal if arg is specified.
+```
 
-optional arguments:
-  -h, --help            show this help message and exit
-  -i SEQUENCES_INPUT, --sequences_input SEQUENCES_INPUT
-                        File path to the raw sequences FASTA file to treat.
-  -db {ncbi,ebi,ddbj}, --source_database {ncbi,ebi,ddbj}
-                        Name of the database from which the FASTA file was obtained.
-  -fp FORWARD_PRIMER, --forward_primer FORWARD_PRIMER
-                        File path to the forward primer FASTA file.
-  -fmt FW_MISMATCH_TOL, --fw_mismatch_tol FW_MISMATCH_TOL
-                        Number of mismatch which are accepted for the forward primer annealing.
-  -rp REVERSE_PRIMER, --reverse_primer REVERSE_PRIMER
-                        File path to the reverse primer FASTA file.
-  -rmt RV_MISMATCH_TOL, --rv_mismatch_tol RV_MISMATCH_TOL
-                        Number of mismatch which are accepted for the reverse primer annealing.
-  -inf INFOS_FILE, --infos_file INFOS_FILE
-                        Informations file in which all the files treatments are recorded.
-  -dit, --displ_inf_terminal
-                        Display information file in terminal if arg is specified.
-  -g1 GENUS1, --genus1 GENUS1
-                        Name of the first genus to keep. Ex: Fusarium
-  -g2 GENUS2, --genus2 GENUS2
-                        Name of the second genus to keep. Ex: Gibberella
-  -u, --unverified      Keep the unverified genus if arg is specified.
-  -tbc, --taxonomy_by_complex
-                        Do not group species with same complex lineage if arg is specified.
-  -f {taxon,global}, --filtering_type {taxon,global}
-  -rsv, --redund_seq_variants
-                        Keep the redundant sequences variants if arg is specified.
-  -ra, --redundant_amplicon
-                        Keep the redundant amplicons if arg is specified.
-  -nasv, --seq_without_ampl
-                        Keep the sequences without amplicons if arg is specified.
-  -svo SEQ_VARIANTS_OUTPUT, --seq_variants_output SEQ_VARIANTS_OUTPUT
-                        File name of the sequences variants FASTA output.
-  -ao AMPLICONS_OUTPUT, --amplicons_output AMPLICONS_OUTPUT
-                        File name of the amplicons FASTA output.
-  -to TAXONOMY_OUTPUT, --taxonomy_output TAXONOMY_OUTPUT
-                        File name of the taxonomy TXT output.
-  -tlo TAXON_LIST_OUTPUT, --taxon_list_output TAXON_LIST_OUTPUT
-                        File name of the taxon list TXT output.
-  -sao SHARED_AMPL_OUTPUT, --shared_ampl_output SHARED_AMPL_OUTPUT
-                        File name of the shared amplicons TXT output.
-  -cdo COMPLEX_DICT_OUTPUT, --complex_dict_output COMPLEX_DICT_OUTPUT
-                        File name of the complex dictionnary TXT output.
-  -mto MODIFIED_TAX_OUTPUT, --modified_tax_output MODIFIED_TAX_OUTPUT
-                        File name of the modified taxon list TXT output.
-  -ado ACCESS_DICT_OUTPUT, --access_dict_output ACCESS_DICT_OUTPUT
-                        File name of the access dictionnary JSON output.
+ 
 
-### 
+```shell
+-g1, --genus1 GENUS1
+# Name of the first genus to keep. Ex: Fusarium
+```
 
+ 
 
+```shell
+-g2, --genus2 GENUS2
+# Name of the second genus to keep. Ex: Gibberella
+```
 
+ 
 
+```shell
+-u, --unverified
+# Keep the unverified genus if arg is specified.
+```
+
+ 
+
+```shell
+-tbc, --taxonomy_by_complex
+# Do not group species with same complex lineage if arg is specified.
+```
+
+ 
+
+```shell
+-f {taxon,global}, --filtering_type {taxon,global}
+```
+
+ 
+
+```shell
+-rsv, --redund_seq_variants
+# Keep the redundant sequences variants if arg is specified.
+```
+
+ 
+
+```shell
+-ra, --redundant_amplicon
+# Keep the redundant amplicons if arg is specified.
+```
+
+ 
+
+```shell
+-nasv, --seq_without_ampl
+# Keep the sequences without amplicons if arg is specified.
+```
+
+  
+
+```shell
+-svo, --seq_variants_output SEQ_VARIANTS_OUTPUT
+# File name of the sequences variants FASTA output.
+```
+
+   
+
+```shell
+-ao, --amplicons_output AMPLICONS_OUTPUT
+# File name of the amplicons FASTA output.
+```
+
+ 
+
+```shell
+-to TAXONOMY_OUTPUT, --taxonomy_output TAXONOMY_OUTPUT
+# File name of the taxonomy TXT output.
+```
+
+ 
+
+```shell
+-tlo, --taxon_list_output TAXON_LIST_OUTPUT
+# File name of the taxon list TXT output.
+```
+
+ 
+
+```shell
+-sao, --shared_ampl_output SHARED_AMPL_OUTPUT
+# File name of the shared amplicons TXT output.
+```
+
+ 
+
+```shell
+-cdo, --complex_dict_output COMPLEX_DICT_OUTPUT
+# File name of the complex dictionnary TXT output.
+```
+
+  
+
+```shell
+-mto, --modified_tax_output MODIFIED_TAX_OUTPUT
+# File name of the modified taxon list TXT output.
+```
+
+ 
+
+```shell
+-ado, --access_dict_output ACCESS_DICT_OUTPUT
+# File name of the access dictionnary JSON output.
+```
+
+  
 
 # Importation pour module
 
