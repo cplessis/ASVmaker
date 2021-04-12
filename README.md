@@ -76,7 +76,7 @@ l'installation direct d'un package avec Pypi peut poser certains problèmes de v
 
 ### Dépôt direct du package en librairie
 
-Si vous souhaitez installer le package or connexion, vous pouvez utiliser cette méthode un peu moins "conventionnelle". Commencez par télécharger préalablement le répertoire "q2_mkrefdb" présent dans [src](./src). Une fois le répertoire (package) récupéré, placer dans votre librairie python avec les autres package que vous utilisez déjà en python. Généralement une grande partie des packages python se trouvent dans le répertoire "site-packages". Vous pouvez trouvez la position de ce répertoire en lançant la commande suivante avec `python`:
+Si vous souhaitez installer le package hors connexion, vous pouvez utiliser cette méthode un peu moins "conventionnelle". Commencez par télécharger préalablement le répertoire "q2_mkrefdb" présent dans [src](./src). Une fois le répertoire (package) récupéré, placer le dans votre librairie python avec les autres package que vous utilisez déjà en python. Généralement une grande partie des packages python se trouvent dans le répertoire "site-packages". Vous pouvez trouvez la position de ce répertoire en lançant la commande suivante avec `python` (où `anymodule` est le nom du module de votre choix):
 
 ```python
 import anymodule
