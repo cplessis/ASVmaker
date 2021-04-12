@@ -6,7 +6,7 @@
 - [Installation du package](#installation-du-package)
   + [Depuis Python Index (Pypi)](#depuis-python-index--pypi-)
   + [Avec un environnement Conda](#avec-un-environnement-conda)
-  + [Dépôt direct du package en librairie](#d-p-t-direct-du-package-en-librairie)
+  + [Dépôt direct du package en librairie](#dépôt-direct-du-package-en-librairie)
 - [Lignes de commandes](#lignes-de-commandes)
   + [Appel du package](#appel-du-package)
   + [Arguments obligatoires](#arguments-obligatoires)
