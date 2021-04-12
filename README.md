@@ -188,7 +188,9 @@ python -m q2_mkrefb [args]
 # Keep the sequences without amplicons if arg is specified.
 ```
 
-  
+---
+
+
 
 ```shell
 -svo, --seq_variants_output SEQ_VARIANTS_OUTPUT
@@ -248,7 +250,7 @@ python -m q2_mkrefb [args]
 
 # Importation pour module
 
-
+Plus d'informations à venir...
 
 
 
