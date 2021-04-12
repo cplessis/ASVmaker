@@ -1,8 +1,14 @@
+
+
 # Description
 
 Ce package permet de créer des bases de données de références à partir de fichiers FASTA non triés issues d'une base de données généraliste telle que [ncbi : 'nt'](https://www.ncbi.nlm.nih.gov/nucleotide/), [ebi : 'ena'](https://www.ebi.ac.uk/ena/browser/home), ou [ddbj : 'arsa](http://ddbj.nig.ac.jp/arsa/). Il est principalement destiné à être utilisé en ligne de commande avec python. Néanmoins certains modules peuvent être utilisé pour d'autres projet python par importation.
 
 La majeur partie du travaille de création de la base de donnée se fait automatiquement, seules quelques commandes sont à la charge de l'utilisateur. Suite à la création des fichiers une vérification manuelle peut être utile. Un exemple d'utilisation est disponible [ici](https://github.com/cplessis/Fusarium-EF1A-Q2_RefDb) dans lequel nous créons une base de données de référence pour le gène EF1 alpha chez Fusarium. 
+
+
+
+[TOC]
 
 # Structure du Projet
 
