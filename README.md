@@ -1,3 +1,18 @@
+# Table des matières
+
+
+- [Description](#description)
+- [Structure du Projet](#structure-du-projet)
+- [Installation du package](#installation-du-package)
+  + [Depuis Python Index (Pypi)](#depuis-python-index--pypi-)
+  + [Avec un environnement Conda](#avec-un-environnement-conda)
+  + [Dépôt direct du package en librairie](#d-p-t-direct-du-package-en-librairie)
+- [Lignes de commandes](#lignes-de-commandes)
+  + [Appel du package](#appel-du-package)
+  + [Arguments obligatoires](#arguments-obligatoires)
+  + [Arguments optionnels](#arguments-optionnels)
+- [Importation pour module](#importation-pour-module)
+
 
 
 # Description
@@ -7,8 +22,6 @@ Ce package permet de créer des bases de données de références à partir de f
 La majeur partie du travaille de création de la base de donnée se fait automatiquement, seules quelques commandes sont à la charge de l'utilisateur. Suite à la création des fichiers une vérification manuelle peut être utile. Un exemple d'utilisation est disponible [ici](https://github.com/cplessis/Fusarium-EF1A-Q2_RefDb) dans lequel nous créons une base de données de référence pour le gène EF1 alpha chez Fusarium. 
 
 
-
-[TOC]
 
 # Structure du Projet
 
