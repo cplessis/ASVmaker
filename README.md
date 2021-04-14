@@ -17,7 +17,7 @@
 
 # Description
 
-This package is used for creating reference databases from unfiltered FASTA files. The FASTA files should come from a general purpose database such as [ncbi: 'nt'](https://www.ncbi.nlm.nih.gov/nucleotide/), [ebi: 'ena'](https://www.ebi.ac.uk/ena/browser/home), or [ddbj: 'arsa'](http://ddbj.nig.ac.jp/arsa/). And the format of the input FASTA files must be as following (complete description + sequence on one or multiples lines) :
+This package is used for creating reference databases from unfiltered FASTA files. The FASTA files should come from a general purpose database such as [ncbi: 'nt'](https://www.ncbi.nlm.nih.gov/nucleotide/), [ebi: 'ena'](https://www.ebi.ac.uk/ena/browser/home), or [ddbj: 'arsa'](http://ddbj.nig.ac.jp/arsa/). And the format of the input FASTA files must be as following (complete description +  single or multiple lines sequence) :
 
 ```
 >JN176092.1 Fusarium mexicanum strain MXJAL-19 translation elongation factor 1 alpha (EF1) gene, partial cds
