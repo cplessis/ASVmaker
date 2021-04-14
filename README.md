@@ -7,7 +7,7 @@
   + [From Python Index (Pypi)](#from-python-index--pypi-)
   + [Conda environment](#conda-environment)
   + [Python library directory](#python-library-directory)
-- [Commands lines](#commands-lines)
+- [Command lines](#command-lines)
   + [Calling the package](#calling-the-package)
   + [Required parameters](#required-parameters)
   + [Optionals parameters](#optionals-parameters)
