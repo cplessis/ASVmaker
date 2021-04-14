@@ -1,29 +1,36 @@
-# Table des matières
+# Table of contents
 
 
 - [Description](#description)
-- [Structure du Projet](#structure-du-projet)
-- [Installation du package](#installation-du-package)
-  + [Depuis Python Index (Pypi)](#depuis-python-index--pypi-)
-  + [Avec un environnement Conda](#avec-un-environnement-conda)
-  + [Dépôt direct du package en librairie](#dépôt-direct-du-package-en-librairie)
-- [Lignes de commandes](#lignes-de-commandes)
-  + [Appel du package](#appel-du-package)
-  + [Arguments obligatoires](#arguments-obligatoires)
-  + [Arguments optionnels](#arguments-optionnels)
-- [Importation pour module](#importation-pour-module)
+- [Project Structure](#project-structure)
+- [Package installation](#package-installation)
+  + [From Python Index (Pypi)](#from-python-index--pypi-)
+  + [Conda environment](#conda-environment)
+  + [Python library directory](#python-library-directory)
+- [Commands lines](#commands-lines)
+  + [Calling the package](#calling-the-package)
+  + [Required parameters](#required-parameters)
+  + [Optionals parameters](#optionals-parameters)
+- [Module for import usage](#module-for-import-usage)
 
 
 
 # Description
 
-Ce package permet de créer des bases de données de références à partir de fichiers FASTA non triés issues d'une base de données généraliste telle que [ncbi : 'nt'](https://www.ncbi.nlm.nih.gov/nucleotide/), [ebi : 'ena'](https://www.ebi.ac.uk/ena/browser/home), ou [ddbj : 'arsa](http://ddbj.nig.ac.jp/arsa/). Il est principalement destiné à être utilisé en ligne de commande avec python. Néanmoins certains modules peuvent être utilisé pour d'autres projet python par importation.
+This package is used for creating reference databases from unfiltered FASTA files. The FASTA files should come from a general purpose database such as [ncbi: 'nt'](https://www.ncbi.nlm.nih.gov/nucleotide/), [ebi: 'ena'](https://www.ebi.ac.uk/ena/browser/home), or [ddbj: 'arsa'](http://ddbj.nig.ac.jp/arsa/). And the format of the input FASTA files must be as following (complete description + sequence on one or multiples lines) :
 
-La majeur partie du travaille de création de la base de donnée se fait automatiquement, seules quelques commandes sont à la charge de l'utilisateur. Suite à la création des fichiers une vérification manuelle peut être utile. Un exemple d'utilisation est disponible [ici](https://github.com/cplessis/Fusarium-EF1A-Q2_RefDb) dans lequel nous créons une base de données de référence pour le gène EF1 alpha chez Fusarium. 
+```
+>JN176092.1 Fusarium mexicanum strain MXJAL-19 translation elongation factor 1 alpha (EF1) gene, partial cds
+GTCGACTCTGGCAAGTCGACCACTGTGAGTACAACCCTCGACGATGAGCTTATCTGCCATCGTCATCCCG
+ATCACCATCGATATTGCTCTCTGGAAGTTCGAGACTCCTCGCTACTATGTCACCGTCATTGGTATGTTGT
+CGCTCATGCCTCGTTCTCCCTTTATTCGTACTAACATATCACTCAGACGCTCCC
+```
+
+It is mainly intended to be used with command lines with python. However, some modules can be used for other python projects by import. Most of the database creation is automatically done, only a few commands are left to the user. After the creation of the files, a manual verification should be done. A usage example is available [here](https://github.com/cplessis/Fusarium-EF1A-Q2_RefDb) in which we create a reference database for the  Fusarium EF1 alpha gene. 
 
 
 
-# Structure du Projet
+# Project Structure
 
 ``` shell
 .
@@ -54,46 +61,46 @@ La majeur partie du travaille de création de la base de donnée se fait automat
 
 
 
-# Installation du package
+# Package installation
 
-### Depuis Python Index (Pypi)
+### From Python Index (Pypi)
 
-Le package est disponible sur [pypi](https://pypi.org/). L'utilisation de cette méthode est la plus classique est la plus simple. Il est peut être directement installé sur votre machine de la manière suivante.
+The package is available on  [pypi](https://pypi.org/). This installation method is the easiest one. 
 
 ```shell
 pip install q2_mkrefdb
 ```
 
-ou
+OR
 
 ```shell
 python -m pip install q2_mkrefdb
 ```
 
-### Avec un environnement Conda
+### Conda environment
 
-l'installation direct d'un package avec Pypi peut poser certains problèmes de versions. Aussi, l'utilisation de ce package est généralement lié à l'utilisation de QIIME2. Vous pourrez donc trouver un environnement Conda [ici]() qui contiendra tous les packages nécessaires ainsi que la version de QIIM2 qui corespond aux analyses que nous avons mené dans le tutorial [Fusarium-EF1A-Q2_RefDb](https://github.com/cplessis/Fusarium-EF1A-Q2_RefDb).
+Installing a package directly with Pypi can cause some version conflicts. Also, the use of this package is generally linked to the use of [Qiime2](https://qiime2.org/). You will therefore find a Conda environment [here](https://github.com/cplessis/Fusarium-EF1A-Q2_RefDb) which will contain all the necessary packages as well as the version of QIIM2 which corresponds to the analyses we carried out in the tutorial [Fusarium-EF1A-Q2_RefDb](https://github.com/cplessis/Fusarium-EF1A-Q2_RefDb).
 
-### Dépôt direct du package en librairie
+### Python library directory
 
-Si vous souhaitez installer le package hors connexion, vous pouvez utiliser cette méthode un peu moins "conventionnelle". Commencez par télécharger préalablement le répertoire "q2_mkrefdb" présent dans [src](./src). Une fois le répertoire (package) récupéré, placer le dans votre librairie python avec les autres package que vous utilisez déjà en python. Généralement une grande partie des packages python se trouvent dans le répertoire "site-packages". Vous pouvez trouvez la position de ce répertoire en lançant la commande suivante avec `python` (où `anymodule` est le nom du module de votre choix):
+If you would like to install the package offline, you can use this slightly less "conventional" method. Start by downloading the "q2_mkrefdb" directory from [src](./src). Once you have the directory (package), place it in your python library with the other packages you already use with python. Usually a large part of the python packages are in the "site-packages" directory. You can find the location of this directory by running the following command with `python` (where `anymodule` is the name of the module of your choice):
 
 ```python
 import anymodule
 print(anymodule.__file__)
 ```
 
-Une fois la package placé dans le répertoire des librairies vous pourrez l'appeler comme tous les autres packages pythons.
+Once the package is placed in the library directory you can call it like any other python package.
 
-# Lignes de commandes
+# Commands lines
 
-### Appel du package
+### Calling the package
 
 ``` shell
 python -m q2_mkrefb [args]
 ```
 
-### Arguments obligatoires
+### Required parameters
 
 ```shell
 -i, --sequences_input SEQUENCES_INPUT
@@ -123,7 +130,7 @@ python -m q2_mkrefb [args]
 
  
 
-### Arguments optionnels
+### Optionals parameters
 
 ```shell
 -fmt, --fw_mismatch_tol FW_MISMATCH_TOL
@@ -267,9 +274,9 @@ python -m q2_mkrefb [args]
 
   
 
-# Importation pour module
+# Module for import usage
 
-Plus d'informations à venir...
+More informations will be available soon...
 
 
 
