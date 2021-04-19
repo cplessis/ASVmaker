@@ -79,7 +79,7 @@ python -m pip install q2_mkrefdb
 
 ### Conda environment
 
-Installing a package directly with Pypi can cause some version conflicts. Also, the use of this package is generally linked to the use of [Qiime2](https://qiime2.org/). You will therefore find a Conda environment [here](https://github.com/cplessis/Fusarium-EF1A-Q2_RefDb) which will contain all the necessary packages as well as the version of QIIM2 which corresponds to the analyses we carried out in the tutorial [Fusarium-EF1A-Q2_RefDb](https://github.com/cplessis/Fusarium-EF1A-Q2_RefDb).
+Installing a package directly with Pypi can cause some version conflicts. Also, the use of this package is generally linked to the use of [Qiime2](https://qiime2.org/). You will therefore find a Conda environment [here](https://github.com/cplessis/Fusarium-EF1A-Q2_RefDb) which will contain all the necessary packages as well as the version of Qiime2 which corresponds to the analyses we carried out in the tutorial [Fusarium-EF1A-Q2_RefDb](https://github.com/cplessis/Fusarium-EF1A-Q2_RefDb).
 
 ### Python library directory
 
@@ -104,7 +104,8 @@ python -m q2_mkrefb [args]
 
 ```shell
 -i, --sequences_input SEQUENCES_INPUT
-# File path to the raw sequences FASTA file to treat 
+# File path to the raw sequences FASTA file to treat
+"The file format must be FASTA. The sequences can be written on one or multiple line. The sequences description must start with '>' and must be followed by the accession number. Such as : '>KJ679381|KJ679381.1 Fusarium falciforme ...' OR '>ENA|KJ679394|KJ679394.1 Fusarium keratoplasticum ...' OR '>JN176092.1 Fusarium mexicanum ...'. These three examples are respectively from DDBJ, EBI, NCBI databases.
 ```
 
 
