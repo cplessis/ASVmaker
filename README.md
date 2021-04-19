@@ -144,7 +144,7 @@ Each of the databases (ncbi, ebi, or ddjb) have its own format of description fo
 # Number of mismatch which are accepted for the forward ('-fmt') and reverse ('-rmt') primer annealing.
 ```
 
- The mismatch tolerance is the number of mismatch you accept on the primer annealing site. You must consider IUPAC nucleotide code as a mismatch. Our algorithm does NOT take into account the degenerated nucloetides yet. A primer can only anneal to a site where the primer 3'-end is perflectly matching to the binding sequence.
+ The mismatch tolerance is the number of mismatch you accept on the primer annealing site. The default value is 3 per primer. You must consider IUPAC nucleotide code as a mismatch. Our algorithm does NOT take into account the degenerated nucloetides yet. A primer can only anneal to a site where the primer 3'-end is perflectly matching to the binding sequence.
 
 ---
 
@@ -153,14 +153,14 @@ Each of the databases (ncbi, ebi, or ddjb) have its own format of description fo
 # Informations file in which all the files treatments are recorded.
 ```
 
-
+The INFOS_FILE save all the database information (number of sequences, amplicons, etc.) at every step of the analysis. As soon as the data are modified by a filtration, the actual state of the data is written on the file. 
 
 ```shell
 -dit, --displ_inf_terminal
 # Display information file in terminal if arg is specified.
 ```
 
- 
+ If you specify this parameter, all the database states will be printed in your shell. This command can be specified or not independantbly from the `--infos_file` arg. 
 
 ---
 
