@@ -36,7 +36,7 @@ It is mainly intended to be used with command lines with python. However, some m
 
 ``` shell
 .
-├── LICENCE.txt
+├── LICENSE.txt
 ├── README.md
 ├── pyproject.toml
 ├── setup.cfg
@@ -50,7 +50,7 @@ It is mainly intended to be used with command lines with python. However, some m
 └── tests
 ```
 
-* [LICENCE](./LICENCE.txt) :: MIT
+* [LICENSE](./LICENSE.txt) :: MIT
 * [pyproject](./pyproject.toml) :: Use for Pypi
 * [setup](./setup.cfg) :: Use for Pypi
 * [src/q2_mkrefdb](./src/q2_mkrefdb) :: Package
