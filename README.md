@@ -144,11 +144,9 @@ Each of the databases (ncbi, ebi, or ddjb) have its own format of description fo
 # Number of mismatch which are accepted for the forward ('-fmt') and reverse ('-rmt') primer annealing.
 ```
 
- The mismatch tolerance is the number of mismatch you accept on the primer annealing site. You must consider IUPAC nucleotide code as a mismatch. Our algorithm does NOT take into account the degenerated nucloetides yet.
+ The mismatch tolerance is the number of mismatch you accept on the primer annealing site. You must consider IUPAC nucleotide code as a mismatch. Our algorithm does NOT take into account the degenerated nucloetides yet. A primer can only anneal to a site where the primer 3'-end is perflectly matching to the binding sequence.
 
 ---
-
-
 
 ```shell
 -inf, --infos_file INFOS_FILE
@@ -164,6 +162,8 @@ Each of the databases (ncbi, ebi, or ddjb) have its own format of description fo
 
  
 
+---
+
 ```shell
 -g1, --genus1 GENUS1
 -g2, --genus2 GENUS2
@@ -172,16 +172,14 @@ Each of the databases (ncbi, ebi, or ddjb) have its own format of description fo
 
  
 
----
-
- 
-
 ```shell
 -u, --unverified
 # Keep the unverified genus if arg is specified.
 ```
 
- 
+
+
+---
 
 ```shell
 -tbc, --taxonomy_by_complex
@@ -190,12 +188,16 @@ Each of the databases (ncbi, ebi, or ddjb) have its own format of description fo
 
  
 
+---
+
 ```shell
 -f, --filtering_type {taxon,global}
 # Filtering by taxon or globally
 ```
 
  
+
+---
 
 ```shell
 -rsv, --redund_seq_variants
@@ -204,6 +206,8 @@ Each of the databases (ncbi, ebi, or ddjb) have its own format of description fo
 
  
 
+---
+
 ```shell
 -ra, --redundant_amplicon
 # Keep the redundant amplicons if arg is specified.
@@ -211,10 +215,14 @@ Each of the databases (ncbi, ebi, or ddjb) have its own format of description fo
 
  
 
+---
+
 ```shell
 -nasv, --seq_without_ampl
 # Keep the sequences without amplicons if arg is specified.
 ```
+
+
 
 
 
