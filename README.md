@@ -11,6 +11,8 @@
   + [Calling the package](#calling-the-package)
   + [Required parameters](#required-parameters)
   + [Optionals parameters](#optionals-parameters)
+    + [Filtration](#filtration)
+    + [Export](#export)
 - [Module for import usage](#module-for-import-usage)
 
 
@@ -107,30 +109,34 @@ python -m q2_mkrefb [args]
 # File path to the raw sequences FASTA file to treat.
 ```
 
-The file format must be FASTA. The sequences can be written on one or multiple lines. The sequences description must start with '>' and must be followed by the accession number. Such as : '>KJ679381|KJ679381.1 Fusarium falciforme ...' OR '>ENA|KJ679394|KJ679394.1 Fusarium keratoplasticum ...' OR '>JN176092.1 Fusarium mexicanum ...'. These three examples are respectively from DDBJ, EBI, NCBI databases.
+The file format must be FASTA. The sequences can be written on one or multiple lines. The sequences description must start with '>' and must be followed by the accession number. Such as : `>KJ679381|KJ679381.1 Fusarium falciforme ...`OR `>ENA|KJ679394|KJ679394.1 Fusarium keratoplasticum ...` OR  `>JN176092.1 Fusarium mexicanum ...`. These three examples are respectively from DDBJ, EBI, NCBI databases. We highly recommand to use the description format of one of these database in order to avoid any error.
 
  ```shell
 -db, --source_database {ncbi,ebi,ddbj}
 # Name of the database from which the FASTA file was obtained.
  ```
 
-
+Each of the databases (ncbi, ebi, or ddjb) have its own format of description for the fasta files. **NCBI**: `>JN176092.1 Fusarium mexicanum ...`; **EBI**: `>ENA|KJ679394|KJ679394.1 Fusarium keratoplasticum ...`; **DDBJ**: `>KJ679381|KJ679381.1 Fusarium falciforme ...`. If you are not using one of these databases, choose the one wich have the same sequences description format.
 
 ```shell
 -fp, --forward_primer FORWARD_PRIMER
 # File path to the forward primer FASTA file.
 ```
 
- 
+ The primer FASTA file must have only one sequence. With a description and a sequence.  You need one FASTA file per primer.
 
 ```shell
 -rp, --reverse_primer REVERSE_PRIMER
 # File path to the reverse primer FASTA file.
 ```
 
- 
+  The primer FASTA file must have only one sequence. With a description and a sequence.  You need one FASTA file per primer.
 
 ### Optionals parameters
+
+##### Filtration
+
+----
 
 ```shell
 -fmt, --fw_mismatch_tol FW_MISMATCH_TOL
@@ -214,9 +220,11 @@ The file format must be FASTA. The sequences can be written on one or multiple l
 # Keep the sequences without amplicons if arg is specified.
 ```
 
----
 
 
+##### Export
+
+____
 
 ```shell
 -svo, --seq_variants_output SEQ_VARIANTS_OUTPUT
