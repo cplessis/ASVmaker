@@ -92,7 +92,7 @@ print(anymodule.__file__)
 
 Once the package is placed in the library directory you can call it like any other python package.
 
-# Commands lines
+# Command lines
 
 ### Calling the package
 
@@ -104,11 +104,11 @@ python -m q2_mkrefb [args]
 
 ```shell
 -i, --sequences_input SEQUENCES_INPUT
-# File path to the raw sequences FASTA file to treat.
-The file format must be FASTA. The sequences can be written on one or multiple line. 
+"""File path to the raw sequences FASTA file to treat.
+The file format must be FASTA. The sequences can be written on one or multiple line.
 The sequences description must start with '>' and must be followed by the accession number. 
 Such as : '>KJ679381|KJ679381.1 Fusarium falciforme ...' OR '>ENA|KJ679394|KJ679394.1 Fusarium keratoplasticum ...' 
-OR '>JN176092.1 Fusarium mexicanum ...'. These three examples are respectively from DDBJ, EBI, NCBI databases.
+OR '>JN176092.1 Fusarium mexicanum ...'. These three examples are respectively from DDBJ, EBI, NCBI databases."""
 ```
 
 
