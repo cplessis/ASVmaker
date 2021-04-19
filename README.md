@@ -126,17 +126,11 @@ Each of the databases (ncbi, ebi, or ddjb) have its own format of description fo
 
 ```shell
 -fp, --forward_primer FORWARD_PRIMER
+-rp, --reverse_primer REVERSE_PRIMER
 # File path to the forward primer FASTA file.
 ```
 
- The primer FASTA file must have only one sequence. With a description and a sequence.  You need one FASTA file per primer.
-
-```shell
--rp, --reverse_primer REVERSE_PRIMER
-# File path to the reverse primer FASTA file.
-```
-
-  The primer FASTA file must have only one sequence. With a description and a sequence.  You need one FASTA file per primer.
+   The primer FASTA file must have only one sequence. With a description and a sequence.  You need one FASTA file per primer.
 
 ### Optionals parameters
 
@@ -146,17 +140,15 @@ Each of the databases (ncbi, ebi, or ddjb) have its own format of description fo
 
 ```shell
 -fmt, --fw_mismatch_tol FW_MISMATCH_TOL
-# Number of mismatch which are accepted for the forward primer annealing.
-```
-
-  
-
-```shell
 -rmt, --rv_mismatch_tol RV_MISMATCH_TOL
-# Number of mismatch which are accepted for the reverse primer annealing.
+# Number of mismatch which are accepted for the forward ('-fmt') and reverse ('-rmt') primer annealing.
 ```
 
- 
+ The mismatch tolerance is the number of mismatch you accept on the primer annealing site. You must consider IUPAC nucleotide code as a mismatch. Our algorithm does NOT take into account the degenerated nucloetides yet.
+
+---
+
+
 
 ```shell
 -inf, --infos_file INFOS_FILE
@@ -174,15 +166,13 @@ Each of the databases (ncbi, ebi, or ddjb) have its own format of description fo
 
 ```shell
 -g1, --genus1 GENUS1
-# Name of the first genus to keep. Ex: Fusarium
+-g2, --genus2 GENUS2
+# Name of the first and second genus to keep. Ex: -g1 Fusarium -g2 Gibberella
 ```
 
  
 
-```shell
--g2, --genus2 GENUS2
-# Name of the second genus to keep. Ex: Gibberella
-```
+---
 
  
 
