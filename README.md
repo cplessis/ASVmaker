@@ -155,12 +155,14 @@ Each of the databases (ncbi, ebi, or ddjb) have its own format of description fo
 
 The INFOS_FILE save all the database information (number of sequences, amplicons, etc.) at every step of the analysis. As soon as the data are modified by a filtration, the actual state of the data is written on the file. 
 
+---
+
 ```shell
 -dit, --displ_inf_terminal
 # Display information file in terminal if arg is specified.
 ```
 
- If you specify this parameter, all the database states will be printed in your shell. This command can be specified or not independantbly from the `--infos_file` arg. 
+ If you specify this parameter, all the database states will be printed in your shell during the analysis. This command can be specified or not independantbly from the `--infos_file` arg. 
 
 ---
 
@@ -170,14 +172,16 @@ The INFOS_FILE save all the database information (number of sequences, amplicons
 # Name of the first and second genus to keep. Ex: -g1 Fusarium -g2 Gibberella
 ```
 
- 
+ You can specify up to 2 genus to keep in your dataset. All the species which have a different Genus will be removed from the dataset. Be aware to write the genus with the right spelling and the word must start with an Uppercase. 
+
+---
 
 ```shell
 -u, --unverified
-# Keep the unverified genus if arg is specified.
+# Keep the unverified taxon if arg is specified.
 ```
 
-
+Some species are not well identified and can be classed as "Fusarium sp." for example. If you specify the `-u` arg these unverified species will be conserved. By default, the unverified species are removed. 
 
 ---
 
@@ -186,7 +190,7 @@ The INFOS_FILE save all the database information (number of sequences, amplicons
 # Do not group species with same complex lineage if arg is specified.
 ```
 
- 
+ By default the species are grouped by complex. A complex is a group of closely related species. This information about species is taken from the lineage.  If you specify the `-tbc` arg the species will NOT be group by complex.
 
 ---
 
@@ -195,7 +199,7 @@ The INFOS_FILE save all the database information (number of sequences, amplicons
 # Filtering by taxon or globally
 ```
 
- 
+ This arg is necessary if you want to filter your data. If you specify `taxon` all the sequences will be compared only in each taxon group. This option is better to keep the variabilty of sequences within the whole dataset. If you specify `global` the sequences will be compared all together without taxon distinction.
 
 ---
 
