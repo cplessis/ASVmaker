@@ -239,56 +239,70 @@ ____
 # File name of the sequences variants FASTA output.
 ```
 
-   
+ Export a file with all the sequences variants as FASTA format with the related accession number as description. These are the full length sequences after all filtrations. One sequence is related to one amplicon.
+
+---
 
 ```shell
 -ao, --amplicons_output AMPLICONS_OUTPUT
 # File name of the amplicons FASTA output.
 ```
 
- 
+Export a file with all the amplicons as FASTA format with the related accession number as description. One amplicon is related to one full sequence. 
+
+---
 
 ```shell
--to TAXONOMY_OUTPUT, --taxonomy_output TAXONOMY_OUTPUT
+-to, --taxonomy_output TAXONOMY_OUTPUT
 # File name of the taxonomy TXT output.
 ```
 
- 
+Export a file with 2 columns. The first contain the accession number (sequence id) and the second contain the related lineage of this id. 
+
+---
 
 ```shell
 -tlo, --taxon_list_output TAXON_LIST_OUTPUT
 # File name of the taxon list TXT output.
 ```
 
- 
+Export a file with the list of all the taxon after filtration. One line, one taxon. 
+
+---
 
 ```shell
 -sao, --shared_ampl_output SHARED_AMPL_OUTPUT
 # File name of the shared amplicons TXT output.
 ```
 
- 
+Export a file with the sequences which have exactly the same amplicon. One line is related to one amplicon. For example, if three sequence id are written on one line, that means their amplicons are all exactly the same. 
+
+---
 
 ```shell
 -cdo, --complex_dict_output COMPLEX_DICT_OUTPUT
 # File name of the complex dictionnary TXT output.
 ```
 
-  
+Export  a file with the list of all the complex names as first column and then a dictionnary as second column with all the accession number (related to ASV) and species of this complex.
+
+---
 
 ```shell
 -mto, --modified_tax_output MODIFIED_TAX_OUTPUT
 # File name of the modified taxon list TXT output.
 ```
 
- 
+Export all the modified taxon in file with as first column the old name of taxon and as second column the new name of the taxon after lineage verification. 
+
+---
 
 ```shell
 -ado, --access_dict_output ACCESS_DICT_OUTPUT
 # File name of the access dictionnary JSON output.
 ```
 
-  
+  Export the whole dictionnary of the database from the programm. This dictionnary is the last state of the database before exporting the files. In this file you will find all the information the database. The dictionnary is made as : {accession_number: {taxon: 'the genus_specie', sequence: 'full sequence', lineage: 'lineage', amplicon: 'amplicon sequence', description: 'the sequence description from the original fasta file' }}. The AccessDictionnary can be usefull to analyse statistics about the data. 
 
 # Module for import usage
 
