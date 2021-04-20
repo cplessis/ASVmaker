@@ -208,7 +208,7 @@ Some species are not well identified and can be classed as "Fusarium sp." for ex
 # Keep the redundant sequences variants if arg is specified.
 ```
 
- 
+ By default the redundant sequences variants are removed from the dataset. If this arg is specified, they are conserved. 
 
 ---
 
@@ -217,16 +217,11 @@ Some species are not well identified and can be classed as "Fusarium sp." for ex
 # Keep the redundant amplicons if arg is specified.
 ```
 
- 
+  By default the redundant sequences variants are removed from the dataset. If this arg is specified, they are conserved. 
 
 ---
 
-```shell
--nasv, --seq_without_ampl
-# Keep the sequences without amplicons if arg is specified.
-```
-
-
+---
 
 
 
