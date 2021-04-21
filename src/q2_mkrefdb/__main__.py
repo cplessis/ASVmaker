@@ -104,7 +104,7 @@ def get_arguments():
                           default=None)
     parser.add_argument('-svop',
                           '--seq_output_phylo',
-                          help="File name of the sequences variants FASTA output for phylogeny.",
+                          help="File name of the sequences variants FASTA output in NCBI format (for phylogeny).",
                           default=None)
     parser.add_argument('-ao',
                           '--amplicons_output',
@@ -112,7 +112,7 @@ def get_arguments():
                           default=None)
     parser.add_argument('-aop',
                           '--ampl_output_phylo',
-                          help="File name of the amplicons FASTA output for phylogeny.",
+                          help="File name of the amplicon variants FASTA output in NCBI format (for phylogeny).",
                           default=None)
     parser.add_argument('-to',
                           '--taxonomy_output',
@@ -286,23 +286,23 @@ seq_output_phylo = args.seq_output_phylo
 flag = False
 if seq_variants_output != None:
     flag = True
-    output_saver.write("* You have decided to 'EXPORT' your SEQUENCES VARIANTS as %s.\n"%seq_variants_output)
+    output_saver.write("* You have decided to 'EXPORT' your qiime format SEQUENCES VARIANTS as %s.\n"%seq_variants_output)
     data.export_seq_fasta(seq_variants_output, "qiime")
 
 if seq_output_phylo != None:
     flag = True
-    output_saver.write("* You have decided to 'EXPORT' your SEQUENCES VARIANTS as %s.\n"%seq_output_phylo)
-    data.export_seq_fasta(seq_output_phylo, "phylo")
+    output_saver.write("* You have decided to 'EXPORT' your ncbi format SEQUENCES VARIANTS as %s.\n"%seq_output_phylo)
+    data.export_seq_fasta(seq_output_phylo, "ncbi")
 
 if amplicons_output != None:
     flag = True
-    output_saver.write("* You have decided to 'EXPORT' your AMPLICONS as %s.\n"%amplicons_output)
+    output_saver.write("* You have decided to 'EXPORT' your qiime format AMPLICONS as %s.\n"%amplicons_output)
     data.export_ampli_fasta(amplicons_output, "qiime")
 
 if ampl_output_phylo != None:
     flag = True
-    output_saver.write("* You have decided to 'EXPORT' your AMPLICONS as %s.\n"%ampl_output_phylo)
-    data.export_ampli_fasta(ampl_output_phylo, "phylo")
+    output_saver.write("* You have decided to 'EXPORT' your ncbi format AMPLICONS as %s.\n"%ampl_output_phylo)
+    data.export_ampli_fasta(ampl_output_phylo, "ncbi")
 
 if taxonomy_output != None:
     flag = True
