@@ -1,4 +1,3 @@
-from os import access
 import re, time, random
 from . import utils
 from .pcr import amplify
