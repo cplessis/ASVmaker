@@ -102,9 +102,17 @@ def get_arguments():
                           '--seq_variants_output',
                           help="File name of the sequences variants FASTA output.",
                           default=None)
+    parser.add_argument('-svop',
+                          '--seq_output_phylo',
+                          help="File name of the sequences variants FASTA output for phylogeny.",
+                          default=None)
     parser.add_argument('-ao',
                           '--amplicons_output',
                           help="File name of the amplicons FASTA output.",
+                          default=None)
+    parser.add_argument('-aop',
+                          '--ampl_output_phylo',
+                          help="File name of the amplicons FASTA output for phylogeny.",
                           default=None)
     parser.add_argument('-to',
                           '--taxonomy_output',
@@ -272,6 +280,8 @@ shared_ampl_output = args.shared_ampl_output
 complex_dict_output = args.complex_dict_output
 modified_tax_output = args.modified_tax_output
 access_dict_output = args.access_dict_output
+ampl_output_phylo = args.ampl_output_phylo
+seq_output_phylo = args.seq_output_phylo
 
 flag = False
 if seq_variants_output != None:
@@ -279,10 +289,20 @@ if seq_variants_output != None:
     output_saver.write("* You have decided to 'EXPORT' your SEQUENCES VARIANTS as %s.\n"%seq_variants_output)
     data.export_seq_fasta(seq_variants_output, "qiime")
 
+if seq_output_phylo != None:
+    flag = True
+    output_saver.write("* You have decided to 'EXPORT' your SEQUENCES VARIANTS as %s.\n"%seq_output_phylo)
+    data.export_seq_fasta(seq_output_phylo, "phylo")
+
 if amplicons_output != None:
     flag = True
     output_saver.write("* You have decided to 'EXPORT' your AMPLICONS as %s.\n"%amplicons_output)
     data.export_ampli_fasta(amplicons_output, "qiime")
+
+if ampl_output_phylo != None:
+    flag = True
+    output_saver.write("* You have decided to 'EXPORT' your AMPLICONS as %s.\n"%ampl_output_phylo)
+    data.export_ampli_fasta(ampl_output_phylo, "phylo")
 
 if taxonomy_output != None:
     flag = True

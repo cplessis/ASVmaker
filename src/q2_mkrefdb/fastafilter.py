@@ -1,3 +1,4 @@
+from os import access
 import re, time, random
 from . import utils
 from .pcr import amplify
@@ -797,6 +798,7 @@ class Database:
         """        
         if fasta_type == "qiime": self.__seq_qiime_fasta(output_file_name)
         elif fasta_type == "ncbi": self.__seq_ncbi_fasta(output_file_name)
+        elif fasta_type == "phylo": self.__phylo_fasta(output_file_name, "sequence")
         else: print("Please reload this function with 'qiime' or 'ncbi' argument.")
   
     def __seq_ncbi_fasta(self, output_file_name):
@@ -840,7 +842,8 @@ class Database:
 
     def export_ampli_fasta(self, output_file_name, fasta_type):
         """Export the amplicon FASTA file. Each amplicon is written on a single line 
-        if 'qiime' is specified or multiple lines (70bp) if 'ncbi' is specified.
+        if 'qiime' is specified or multiple lines (70bp) if 'ncbi' is specified. The
+        'phylo' fasta_type is used for phylogeny analysis (write the taxon as sequence description).
         The description is the accession number of the amplicon. 
 
         Args:
@@ -849,6 +852,7 @@ class Database:
         """        
         if fasta_type == "qiime": self.__ampli_qiime_fasta(output_file_name)
         elif fasta_type == "ncbi": self.__ampli_ncbi_fasta(output_file_name)
+        elif fasta_type == "phylo": self.__phylo_fasta(output_file_name, "amplicon")
         else: print("Please reload this function with 'qiime' or 'ncbi' argument.")
 
     def __ampli_ncbi_fasta(self, output_file_name):
@@ -877,6 +881,15 @@ class Database:
             for access_nb in self.access_dict:
                 amplicon_file.write(">"+access_nb+"\n"+self.get_amplicon(access_nb)+"\n")
         print("   ==> Amplicon FASTA file susccessfully exported.")
+
+    def __phylo_fasta(self, output_file_name, seq_type):
+        with open(output_file_name, "w") as amplicon_file:
+            for access_nb in self.access_dict:
+                if seq_type == "sequence":
+                    amplicon_file.write(">"+self.get_taxon(access_nb)+"\n"+self.get_sequence(access_nb)+"\n")
+                elif seq_type == "amplicon":
+                    amplicon_file.write(">"+self.get_taxon(access_nb)+"\n"+self.get_amplicon(access_nb)+"\n")
+        print("   ==> Amplicon FASTA file susccessfully exported.")     
 
     def export_shared_ampli(self, output_file_name):
         """Export a file with all the accession number which have an identical amplicon.
