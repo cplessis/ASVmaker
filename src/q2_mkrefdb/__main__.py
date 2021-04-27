@@ -35,6 +35,11 @@ def get_arguments():
                           '--rv_mismatch_tol',
                           help="Number of mismatch which are accepted for the reverse primer annealing.",
                           default=3)
+    parser.add_argument('-tp',
+                          '--trim_primers',
+                          help="""This option keep the primers on amplicons if specified.
+                          By default the primers are trimmed.""",
+                          default= True)
     parser.add_argument('-inf',
                           '--infos_file',
                           help="Informations file in which all the files treatments are recorded.",
@@ -152,6 +157,7 @@ infos_file = args.infos_file
 displ_inf_terminal = args.displ_inf_terminal
 fw_mismatch_tol = args.fw_mismatch_tol
 rv_mismatch_tol = args.rv_mismatch_tol
+trim_primers = args.trim_primers
 
 print("\n\n\n\
 =============================================================================================\n\
@@ -185,7 +191,7 @@ output_saver.write("Reverse primer path : "+reverse_primer+"\n")
 
 # Init input data: DATABASE creation
 data = ff.Database(sequences_input, source_database, forward_primer, reverse_primer, \
-    fw_mismatch_tol, rv_mismatch_tol)
+    fw_mismatch_tol, rv_mismatch_tol, trim_primers)
 output_saver.write(data.get_info("init data")+"\n")
 
 output_saver.write("\n\n\n\
@@ -348,7 +354,3 @@ if infos_file == "none":
     output_saver.flush()
     output_saver.delete()
 print("Closing the program... \n")
-
-
-
-

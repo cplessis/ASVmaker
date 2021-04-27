@@ -21,7 +21,7 @@ class Database:
     The Database Class can be used directly but it is more adapted to use it throw the q2_mkrefdb modules (command lines). 
     """    
     def __init__(self, fasta_file, origin_database, forward_primer_fasta, reverse_primer_fasta, \
-        fw_mismatch_tol = 3, rv_mismatch_tol = 3):
+        fw_mismatch_tol = 3, rv_mismatch_tol = 3, trim_primers = True):
         """Initiate the Database Class.
 
         Args:
@@ -31,11 +31,13 @@ class Database:
             reverse_primer_fasta (string): path to the reverse primer FASTA file
             fw_mismatch_tol (int, optional): forward primer mismatch tolerance for annealing. Defaults to 3.
             rv_mismatch_tol (int, optional): reverse primer mismatch tolerance for annealing. Defaults to 3.
+            trim_primers = True to trim primers on amplicons, else False.
         """              
         self.file_name = fasta_file
         self.origin_database = origin_database
         self.fw_mismatch_tol = fw_mismatch_tol
         self.rv_mismatch_tol = rv_mismatch_tol
+        self.trim_primers = trim_primers
         self.forward_primer_list = self.__get_seq_from_fasta(forward_primer_fasta, False)
         self.reverse_primer_list = self.__get_seq_from_fasta(reverse_primer_fasta, False)
         self.seq_dict = self.__get_seq_from_fasta(fasta_file, True)
@@ -392,7 +394,7 @@ class Database:
         for seq_name, sequence in self.seq_dict.items():
             try:
                 amplicon_seq = amplify(sequence, self.forward_primer_list[1], self.reverse_primer_list[1], \
-                    self.fw_mismatch_tol, self.rv_mismatch_tol)
+                    self.fw_mismatch_tol, self.rv_mismatch_tol, self.trim_primers)
                 self.access_dict[self.__get_access_num(seq_name)]["amplicon"] = amplicon_seq
             except ValueError:
                 self.access_dict[self.__get_access_num(seq_name)]["amplicon"] = "NA"
@@ -827,7 +829,7 @@ class Database:
         print("   ==> Sequences variants FASTA file susccessfully exported.")
         
     def export_taxon_list(self, output_file_name):
-        """Export the taxon list. One line, one taxon.
+        """Export the taxon list with their number of ASV. Col1 = taxon, col2 = nb of ASV. 
 
         Args:
             output_file_name (string): path to the output file

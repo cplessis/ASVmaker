@@ -8,7 +8,7 @@ aligner.open_gap_score = -1
 aligner.extend_gap_score = -0.5
 aligner.mismatch_score = 0
 # Algortithm by default for local alignement with the above parameters : "Gotoh"
-# These parameters are used in order to force very high identity score when no gaps.
+# These parameters are used in order to return very high identity score when no gaps.
 
 
 """This module can be used independantly from the main function of the package. 
@@ -42,12 +42,12 @@ def __primer_infos(primer_type, primer, sequence):
     End position if 'fw' and start one if 'rv'. 
 
     Args:
-        primer_type (string): 'fw' if forward, 'rv' if reverse 
-        primer (string): Primer sequence
-        sequence (string): Sequence
+        primer_type (str): 'fw' if forward, 'rv' if reverse 
+        primer (str): Primer sequence
+        sequence (str): Sequence
 
     Returns:
-        lsit: The best position and score [postion, score] 
+        list: The best position and score [postion, score] 
     """    
     al = aligner.align(sequence, primer)
     if len(al) == 1: pos_infos = __extract_position(primer_type, primer, al[0])
@@ -64,18 +64,19 @@ def __primer_infos(primer_type, primer, sequence):
 
 def primer_condition(sequence, forward_primer, reverse_primer, \
     fw_mismatch_tol, rv_mismatch_tol, fw_position, rv_position):
-    """Verify if the primers alignments respect the wanted conditions.
-    The primers must have at leat three last nuclotide as identical as in 
+    """Verify if the primers alignments respect the wanted conditions 
+    (mismatch tolerance and identical 3 last 3'-end nucleotides). The 
+    primers must have at leat three last nuclotide as identical as in 
     the sequence. 
 
     Args:
-        sequence (string): Sequence
-        forward_primer (string): forward primer sequence
-        reverse_primer (string): reverse primer sequence
-        rv_mismatch_tol (integer): reverse primer mismatch tolerance
-        fw_mismatch_tol (integer): forward primer mismatch tolerance
-        fw_position (integer): primer end position on sequence 
-        rv_position ([type]): primer start position on sequence
+        sequence (str): Sequence
+        forward_primer (str): forward primer sequence
+        reverse_primer (str): reverse primer sequence
+        rv_mismatch_tol (int): reverse primer mismatch tolerance
+        fw_mismatch_tol (int): forward primer mismatch tolerance
+        fw_position (int): primer end position on sequence 
+        rv_position (int): primer start position on sequence
 
     Returns:
         boolean: True if conditions are respected, else False.
@@ -85,34 +86,40 @@ def primer_condition(sequence, forward_primer, reverse_primer, \
     bool += (sequence[fw_position[0]-3:fw_position[0]] == forward_primer[-3:])
     bool += (sequence[rv_position[0]:rv_position[0]+3] == reverse_primer[:3])
     return bool == 4
- 
-def amplify(sequence, forward_primer,reverse_primer, fw_mismatch_tol, rv_mismatch_tol):
+
+def amplify(sequence, forward_primer,reverse_primer, fw_mismatch_tol, rv_mismatch_tol, trim_prim):
     """Find the best positions of the inputed primers on the sequence in order to return an amplicon.
     The amplicon primers sites are trimmed.
     
-
     Args:
         sequence (string): Sequence to amplify
-        forward_primer (string): Forward primer sequence
-        reverse_primer (string): Reverse primer sequence
-        fw_mismatch_tol (integer): Forward primer mismatch tolerance
-        rv_mismatch_tol (integer): Reverse primer mismatch tolerance
+        forward_primer (str): Forward primer sequence
+        reverse_primer (str): Reverse primer sequence
+        fw_mismatch_tol (int): Forward primer mismatch tolerance
+        rv_mismatch_tol (int): Reverse primer mismatch tolerance
+        trim_prim(bool): True to trim primers on amplicons, else False
 
     Returns:
         string: The amplicon sequence
     """    
     reverse_primer = Seq(reverse_primer).reverse_complement()
     fw_position = __primer_infos("fw", forward_primer, sequence)
+    print("fw pos", fw_position)
     rv_position = __primer_infos("rv", reverse_primer, sequence)
+    print("rv pos", rv_position)
     if primer_condition(sequence, forward_primer, reverse_primer, \
         fw_mismatch_tol, rv_mismatch_tol, fw_position, rv_position): 
-        amplicon = str(sequence[fw_position[0]:rv_position[0]])
+        if trim_prim: amplicon = str(sequence[fw_position[0]:rv_position[0]])
+        else: amplicon = str(sequence[fw_position[0]-len(forward_primer)\
+            :rv_position[0]+len(reverse_primer)])
     else:
         sequence = Seq(sequence).reverse_complement()
         fw_position = __primer_infos("fw", forward_primer, sequence)
         rv_position = __primer_infos("rv", reverse_primer, sequence)
         if primer_condition(sequence, forward_primer, reverse_primer, \
         fw_mismatch_tol, rv_mismatch_tol, fw_position, rv_position):
-            amplicon = str(sequence[fw_position[0]:rv_position[0]])
+            if trim_prim: amplicon = str(sequence[fw_position[0]:rv_position[0]])
+            else: amplicon = str(sequence[fw_position[0]-len(forward_primer)\
+                :rv_position[0]+len(reverse_primer)])
         else: amplicon = "NA"
-    return amplicon   
+    return amplicon
