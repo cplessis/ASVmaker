@@ -149,6 +149,15 @@ Each of the databases (ncbi, ebi, or ddjb) have its own format of description fo
 ---
 
 ```shell
+-tp, --trim_primers
+# This option keep the primers on amplicons if specified. By default the primers are trimmed.
+```
+
+The primers are by default removed from the amplicon. If this option is specified, they will be conserved. 
+
+---
+
+```shell
 -inf, --infos_file INFOS_FILE
 # Informations file in which all the files treatments are recorded.
 ```
