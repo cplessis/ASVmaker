@@ -768,7 +768,7 @@ class Database:
         with FillingSquaresBar('Assembling taxon by complex ', max= len(self.seq_dict)) as bar:
             for access_nb in self.access_dict:
                 lineage = self.get_lineage(access_nb)
-                if lineage.split("; ")[-2].split(" ")[-1] == "complex":
+                if lineage.split("; ")[-2].split(" ")[-1] in {"complex","group"}:
                     taxon = ""
                     if lineage.split("; ")[-2].split(" ")[0] == "unclassified":
                         taxon = lineage.split("; ")[-2].split(" ")[1:3]
