@@ -104,9 +104,7 @@ def amplify(sequence, forward_primer,reverse_primer, fw_mismatch_tol, rv_mismatc
     """    
     reverse_primer = Seq(reverse_primer).reverse_complement()
     fw_position = __primer_infos("fw", forward_primer, sequence)
-    print("fw pos", fw_position)
     rv_position = __primer_infos("rv", reverse_primer, sequence)
-    print("rv pos", rv_position)
     if primer_condition(sequence, forward_primer, reverse_primer, \
         fw_mismatch_tol, rv_mismatch_tol, fw_position, rv_position): 
         if trim_prim: amplicon = str(sequence[fw_position[0]:rv_position[0]])

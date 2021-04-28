@@ -474,6 +474,7 @@ class Database:
         "Minimum number of sequences per complex : "+str(self.__min_seq_complex())+"\n"+\
         "Mean number of sequences per complex : "+str(self.__mean_seq_complex())+"\n\n"+\
         "--------------AMPLICONS---------------------\n"+\
+        "Number of amplicons : "+str(self.__get_amplicon_nb())+"\n"+\
         "Maximum amplicons length : "+str(self.__max_amplicon_len())+"\n"+\
         "Minimum amplicons length : "+str(self.__min_amplicon_len())+"\n"+\
         "Mean amplicons length : "+str(self.__mean_amplicon_len())+"\n"+\
@@ -596,7 +597,19 @@ class Database:
                     shared_amplicon += access_nb+"_"+self.get_taxon(access_nb)+"  <==>  "
                 shared_ampli_list.append(shared_amplicon)
         return shared_ampli_list
+    
+    def __get_amplicon_nb(self):
+        """Get the total number of amplicons.
 
+        Returns:
+            int: the number of amplicons.
+        """
+        ampl_nb = 0
+        for access_nb in self.access_dict:
+            if self.access_dict[access_nb]["amplicon"] != "NA":
+                ampl_nb += 1
+        return ampl_nb
+        
     def get_lineage(self, access_number):
         """Get the lineage related to the accession number.
 
