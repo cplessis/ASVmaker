@@ -143,7 +143,8 @@ class Database:
         len_sum = 0
         for access_nb in self.access_dict:
             len_sum += len(self.access_dict[access_nb]["sequence"])
-        mean_len = len_sum/len(self.access_dict)
+        try: mean_len = len_sum/len(self.access_dict)
+        except ZeroDivisionError: mean_len = 0
         return mean_len
 
     def __make_taxon_dict(self):
