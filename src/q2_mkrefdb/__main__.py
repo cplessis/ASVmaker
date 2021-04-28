@@ -228,16 +228,17 @@ if genus1 != "none":
     else: 
         output_saver.write("* 'UNVERIFIED' and 'UNCULTURED' genus have been removed.\n")
     output_saver.write(data.get_info("After Cleaning with : "+genus1+" -- "+genus2+" -- UNVERIFIED="+str(unverified))+"\n")
-    if seq_without_ampl == True:
-        output_saver.write("\n\
-=============================================================================================\n")
-        data.del_na_amplicons()
-        output_saver.write("** 'SEQUENCES VARIANTS' have been removed if 'NO AMPLICONS'.\n")
-        output_saver.write(data.get_info("after deleting sequences variants without amplicons")+"\n")
-    else:
-        output_saver.write("** You decided to 'KEEP' the 'SEQUENCES VARIANTS' with 'NO AMPLICONS'.\n")
 else:
     output_saver.write("* You have decided 'NOT' to 'CLEAN UP' your dataset.\n")
+
+if seq_without_ampl == True:
+    output_saver.write("\n\
+=============================================================================================\n")
+    data.del_na_amplicons()
+    output_saver.write("** 'SEQUENCES VARIANTS' have been removed if 'NO AMPLICONS'.\n")
+    output_saver.write(data.get_info("after deleting sequences variants without amplicons")+"\n")
+else:
+    output_saver.write("** You decided to 'KEEP' the 'SEQUENCES VARIANTS' with 'NO AMPLICONS'.\n")
 
 output_saver.write("\n\n\n\
 =============================================================================================\n\
