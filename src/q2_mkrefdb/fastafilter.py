@@ -384,7 +384,8 @@ class Database:
         seq_sum = 0
         for taxon in self.taxon_dict:
             seq_sum += len(self.taxon_dict[taxon])
-        mean_seq = seq_sum/len(self.taxon_dict)
+        try: mean_seq = seq_sum/len(self.taxon_dict)
+        except ZeroDivisionError: mean_seq = 0
         return mean_seq
 
     def __make_amplicon_dict(self):
