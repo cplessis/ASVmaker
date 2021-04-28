@@ -437,7 +437,8 @@ class Database:
             if self.get_amplicon(access_nb) != "NA":
                 seq_sum += len(self.get_amplicon(access_nb))
             else: na_amplicon += 1
-        mean_seq = seq_sum/(len(self.access_dict)-na_amplicon)
+        try: mean_seq = seq_sum/(len(self.access_dict)-na_amplicon)
+        except ZeroDivisionError: mean_seq = 0
         return mean_seq
 
 #########   INFOS  ######### 
@@ -609,7 +610,7 @@ class Database:
             if self.access_dict[access_nb]["amplicon"] != "NA":
                 ampl_nb += 1
         return ampl_nb
-        
+
     def get_lineage(self, access_number):
         """Get the lineage related to the accession number.
 
