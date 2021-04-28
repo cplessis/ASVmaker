@@ -31,11 +31,11 @@ def get_arguments():
     parser.add_argument('-rp',
                           '--reverse_primer',
                           help="File path to the reverse primer FASTA file.",
-                          type=int,
                           required=True)
     parser.add_argument('-rmt',
                           '--rv_mismatch_tol',
                           help="Number of mismatch which are accepted for the reverse primer annealing.",
+                          type=int,
                           default=3)
     parser.add_argument('-tp',
                           '--trim_primers',
