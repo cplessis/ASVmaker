@@ -1,6 +1,7 @@
 import re, time, random
 from . import utils
 from .pcr import amplify
+from .lineage import custom_group
 from progress.bar import FillingSquaresBar
 from progress.spinner import PixelSpinner
 from pydna.dseqrecord import Dseqrecord
@@ -256,6 +257,10 @@ class Database:
                         if taxon not in complex_dict[complex_name]["taxon"]:
                             complex_dict[complex_name]["taxon"].add(taxon)
         return complex_dict
+
+    def custom_complex(self, groups_file, taxonomic_level):
+        self.access_dict = custom_group(self.access_dict, groups_file, taxonomic_level)
+        self.__update_data()
 
     def __mean_tax_complex(self):
         """Get the mean number of taxon per complex.
