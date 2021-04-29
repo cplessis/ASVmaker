@@ -238,7 +238,7 @@ class Database:
         for access_nb in self.access_dict:
             if self.get_lineage(access_nb) != "NA":
                 complex_name = self.get_lineage(access_nb).split("; ")[-2]
-                if self.get_taxon(access_nb).split("_")[-1] == "complex":
+                if self.get_taxon(access_nb).split("_")[-1] in {"complex", "group"}:
                     complex_name = self.access_dict[access_nb]["taxon"]
                     taxon = "_".join(self.get_name(access_nb).split()[1:3])
                     if  complex_name not in complex_dict:
@@ -247,7 +247,7 @@ class Database:
                         complex_dict[complex_name]["access"].add(access_nb)
                         if taxon not in complex_dict[complex_name]["taxon"]:
                             complex_dict[complex_name]["taxon"].add(taxon)
-                elif complex_name.split()[-1] == "complex":
+                elif complex_name.split()[-1] in {"complex", "group"}:
                     taxon = self.get_taxon(access_nb)
                     if complex_name not in complex_dict:
                         complex_dict[complex_name] = {"access":{access_nb}, "taxon":{taxon}}
