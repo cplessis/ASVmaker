@@ -682,57 +682,22 @@ class Database:
     def del_na_amplicons(self):
         """Remove all the sequences which have no amplicon ('NA').
         """        
-        t0 = time.time()
-        with FillingSquaresBar('Deleting NA amplicons ', max= len(self.access_dict)) as bar:
-            temp_seq_dict = {}
-            for access_nb in self.access_dict:
-                if self.get_amplicon(access_nb) != "NA":
-                    temp_seq_dict[self.get_name(access_nb)] = self.get_sequence(access_nb)
-                bar.next()
-            self.seq_dict = temp_seq_dict
-            self.__update_data()
-            t1 = time.time()
-            print("\n   ==> Deletion done in %f seconds."%(t1 - t0))
+        self.seq_dict = filter.del_na_amplicons(self)
+        self.__update_data()
 
     def del_redund_ampli_glob(self):
         """Remove all the redundant amplicons globaly. All the amplicons are compared two by two, 
         if they are 100% identical one of them is removed.
         """        
-        t0 = time.time()
-        with FillingSquaresBar('Deleting redundant amplicons global ', max= len(self.access_dict)) as bar:
-            ampli_set = set()
-            seq_dict = {}
-            for access_nb in self.access_dict:
-                if self.get_amplicon(access_nb) not in ampli_set:
-                    ampli_set.add(self.get_amplicon(access_nb))
-                    seq_dict[self.get_name(access_nb)] = self.get_sequence(access_nb)
-                bar.next()
-            self.seq_dict = seq_dict
-            self.__update_data()
-            t1 = time.time()
-            print("\n   ==> Deletion done in %f seconds."%(t1 - t0))
+        self.seq_dict = filter.del_redund_ampli_glob(self)
+        self.__update_data()
 
     def del_redund_ampli_tax(self):
         """Remove all the redundant amplicons by taxon. All the amplicons are compared two by two in each group of taxon only, 
         if they are 100% identical one of them is removed.
         """        
-        t0 = time.time()
-        with FillingSquaresBar('Deleting redundant amplicons by taxon ', max= len(self.seq_dict)) as bar:
-            ref_access_list = []
-            for taxon in self.taxon_dict:
-                seq_set = set()
-                for access_nb in self.taxon_dict[taxon]:
-                    if self.get_amplicon(access_nb) not in seq_set:
-                        seq_set.add(self.get_amplicon(access_nb))
-                        ref_access_list.append(access_nb)
-                    bar.next()
-            seq_dict = {}
-            for access_nb in ref_access_list:
-                seq_dict[self.get_name(access_nb)] = self.get_sequence(access_nb)
-            self.seq_dict = seq_dict
-            self.__update_data()
-            t1 = time.time()
-            print("\n   ==> Deletion done in %f seconds."%(t1 - t0))
+        self.seq_dict = filter.del_redund_ampli_tax(self)
+        self.__update_data()
 
     def group_by_complex(self):
         """Change the lineage and taxon of all species which are in a species complex.
