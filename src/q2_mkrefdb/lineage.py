@@ -4,22 +4,19 @@ sequences = {}
 taxonomy = {}
 groups = {}
 
-def custom_group(access_dict, groups_file):
+def custom_group(Database, groups_file):
+    print("LINEAGE")
     with open(groups_file) as g_file:
         for line in g_file.readlines():
-            lineage = line.split()[1]
-            groups[" ".join(lineage)] = line.split()[0]
+            taxon = line.split()[1]
+            groups[taxon] = line.split()[0]
         new_access_dict = {}
-        for access_nb in access_dict:
-            new_access_dict[access_nb] = access_dict[access_nb]
-            full_lineage = (access_dict[access_nb]["lineage"]+access_dict[access_nb]["taxon"])
-            if full_lineage in groups:
-                lineage_lvls = full_lineage.split("; ")
-                lineage_lvls[-1] = groups[full_lineage]
-                lineage = "; ".join(lineage_lvls[:-1])+"; "
-                taxon = lineage_lvls[-1]+"_"+"group"
-                new_access_dict[access_nb]["lineage"] = lineage
-                new_access_dict[access_nb]["taxon"] = taxon
+        for access_nb in Database.access_dict:
+            new_access_dict[access_nb] = Database.access_dict[access_nb]
+            access_taxon = Database.access_dict[access_nb]["taxon"]
+            if access_taxon in groups:
+                new_tax = groups[access_taxon]+"_"+"group"
+                new_access_dict[access_nb]["taxon"] = new_tax
     return new_access_dict
 
 
