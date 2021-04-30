@@ -258,8 +258,8 @@ class Database:
                             complex_dict[complex_name]["taxon"].add(taxon)
         return complex_dict
 
-    def custom_complex(self, groups_file, taxonomic_level):
-        self.access_dict = custom_group(self.access_dict, groups_file, taxonomic_level)
+    def custom_complex(self, groups_file):
+        self.access_dict = custom_group(self.access_dict, groups_file)
         self.__update_data()
 
     def __mean_tax_complex(self):

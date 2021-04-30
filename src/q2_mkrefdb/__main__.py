@@ -55,12 +55,7 @@ def get_arguments():
                           '--custom_complex',
                           help="File path to the custom complex CSV file.",
                           default=None)
-    parser.add_argument('-ccl',
-                          '--custom_complex_lvl',
-                          help="""Level of the custom complex from kingdom (k) to specie (s).
-                          This arg must be specified if different from genus""",
-                          default="g")
-    
+        
     #---------------------------------------------------
     #                Cleaning
     #---------------------------------------------------    
@@ -170,7 +165,6 @@ fw_mismatch_tol = args.fw_mismatch_tol
 rv_mismatch_tol = args.rv_mismatch_tol
 trim_primers = args.trim_primers
 custom_complex = args.custom_complex
-custom_complex_lvl = args.custom_complex_lvl
 
 print("\n\n\n\
 =============================================================================================\n\
@@ -207,7 +201,6 @@ data = ff.Database(sequences_input, source_database, forward_primer, reverse_pri
     fw_mismatch_tol, rv_mismatch_tol, trim_primers)
 output_saver.write(data.get_info("init data")+"\n")
 
-if custom_complex: data.custom_complex(custom_complex, custom_complex_lvl)
 
 output_saver.write("\n\n\n\
 =============================================================================================\n\
@@ -220,14 +213,20 @@ unverified = args.unverified
 taxonomy_by_complex = args.taxonomy_by_complex
 seq_without_ampl = args.seq_without_ampl
 
+if taxonomy_by_complex == True:
+    data.group_by_complex()
+    output_saver.write("* You have decided to 'GROUP TAXON by COMPLEX' in your dataset.\n")
+    output_saver.write(data.get_info("After grouping by complex \n"))
+    output_saver.write("\n\
+=============================================================================================\n")
+if custom_complex: 
+    data.custom_complex(custom_complex)
+    output_saver.write("* You have decided to use a 'CUSTOM TAXONOMY'.\n")
+    output_saver.write(data.get_info("After grouping by complex with custom taxonomy \n"))
+    output_saver.write("\n\
+=============================================================================================\n")
 if genus1 != "none":
     output_saver.write("* You have decided to 'CLEAN UP' your dataset.\n")
-    if taxonomy_by_complex == True:
-        data.group_by_complex()
-        output_saver.write("* You have decided to 'GROUP TAXON by COMPLEX' in your dataset.\n")
-        output_saver.write(data.get_info("After grouping by taxa \n"))
-        output_saver.write("\n\
-=============================================================================================\n")
     genus_set = data.get_all_genus()
     if genus1 in genus_set:
         output_saver.write(genus1+" is in your dataset."+"\n")
