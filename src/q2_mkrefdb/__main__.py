@@ -51,6 +51,15 @@ def get_arguments():
                           help="Display information file in terminal if arg is specified.",
                           action = 'store_true',
                           default=False)
+    parser.add_argument('-cc',
+                          '--custom_complex',
+                          help="File path to the custom complex CSV file.",
+                          default=None)
+    parser.add_argument('-ccl',
+                          '--custom_complex_lvl',
+                          help="""Level of the custom complex from kingdom (k) to specie (s).
+                          This arg must be specified if different from genus""",
+                          default="g")
     
     #---------------------------------------------------
     #                Cleaning
@@ -160,6 +169,8 @@ displ_inf_terminal = args.displ_inf_terminal
 fw_mismatch_tol = args.fw_mismatch_tol
 rv_mismatch_tol = args.rv_mismatch_tol
 trim_primers = args.trim_primers
+custom_complex = args.custom_complex
+custom_complex_lvl = args.custom_complex_lvl
 
 print("\n\n\n\
 =============================================================================================\n\
@@ -195,6 +206,8 @@ output_saver.write("Reverse primer path : "+reverse_primer+"\n")
 data = ff.Database(sequences_input, source_database, forward_primer, reverse_primer, \
     fw_mismatch_tol, rv_mismatch_tol, trim_primers)
 output_saver.write(data.get_info("init data")+"\n")
+
+if custom_complex: data.custom_complex(custom_complex, custom_complex_lvl)
 
 output_saver.write("\n\n\n\
 =============================================================================================\n\
