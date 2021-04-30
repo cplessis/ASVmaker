@@ -1,5 +1,5 @@
 import re, time, random
-from . import utils
+from . import utils, filter
 from .pcr import amplify
 from .lineage import custom_group
 from progress.bar import FillingSquaresBar
@@ -259,7 +259,7 @@ class Database:
         return complex_dict
 
     def custom_complex(self, groups_file):
-        self.access_dict = custom_group(self.access_dict, groups_file)
+        self.access_dict = custom_group(self, groups_file)
         self.__update_data()
 
     def __mean_tax_complex(self):
@@ -668,46 +668,16 @@ class Database:
     def del_redund_seq_glob(self):
         """Remove all the redundant sequence globaly. All the sequences are compared two by two, 
         if they are 100% identical one of them is removed.
-        """        
-        t0 = time.time()
-        with FillingSquaresBar('Deleting redundant sequence global ', max= len(self.seq_dict)) as bar:
-            temp_seq_set = set()
-            temp_seq_dict = {}
-            for seq_name in self.seq_dict:
-                d_seq = Dseqrecord(self.seq_dict[seq_name])
-                if all(seq not in temp_seq_set for seq in [d_seq.seq.crick, d_seq.seq.watson]):
-                    temp_seq_set.add(d_seq.seq.crick)
-                    temp_seq_set.add(d_seq.seq.watson)
-                    temp_seq_dict[seq_name] = self.seq_dict[seq_name]
-                bar.next()
-            self.seq_dict = temp_seq_dict
-            self.__update_data()
-            t1 = time.time()
-            print("\n   ==> Deletion done in %f seconds."%(t1 - t0))
+        """
+        self.seq_dict = filter.del_redund_seq_glob(self)
+        self.__update_data()
 
     def del_redund_seq_tax(self):
         """Remove all the redundant sequence by taxon. All the sequences are compared two by two in each group of taxon only, 
         if they are 100% identical one of them is removed.
         """        
-        t0 = time.time()
-        with FillingSquaresBar('Deleting redundant sequence variant by taxon ', max= len(self.seq_dict)) as bar:
-            ref_seq_dict = {}
-            for taxon in self.taxon_dict:
-                seq_set = set()
-                for access_nb in self.taxon_dict[taxon]:
-                    d_seq = Dseqrecord(self.get_sequence(access_nb))
-                    if all(seq not in seq_set for seq in [d_seq.seq.crick, d_seq.seq.watson]):
-                        seq_set.add(d_seq.seq.crick)
-                        seq_set.add(d_seq.seq.watson)
-                        ref_seq_dict[access_nb] = self.get_sequence(access_nb)
-                    bar.next()
-            seq_dict = {}
-            for access_nb, sequence1 in ref_seq_dict.items():
-                seq_dict[self.get_name(access_nb)] = sequence1
-            self.seq_dict = seq_dict
-            self.__update_data()
-            t1 = time.time()
-            print("\n   ==> Deletion done in %f seconds."%(t1 - t0))
+        self.seq_dict = filter.del_redund_seq_tax(self)
+        self.__update_data()
 
     def del_na_amplicons(self):
         """Remove all the sequences which have no amplicon ('NA').
