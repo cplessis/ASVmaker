@@ -47,10 +47,12 @@ class Database:
         self.__make_amplicon_dict()
         self.__make_lineage_dict()
         self.complex_dict = self.__make_complex_dict()
+        return
 
-    def import(self, Database_json):
-        db = utils.open_from_json(Database_json)
+    def import_db(self, database_json):
+        db = utils.open_from_json(database_json)
         self.access_dict = db
+        self.seq_dict = {}
         for access_nb in self.access_dict:
             self.seq_dict[self.get_name(access_nb)] = self.get_sequence(access_nb)
         self.taxon_dict = self.__make_taxon_dict()
@@ -164,8 +166,7 @@ class Database:
             dictionnary: The taxon dictionnary.
         """        
         taxon_dict = {}
-        for seq_name in self.seq_dict:
-            access_nb = self.__get_access_num(seq_name)
+        for access_nb in self.access_dict:
             try:
                 taxon_dict[self.get_taxon(access_nb)].add(access_nb)
             except KeyError:
