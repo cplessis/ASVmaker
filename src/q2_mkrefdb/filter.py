@@ -95,3 +95,36 @@ def del_redund_ampli_tax(Database):
         t1 = time.time()
         print("\n   ==> Deletion done in %f seconds."%(t1 - t0))
         return seq_dict
+
+def clean_dataset(Database, wanted_genus1, wanted_genus2, unverified_bool):
+        """Keep in the dataset only the specified genus. The unverified bool remove all
+        the species which are ended by '.' such as 'Fusarium sp.' if False is specified. 
+
+        Args:
+            wanted_genus1 (string): genus to keep 1
+            wanted_genus2 (string): genus to keep 2
+            unverified_bool (bool): False to to remove unverfied ('.'), else True.  
+        """        
+        t0 = time.time()
+        with FillingSquaresBar('Cleaning dataset ', max= len(Database.seq_dict)) as bar:
+            temp_dict = {}
+            for seq_name in Database.seq_dict:
+                seq_name_list = seq_name.split(" ")
+                if seq_name_list[1] == wanted_genus1:
+                    if (unverified_bool == False) & (seq_name_list[2][-1] != "."):
+                        temp_dict[seq_name] = Database.seq_dict[seq_name]
+                    elif unverified_bool == True:
+                        temp_dict[seq_name] = Database.seq_dict[seq_name]
+                elif (unverified_bool == True) & (seq_name_list[2] == wanted_genus1):
+                    temp_dict[seq_name] = Database.seq_dict[seq_name]
+                elif seq_name_list[1] == wanted_genus2:
+                    if (unverified_bool == False) & (seq_name_list[2][-1] != "."):                        
+                        temp_dict[seq_name] = Database.seq_dict[seq_name]
+                    elif unverified_bool == True:
+                        temp_dict[seq_name] = Database.seq_dict[seq_name]
+                elif (unverified_bool == True) & (seq_name_list[2] == wanted_genus2):
+                    temp_dict[seq_name] = Database.seq_dict[seq_name]
+                bar.next()            
+            t1 = time.time()
+            print("\n   ==> Dataset cleaned in %f seconds."%(t1 - t0))
+            return temp_dict
