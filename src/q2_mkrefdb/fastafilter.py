@@ -21,7 +21,7 @@ class Database:
 
     The Database Class can be used directly but it is more adapted to use it throw the q2_mkrefdb modules (command lines). 
     """    
-    def __init__(self, fasta_file, origin_database, forward_primer_fasta, reverse_primer_fasta, \
+    def create(self, fasta_file, origin_database, forward_primer_fasta, reverse_primer_fasta, \
         fw_mismatch_tol = 3, rv_mismatch_tol = 3, trim_primers = True):
         """Initiate the Database Class.
 
@@ -47,6 +47,15 @@ class Database:
         self.__make_amplicon_dict()
         self.__make_lineage_dict()
         self.complex_dict = self.__make_complex_dict()
+
+    def import(self, Database_json):
+        db = utils.open_from_json(Database_json)
+        self.access_dict = db
+        for access_nb in self.access_dict:
+            self.seq_dict[self.get_name(access_nb)] = self.get_sequence(access_nb)
+        self.taxon_dict = self.__make_taxon_dict()
+        self.complex_dict = self.__make_complex_dict()
+
 
     def __get_seq_from_fasta(self, fasta_file, bool_multiple_seq):
         """Extract the sequences from the FASTA file and initiate the data.
