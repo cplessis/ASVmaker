@@ -1,5 +1,5 @@
 import argparse, sys, getpass, datetime, platform
-from . import fastafilter as ff
+from . import database as db
 from . import utils
 
 __doc__ =  """This package is released and maintained by the Research and Development Institute 
@@ -197,7 +197,8 @@ output_saver.write("Forward primer path : "+forward_primer+"\n")
 output_saver.write("Reverse primer path : "+reverse_primer+"\n")
 
 # Init input data: DATABASE creation
-data = ff.Database(sequences_input, source_database, forward_primer, reverse_primer, \
+data = db.Database()
+data.create(sequences_input, source_database, forward_primer, reverse_primer, \
     fw_mismatch_tol, rv_mismatch_tol, trim_primers)
 output_saver.write(data.get_info("init data")+"\n")
 
