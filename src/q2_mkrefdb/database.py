@@ -1,17 +1,15 @@
 import re, time, random
-from . import utils, filter
+from . import utils, filter, lineage, stats
 from .pcr import amplify
-from .lineage import custom_group
 from progress.bar import FillingSquaresBar
 from progress.spinner import PixelSpinner
-from pydna.dseqrecord import Dseqrecord
 from Bio import Entrez
 from Bio.Blast import NCBIWWW
 from Bio.Blast import NCBIXML
 
-###########################################################################################################################################
-#################### CLASS FastaFile ######################################################################################################
-###########################################################################################################################################
+#######################################################################################################################
+#################     CLASS Database     ##############################################################################
+#######################################################################################################################
 
 class Database:
     """The class Database own all the function and attributes to filter data from a FASTA file. 
@@ -34,7 +32,7 @@ class Database:
             rv_mismatch_tol (int, optional): reverse primer mismatch tolerance for annealing. Defaults to 3.
             trim_primers = True to trim primers on amplicons, else False.
         """              
-        self.file_name = fasta_file
+        self.file_name = fasta_file.rstrip(".fasta")
         self.origin_database = origin_database
         self.fw_mismatch_tol = fw_mismatch_tol
         self.rv_mismatch_tol = rv_mismatch_tol
@@ -120,43 +118,6 @@ class Database:
         self.access_dict = new_access_dict
         self.taxon_dict = self.__make_taxon_dict()
         self.complex_dict = self.__make_complex_dict()
-
-    def __max_seq_len(self):
-        """Get maximum sequence length from the data.
-
-        Returns:
-            integer: The maximum sequence length
-        """        
-        max_len = 0
-        for access_nb in self.access_dict:
-            if len(self.access_dict[access_nb]["sequence"]) > max_len:
-                max_len = len(self.access_dict[access_nb]["sequence"])
-        return max_len
-    
-    def __min_seq_len(self):
-        """Get the minimum sequence length from the data.
-
-        Returns:
-            integer: The minimum sequence length
-        """        
-        min_len = 100000
-        for access_nb in self.access_dict:
-            if len(self.access_dict[access_nb]["sequence"]) < min_len:
-                min_len = len(self.access_dict[access_nb]["sequence"])
-        return min_len
-
-    def __mean_seq_len(self):
-        """Get the mean sequence length from the data. 
-
-        Returns:
-            integer: The mean sequence length
-        """        
-        len_sum = 0
-        for access_nb in self.access_dict:
-            len_sum += len(self.access_dict[access_nb]["sequence"])
-        try: mean_len = len_sum/len(self.access_dict)
-        except ZeroDivisionError: mean_len = 0
-        return mean_len
 
     def __make_taxon_dict(self):
         """Create the taxon dictionnary.
@@ -268,84 +229,8 @@ class Database:
         return complex_dict
 
     def custom_complex(self, groups_file):
-        self.access_dict = custom_group(self, groups_file)
+        self.access_dict = lineage.custom_group(self, groups_file)
         self.__update_data()
-
-    def __mean_tax_complex(self):
-        """Get the mean number of taxon per complex.
-
-        Returns:
-            float: mean number of taxon per complex
-        """        
-        tax_nb = 0
-        for complex_name in self.complex_dict:
-            tax_nb += len(self.complex_dict[complex_name]["taxon"])
-        try: mean_tax = tax_nb/len(self.complex_dict)    
-        except ZeroDivisionError: mean_tax = 0
-        return mean_tax
-
-    def __max_tax_complex(self):
-        """Get the maximum number of taxon per complex;
-
-        Returns:
-            integer: max number of taxon per complex
-        """        
-        max_tax = 0
-        for complex_name in self.complex_dict:
-            if len(self.complex_dict[complex_name]["taxon"]) > max_tax:
-                max_tax = len(self.complex_dict[complex_name]["taxon"])
-        return max_tax
-
-    def __min_tax_complex(self):
-        """Get the minimum number of taxon per complex.
-
-        Returns:
-            integer: min number of taxon per complex
-        """        
-        min_tax = 100000
-        for complex_name in self.complex_dict:
-            if len(self.complex_dict[complex_name]["taxon"]) < min_tax:
-                min_tax = len(self.complex_dict[complex_name]["taxon"])
-        if min_tax == 100000: min_tax = 0
-        return min_tax
-
-    def __mean_seq_complex(self):
-        """Get the mean number of sequences per complex.
-
-        Returns:
-            float: mean number of sequences per complex
-        """        
-        seq_nb = 0
-        for complex_name in self.complex_dict:
-            seq_nb += len(self.complex_dict[complex_name]["access"])
-        try: mean_seq = seq_nb/len(self.complex_dict)    
-        except ZeroDivisionError: mean_seq = 0
-        return mean_seq
-
-    def __max_seq_complex(self):
-        """Get the maximum number of sequences per complex.
-
-        Returns:
-            integer: max number of sequences per complex
-        """        
-        max_seq = 0
-        for complex_name in self.complex_dict:
-            if len(self.complex_dict[complex_name]["access"]) > max_seq:
-                max_seq = len(self.complex_dict[complex_name]["access"])
-        return max_seq
-
-    def __min_seq_complex(self):
-        """Get the minimum number of sequences per complex.
-
-        Returns:
-            integer: min number of sequence per complex
-        """        
-        min_seq = 100000
-        for complex_name in self.complex_dict:
-            if len(self.complex_dict[complex_name]["access"]) < min_seq:
-                min_seq = len(self.complex_dict[complex_name]["access"])
-        if min_seq == 100000: min_tax = 0
-        return min_seq
 
     def __get_access_num(self, seq_name):
         """Get the sequence accession number from the seqeunce name.
@@ -365,43 +250,6 @@ class Database:
             access_num = seq_name.split("|")[0].strip(">")
         return access_num
 
-    def __max_nb_seq_tax(self):
-        """Get the maximum number of sequences per taxon.
-
-        Returns:
-            integer: max number of sequences per taxon
-        """        
-        max_seq = 0
-        for taxon in self.taxon_dict:
-            if len(self.taxon_dict[taxon]) > max_seq:
-                max_seq = len(self.taxon_dict[taxon])
-        return max_seq
-
-    def __min_nb_seq_tax(self):
-        """Get the minimum number of sequences per taxon;
-
-        Returns:
-            integer: min number of sequence per taxon
-        """        
-        min_seq = 100000
-        for taxon in self.taxon_dict:
-            if len(self.taxon_dict[taxon]) < min_seq:
-                min_seq = len(self.taxon_dict[taxon])
-        return min_seq
-
-    def __mean_nb_seq_tax(self):
-        """Get the mean number of sequence per taxon;
-
-        Returns:
-            float: mean number of seq per taxon
-        """        
-        seq_sum = 0
-        for taxon in self.taxon_dict:
-            seq_sum += len(self.taxon_dict[taxon])
-        try: mean_seq = seq_sum/len(self.taxon_dict)
-        except ZeroDivisionError: mean_seq = 0
-        return mean_seq
-
     def __make_amplicon_dict(self):
         """Add the amplicons keys to the access_dict. Each amplicon is created thanks to the pcr module.
         The default values of mismatch tolerance is 3. 
@@ -416,48 +264,9 @@ class Database:
                 self.access_dict[self.__get_access_num(seq_name)]["amplicon"] = "NA"
             spinner.next()
 
-    def __max_amplicon_len(self):
-        """Get the maximum aplicon length.
-
-        Returns:
-            int: max amplicon length
-        """        
-        max_seq = 0
-        for access_nb in self.access_dict:
-            if len(self.get_amplicon(access_nb)) > max_seq:
-                max_seq = len(self.get_amplicon(access_nb))
-        return max_seq
-
-    def __min_amplicon_len(self):
-        """Get the minimum amplicon length.
-
-        Returns:
-            int: min amplicon length
-        """        
-        min_seq = 100000
-        for access_nb in self.access_dict:
-            if (len(self.get_amplicon(access_nb)) < min_seq) & \
-                (self.get_amplicon(access_nb) != "NA"):
-                min_seq = len(self.get_amplicon(access_nb))
-        return min_seq
-
-    def __mean_amplicon_len(self):
-        """Get the mean amplicon length.
-
-        Returns:
-            float: mean amplicon length
-        """        
-        seq_sum = 0
-        na_amplicon = 0
-        for access_nb in self.access_dict:
-            if self.get_amplicon(access_nb) != "NA":
-                seq_sum += len(self.get_amplicon(access_nb))
-            else: na_amplicon += 1
-        try: mean_seq = seq_sum/(len(self.access_dict)-na_amplicon)
-        except ZeroDivisionError: mean_seq = 0
-        return mean_seq
-
-#########   INFOS  ######### 
+#######################################################################################################################
+#####################        INFOS       ##############################################################################
+#######################################################################################################################
 
     def get_info(self, title):
         """Return a string to print to see all the actual informations about the data. 
@@ -474,27 +283,27 @@ class Database:
         "File name : "+self.file_name+"\n\n"+\
         "--------------SEQUENCES---------------------\n"+\
         "Number of sequences : "+str(len(self.seq_dict))+"\n"+ \
-        "Maximum sequences length : "+str(self.__max_seq_len())+"\n"+\
-        "Minimum sequences length : "+str(self.__min_seq_len())+"\n"+\
-        "Mean sequences length : "+str(self.__mean_seq_len())+"\n\n"+\
+        "Maximum sequences length : "+str(stats.max_seq_len(self))+"\n"+\
+        "Minimum sequences length : "+str(stats.min_seq_len(self))+"\n"+\
+        "Mean sequences length : "+str(stats.mean_seq_len(self))+"\n\n"+\
         "---------------TAXONS-----------------------\n"+\
         "Number of different taxons : "+str(len(self.taxon_dict))+"\n"+\
-        "Maximum number of sequences per taxon : "+str(self.__max_nb_seq_tax())+"\n"+\
-        "Minimum number of sequences per taxon : "+str(self.__min_nb_seq_tax())+"\n"+\
-        "Mean number of sequences per taxon : "+str(self.__mean_nb_seq_tax())+"\n\n"+\
+        "Maximum number of sequences per taxon : "+str(stats.max_nb_seq_tax(self))+"\n"+\
+        "Minimum number of sequences per taxon : "+str(stats.min_nb_seq_tax(self))+"\n"+\
+        "Mean number of sequences per taxon : "+str(stats.mean_nb_seq_tax(self))+"\n\n"+\
         "---------------COMPLEXS---------------------\n"+\
         "Number of differents complex : "+str(len(self.complex_dict))+"\n"+\
-        "Maximum number of taxons per complex : "+str(self.__max_tax_complex())+"\n"+\
-        "Minimum number of taxons per complex : "+str(self.__min_tax_complex())+"\n"+\
-        "Mean number of taxons per complex : "+str(self.__mean_tax_complex())+"\n"+\
-        "Maximum number of sequences per complex : "+str(self.__max_seq_complex())+"\n"+\
-        "Minimum number of sequences per complex : "+str(self.__min_seq_complex())+"\n"+\
-        "Mean number of sequences per complex : "+str(self.__mean_seq_complex())+"\n\n"+\
+        "Maximum number of taxons per complex : "+str(stats.max_tax_complex(self))+"\n"+\
+        "Minimum number of taxons per complex : "+str(stats.min_tax_complex(self))+"\n"+\
+        "Mean number of taxons per complex : "+str(stats.mean_tax_complex(self))+"\n"+\
+        "Maximum number of sequences per complex : "+str(stats.max_seq_complex(self))+"\n"+\
+        "Minimum number of sequences per complex : "+str(stats.min_seq_complex(self))+"\n"+\
+        "Mean number of sequences per complex : "+str(stats.mean_seq_complex(self))+"\n\n"+\
         "--------------AMPLICONS---------------------\n"+\
-        "Number of amplicons : "+str(self.__get_amplicon_nb())+"\n"+\
-        "Maximum amplicons length : "+str(self.__max_amplicon_len())+"\n"+\
-        "Minimum amplicons length : "+str(self.__min_amplicon_len())+"\n"+\
-        "Mean amplicons length : "+str(self.__mean_amplicon_len())+"\n"+\
+        "Number of amplicons : "+str(stats.get_amplicon_nb(self))+"\n"+\
+        "Maximum amplicons length : "+str(stats.max_amplicon_len(self))+"\n"+\
+        "Minimum amplicons length : "+str(stats.min_amplicon_len(self))+"\n"+\
+        "Mean amplicons length : "+str(stats.mean_amplicon_len(self))+"\n"+\
         "Number of redundant amplicons : "+str(len(self.get_shared_amplicons()))+"\n"+\
         "****************************************\n"
         return message
@@ -614,18 +423,6 @@ class Database:
                     shared_amplicon += access_nb+"_"+self.get_taxon(access_nb)+"  <==>  "
                 shared_ampli_list.append(shared_amplicon)
         return shared_ampli_list
-    
-    def __get_amplicon_nb(self):
-        """Get the total number of amplicons.
-
-        Returns:
-            int: the number of amplicons.
-        """
-        ampl_nb = 0
-        for access_nb in self.access_dict:
-            if self.access_dict[access_nb]["amplicon"] != "NA":
-                ampl_nb += 1
-        return ampl_nb
 
     def get_lineage(self, access_number):
         """Get the lineage related to the accession number.
@@ -638,7 +435,9 @@ class Database:
         """        
         return self.access_dict[access_number]["lineage"]
 
-#########   FILTER  ######### 
+#######################################################################################################################
+#################         FILTER         ##############################################################################
+#######################################################################################################################
 
     def clean_dataset(self, wanted_genus1, wanted_genus2, unverified_bool):
         """Keep in the dataset only the specified genus. The unverified bool remove all
@@ -649,30 +448,8 @@ class Database:
             wanted_genus2 (string): genus to keep 2
             unverified_bool (bool): False to to remove unverfied ('.'), else True.  
         """        
-        t0 = time.time()
-        with FillingSquaresBar('Cleaning dataset ', max= len(self.seq_dict)) as bar:
-            temp_dict = {}
-            for seq_name in self.seq_dict:
-                seq_name_list = seq_name.split(" ")
-                if seq_name_list[1] == wanted_genus1:
-                    if (unverified_bool == False) & (seq_name_list[2][-1] != "."):
-                        temp_dict[seq_name] = self.seq_dict[seq_name]
-                    elif unverified_bool == True:
-                        temp_dict[seq_name] = self.seq_dict[seq_name]
-                elif (unverified_bool == True) & (seq_name_list[2] == wanted_genus1):
-                    temp_dict[seq_name] = self.seq_dict[seq_name]
-                elif seq_name_list[1] == wanted_genus2:
-                    if (unverified_bool == False) & (seq_name_list[2][-1] != "."):                        
-                        temp_dict[seq_name] = self.seq_dict[seq_name]
-                    elif unverified_bool == True:
-                        temp_dict[seq_name] = self.seq_dict[seq_name]
-                elif (unverified_bool == True) & (seq_name_list[2] == wanted_genus2):
-                    temp_dict[seq_name] = self.seq_dict[seq_name]
-                bar.next()            
-            self.seq_dict = temp_dict
-            self.__update_data()
-            t1 = time.time()
-            print("\n   ==> Dataset cleaned in %f seconds."%(t1 - t0))              
+        self.seq_dict = filter.clean_dataset(self, wanted_genus1, wanted_genus2, unverified_bool)
+        self.__update_data()
 
     def del_redund_seq_glob(self):
         """Remove all the redundant sequence globaly. All the sequences are compared two by two, 
@@ -713,30 +490,12 @@ class Database:
         The taxon name become the complex name and the lineage stop at this level. 
         By this way, species are gathered in complex.  
         """        
-        t0 = time.time()
-        with FillingSquaresBar('Assembling taxon by complex ', max= len(self.seq_dict)) as bar:
-            for access_nb in self.access_dict:
-                lineage = self.get_lineage(access_nb)
-                if lineage.split("; ")[-2].split(" ")[-1] in {"complex","group"}:
-                    taxon = ""
-                    if lineage.split("; ")[-2].split(" ")[0] == "unclassified":
-                        taxon = lineage.split("; ")[-2].split(" ")[1:3]
-                        taxon.append("complex")
-                        taxon = "_".join(taxon)
-                        lineage = "; ".join(lineage.split("; ")[:-3])+"; "
-                    else:
-                        taxon = lineage.split("; ")[-2].split(" ")[:2]
-                        taxon.append("complex")
-                        taxon = "_".join(taxon)
-                        lineage = "; ".join(lineage.split("; ")[:-2])+"; "
-                    self.access_dict[access_nb]["taxon"] = taxon
-                    self.access_dict[access_nb]["lineage"] = lineage
-                bar.next()
-            self.__update_data()
-            t1 = time.time()
-            print("\n   ==> Taxon assembled by complex in %f seconds."%(t1 - t0))  
+        self.access_dict = filter.group_by_complex(self)
+        self.__update_data()
 
-#########   EXPORT  ######### 
+#######################################################################################################################
+#################         EXPORT         ##############################################################################
+#######################################################################################################################
 
     def export_tax_id_txt(self, output_file_name, separator):
         """Export the Taxonomic Table for Qiime2. Col1 with accession number and 
