@@ -1,9 +1,6 @@
 import time
 from progress.bar import FillingSquaresBar
-from progress.spinner import PixelSpinner
 from pydna.dseqrecord import Dseqrecord
-
-
 
 def del_redund_seq_tax(Database):
     """Remove all the redundant sequence by taxon. All the sequences are compared two by two in each group of taxon only, 
@@ -47,7 +44,6 @@ def del_redund_seq_glob(Database):
         print("\n   ==> Deletion done in %f seconds."%(t1 - t0))
         return temp_seq_dict
 
-
 def del_na_amplicons(Database):
     """Remove all the sequences which have no amplicon ('NA').
     """        
@@ -61,7 +57,6 @@ def del_na_amplicons(Database):
         t1 = time.time()
         print("\n   ==> Deletion done in %f seconds."%(t1 - t0))
         return temp_seq_dict
-
 
 def del_redund_ampli_glob(Database):
     """Remove all the redundant amplicons globaly. All the amplicons are compared two by two, 
@@ -80,8 +75,6 @@ def del_redund_ampli_glob(Database):
         print("\n   ==> Deletion done in %f seconds."%(t1 - t0))
         return seq_dict
     
-
-
 def del_redund_ampli_tax(Database):
     """Remove all the redundant amplicons by taxon. All the amplicons are compared two by two in each group of taxon only, 
     if they are 100% identical one of them is removed.
@@ -102,5 +95,3 @@ def del_redund_ampli_tax(Database):
         t1 = time.time()
         print("\n   ==> Deletion done in %f seconds."%(t1 - t0))
         return seq_dict
-
-
