@@ -51,6 +51,7 @@ class Database:
 
     def import_db(self, database_json):
         db = utils.open_from_json(database_json)
+        self.file_name = database_json.rstrip(".json")
         self.access_dict = db
         self.seq_dict = {}
         for access_nb in self.access_dict:
@@ -127,11 +128,9 @@ class Database:
             integer: The maximum sequence length
         """        
         max_len = 0
-        final = ""
         for access_nb in self.access_dict:
             if len(self.access_dict[access_nb]["sequence"]) > max_len:
                 max_len = len(self.access_dict[access_nb]["sequence"])
-                final = access_nb
         return max_len
     
     def __min_seq_len(self):
