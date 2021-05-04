@@ -128,3 +128,31 @@ def clean_dataset(Database, wanted_genus1, wanted_genus2, unverified_bool):
             t1 = time.time()
             print("\n   ==> Dataset cleaned in %f seconds."%(t1 - t0))
             return temp_dict
+
+def group_by_complex(self):
+    """Change the lineage and taxon of all species which are in a species complex.
+    The taxon name become the complex name and the lineage stop at this level. 
+    By this way, species are gathered in complex.  
+    """        
+    t0 = time.time()
+    with FillingSquaresBar('Assembling taxon by complex ', max= len(self.seq_dict)) as bar:
+        for access_nb in self.access_dict:
+            lineage = self.get_lineage(access_nb)
+            if lineage.split("; ")[-2].split(" ")[-1] in {"complex","group"}:
+                taxon = ""
+                if lineage.split("; ")[-2].split(" ")[0] == "unclassified":
+                    taxon = lineage.split("; ")[-2].split(" ")[1:3]
+                    taxon.append("complex")
+                    taxon = "_".join(taxon)
+                    lineage = "; ".join(lineage.split("; ")[:-3])+"; "
+                else:
+                    taxon = lineage.split("; ")[-2].split(" ")[:2]
+                    taxon.append("complex")
+                    taxon = "_".join(taxon)
+                    lineage = "; ".join(lineage.split("; ")[:-2])+"; "
+                self.access_dict[access_nb]["taxon"] = taxon
+                self.access_dict[access_nb]["lineage"] = lineage
+            bar.next()
+        t1 = time.time()
+        print("\n   ==> Taxon assembled by complex in %f seconds."%(t1 - t0))  
+        return self.access_dict
