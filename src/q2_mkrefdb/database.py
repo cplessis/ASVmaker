@@ -49,7 +49,14 @@ class Database:
 
     def import_db(self, database_json):
         db = utils.open_from_json(database_json)
-        self.file_name = database_json.rstrip(".json")
+        self.file_name = db["infos"]["file_name"]
+        self.origin_database = db["infos"]["origin_db"]
+        self.fw_mismatch_tol = db["infos"]["fw_mis_tol"]
+        self.rv_mismatch_tol = db["infos"]["rv_mis_tol"]
+        self.trim_primers = db["infos"]["trim_prim"]
+        self.forward_primer_list = db["infos"]["fw_prim"]
+        self.reverse_primer_list = db["infos"]["rv_prim"]
+        db.pop("infos")
         self.access_dict = db
         self.seq_dict = {}
         for access_nb in self.access_dict:
@@ -678,6 +685,14 @@ class Database:
 
         Args:
             output_file_name (string): path to output file
-        """        
+        """
+        self.access_dict["infos"] = {
+            "file_name":self.file_name,
+            "origin_db":self.origin_database,
+            "fw_mis_tol":self.fw_mismatch_tol,
+            "rv_mis_tol":self.rv_mismatch_tol,
+            "trim_prim":self.trim_primers,
+            "fw_prim":self.forward_primer_list,
+            "rv_prim":self.reverse_primer_list}      
         utils.save_as_json(self.access_dict, output_file_name)
         print("   ==> Access_dict successfully exported.")
