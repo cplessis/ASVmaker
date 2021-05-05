@@ -646,39 +646,6 @@ class Database:
         utils.export_list_csv(self.__modified_taxon, output_file_name)
         print("   ==> Modified taxon list successfully exported.")
 
-    def export_homologous_dict(self, output_file_name):
-        """WARNING : This function is not well working. This require a lot ot time to 
-        to run and require a very stable internet connexion to avoid any trouble. 
-
-        Export a list of accession number from NCBI 'nt' which have 100% of similarity with
-        the final amplicons in our database and are not the same species. 
-        This function can be use for database validation. 
-
-        Args:
-            output_file_name (string): path to output file 
-        """        
-        t0 = time.time()
-        sequences = random.sample(list(self.access_dict), 30)
-        print(sequences)
-        homologous = {"GENUS":"ACCESSESSION: HomologousAccession_HomologousGenus"}
-        with FillingSquaresBar('Getting Blast result from NCBI servers ', max= len(sequences)) as bar: 
-            for access_nb in sequences:
-                print(self.access_dict[access_nb]["amplicon"])
-                result_handle = NCBIWWW.qblast("blastn", "nt", self.access_dict[access_nb]["amplicon"])
-                blast_record = NCBIXML.read(result_handle)
-                genus = self.get_genus(access_nb)
-                homologous[genus] = {}
-                for blast in blast_record.descriptions:
-                    if genus not in set(blast.title.split()):
-                        try: homologous[genus][access_nb].append(blast.accession+"_"+blast.title.split()[1])
-                        except:
-                            homologous[genus][access_nb] = blast.accession+"_"+blast.title.split()[1]
-                bar.next
-        t1 = time.time()
-        print("\n   ==> Blast the sequences in %f seconds."%(t1 - t0))
-        utils.export_dict_csv(homologous, output_file_name, "  ==>  ")
-        print("   ==> Interspecies out of selection amplicons dict successfully exported.")
-
     def export_access_dict(self, output_file_name):
         """Export the access_dict with all the informations of the data to JSON format.
         WARNING : You must write the file extension as '.json' to avoir Errors.
