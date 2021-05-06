@@ -274,7 +274,7 @@ if action_type == "create":
     
 
 # Initiate if the FILTER or EXPORT subparser is called
-if action_type in ["filter", "export"]:
+if action_type in ["filter", "export", "edit"]:
     data.import_db(args.database_json)
     write_db_infos(data)
     output_saver.write(data.get_info("init data")+"\n")
