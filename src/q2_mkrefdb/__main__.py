@@ -1,4 +1,5 @@
 import argparse, sys, getpass, datetime, platform
+from edit import group_by_id
 from . import database as db
 from . import utils
 
@@ -11,6 +12,7 @@ def get_arguments():
     subparser_create = subparsers.add_parser("create")
     subparser_filter = subparsers.add_parser("filter")
     subparser_export = subparsers.add_parser("export")
+    subparser_edit = subparsers.add_parser("edit")
     
     #---------------------------------------------------
     #                  CREATE
@@ -113,7 +115,7 @@ def get_arguments():
     subparser_filter.add_argument('-o',
                           '--output_database_json',
                           help="File name of the access dictionnary JSON output.",
-                          default="database.json")
+                          required=True)
     subparser_filter.add_argument('-inf',
                           '--infos_file',
                           help="Informations file in which all the files treatments are recorded.",
@@ -124,7 +126,7 @@ def get_arguments():
                           action = 'store_true',
                           default=False)
     #---------------------------------------------------
-    #                Export
+    #                EXPORT
     #---------------------------------------------------
     subparser_export.add_argument('-i',
                           '--database_json',
@@ -171,7 +173,41 @@ def get_arguments():
                           help="Display information file in terminal if arg is specified.",
                           action = 'store_true',
                           default=False)
-    
+    #---------------------------------------------------
+    #                EDIT
+    #---------------------------------------------------
+    subparser_edit.add_argument('-i',
+                          '--database_json',
+                          help="Path to the database JSON file to treat.",
+                          required=True)
+    subparser_edit.add_argument('-rm',
+                          '--remove',
+                          help="Path to the database JSON file to treat.",
+                          default=None)
+    subparser_edit.add_argument('-mv',
+                          '--rename',
+                          help="Path to the database JSON file to treat.",
+                          default=None)
+    subparser_edit.add_argument('-grp',
+                          '--group',
+                          help="Path to the database JSON file to treat.",
+                          default=None)
+    subparser_edit.add_argument('-o',
+                          '--output_database_json',
+                          help="File name of the access dictionnary JSON output.",
+                          required=True)
+    subparser_edit.add_argument('-inf',
+                          '--infos_file',
+                          help="Informations file in which all the files treatments are recorded.",
+                          default=None)
+    subparser_edit.add_argument('-dit',
+                          '--displ_inf_terminal',
+                          help="Display information file in terminal if arg is specified.",
+                          action = 'store_true',
+                          default=False)
+
+
+
     args = parser.parse_args()
     return args
 
@@ -183,6 +219,7 @@ action_type = ""
 if "source_database" in args_dict: action_type = "create"
 if "genus1" in args_dict: action_type = "filter"
 if "seq_variants_output" in args_dict: action_type = "export"
+if "remove" in args_dict: action_type = "edit"
 
 print("\n\n\n\
 =============================================================================================\n\
@@ -234,6 +271,8 @@ if action_type == "create":
         args.fw_mismatch_tol, args.rv_mismatch_tol, args.trim_primers)
     write_db_infos(data)
     output_saver.write(data.get_info("init data")+"\n")
+    modified_tax_output = args.modified_tax_output
+    
 
 # Initiate if the FILTER or EXPORT subparser is called
 if action_type in ["filter", "export"]:
@@ -241,12 +280,11 @@ if action_type in ["filter", "export"]:
     write_db_infos(data)
     output_saver.write(data.get_info("init data")+"\n")
 
-
-output_saver.write("\n\n\n\
+if action_type == "filter":
+    output_saver.write("\n\n\n\
 =============================================================================================\n\
 =========                            Filter Informations                            =========\n\
 =============================================================================================\n")
-if action_type == "filter":
     print("\n\n\n\
 ------------------------------------\n\
                 FILTER              \n\
@@ -314,9 +352,6 @@ if action_type == "filter":
         output_saver.write(data.get_info("after deleting redundant amplicons")+"\n")
 
 
-
-
-
 output_saver.write("\n\n\n\
 =============================================================================================\n\
 =========                            Export Informations                            =========\n\
@@ -377,14 +412,38 @@ if action_type == "export":
             as '%s'.\n"%complex_dict_output)
         data.export_complex_dict(complex_dict_output, "\t")
 
+if action_type == "edit":
+    output_saver.write("\n\n\n\
+=============================================================================================\n\
+=========                            Edit Informations                              =========\n\
+=============================================================================================\n")
+    print("\n\n\n\
+------------------------------------\n\
+                EDIT                \n\
+------------------------------------\n")
+    remove = args.remove
+    rename = args.rename
+    group = args.group
+    if remove:
+        output_saver.write("* Sequences inside '%s' have been removed from DATABASE.\n"%remove)
+        data.remove_by_id(remove)
+    if rename:
+        output_saver.write("* Sequences inside '%s' have been renamed within DATABASE.\n"%rename)
+        data.rename_by_id(rename)
+    if group:
+        output_saver.write("* Sequences inside '%s' have been grouped within DATABASE.\n"%group)
+        data.group_by_id(group)
+
+#---------------------------------------------------
+#                END
+#---------------------------------------------------
 if action_type == "create":
-    modified_tax_output = args.modified_tax_output
     if modified_tax_output:
         output_saver.write("* You have decided to 'EXPORT' your MODIFIED TAX LIST file \
             as '%s'.\n"%modified_tax_output)
         data.export_modified_tax(modified_tax_output)
 
-if action_type in ["create", "filter"]:
+if action_type in ["create", "filter", "edit"]:
     output_database_json = args.output_database_json
     output_saver.write("* DATABASE JSON file exported \
         as '%s'.\n"%output_database_json)
