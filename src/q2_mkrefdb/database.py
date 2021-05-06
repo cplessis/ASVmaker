@@ -619,7 +619,7 @@ class Database:
                 amplicon_file.write(">"+access_nb+"\n"+self.get_amplicon(access_nb)+"\n")
         print("   ==> Amplicon FASTA file susccessfully exported.")
 
-    def export_shared_ampli(self, output_file_name):
+    def export_shared_ampli(self, output_file_name, threshold):
         """Export a file with all the accession number which have an identical amplicon.
         Each interaction is represented as 'accession_specie1 <=> accession_specie2'.
         The symbol '<=>' means there a common amplicon between the two sequences. 
@@ -627,7 +627,7 @@ class Database:
         Args:
             output_file_name (string): path to the output file
         """
-        sa_ampli = self.get_shared_amplicons(5)
+        sa_ampli = self.get_shared_amplicons(threshold)
         utils.export_list_csv(sa_ampli[0], output_file_name)
         utils.export_dict_csv2(sa_ampli[1], "_ext.".join(output_file_name.rsplit(".", 1)), "\t")        
         print("   ==> Shared amplicons list successfully exported.")
