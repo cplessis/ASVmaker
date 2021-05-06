@@ -1,5 +1,4 @@
 import argparse, sys, getpass, datetime, platform
-from edit import group_by_id
 from . import database as db
 from . import utils
 
