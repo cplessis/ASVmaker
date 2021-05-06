@@ -1,11 +1,9 @@
-import re, time, random
-from . import utils, filter, lineage, stats
+import re, time
+from . import utils, filter, lineage, stats, edit
 from .pcr import amplify
 from progress.bar import FillingSquaresBar
 from progress.spinner import PixelSpinner
 from Bio import Entrez
-from Bio.Blast import NCBIWWW
-from Bio.Blast import NCBIXML
 
 #######################################################################################################################
 #################     CLASS Database     ##############################################################################
@@ -311,7 +309,7 @@ class Database:
         "Maximum amplicons length : "+str(stats.max_amplicon_len(self))+"\n"+\
         "Minimum amplicons length : "+str(stats.min_amplicon_len(self))+"\n"+\
         "Mean amplicons length : "+str(stats.mean_amplicon_len(self))+"\n"+\
-        "Number of redundant amplicons : "+str(len(self.get_shared_amplicons()))+"\n"+\
+        "Number of redundant amplicons : "+str(len(self.get_shared_amplicons(5)[0]))+"\n"+\
         "****************************************\n"
         return message
 
@@ -409,14 +407,19 @@ class Database:
                 na_amplicon_dict[access_nb] = self.get_taxon(access_nb)
         return na_amplicon_dict
 
-    def get_shared_amplicons(self):
+    def get_shared_amplicons(self, threshold):
         """Get a list of all the sequences which have an identical amplicon.
+
+        Args:
+            threshold (int): Threshold number od sequences with the same amplicon.
 
         Returns:
             list: list of strings which describes sequences with shared amplicon
         """        
         shared_ampli_list = []
         checked_sequences = {}
+        sa_number = 0
+        sa_dict = {}
         for access_nb in self.access_dict:
             amplicon = self.get_amplicon(access_nb)
             if  amplicon not in checked_sequences:
@@ -424,12 +427,17 @@ class Database:
             else:
                 checked_sequences[amplicon].add(access_nb)
         for amplicon in checked_sequences:
-            if len(checked_sequences[amplicon]) > 1:
+            if threshold > len(checked_sequences[amplicon]) > 1:
                 shared_amplicon = ""
                 for access_nb in checked_sequences[amplicon]:
-                    shared_amplicon += access_nb+"_"+self.get_taxon(access_nb)+"  <==>  "
+                    shared_amplicon += access_nb+"_"+self.get_taxon(access_nb)+"  <--->  "
                 shared_ampli_list.append(shared_amplicon)
-        return shared_ampli_list
+            elif len(checked_sequences[amplicon]) > threshold:
+                sa_number += 1 
+                sa_id = "SA"+str(sa_number)
+                shared_ampli_list.append(sa_id)
+                sa_dict[sa_id] = checked_sequences[amplicon]
+        return shared_ampli_list, sa_dict
 
     def get_lineage(self, access_number):
         """Get the lineage related to the accession number.
@@ -618,8 +626,10 @@ class Database:
 
         Args:
             output_file_name (string): path to the output file
-        """        
-        utils.export_list_csv(self.get_shared_amplicons(), output_file_name)
+        """
+        sa_ampli = self.get_shared_amplicons(5)
+        utils.export_list_csv(sa_ampli[0], output_file_name)
+        utils.export_dict_csv2(sa_ampli[1], "_ext.".join(output_file_name.rsplit(".", 1)), "\t")        
         print("   ==> Shared amplicons list successfully exported.")
     
     def export_complex_dict(self, outputfile_name, separator):
@@ -663,3 +673,43 @@ class Database:
             "rv_prim":self.reverse_primer_list}      
         utils.save_as_json(self.access_dict, output_file_name)
         print("   ==> Access_dict successfully exported.")
+
+
+
+#######################################################################################################################
+#################         EDIT           ##############################################################################
+#######################################################################################################################
+
+    def remove_by_id(self, id_list_csv):
+        """Remove all the sequences with IDs on id_list_csv.
+        The id_list_csv FILE must be as one line = 'seq_id'. 
+
+        Args:
+            id_list_csv (str): ID list CSV or TXT file
+        """        
+        self.seq_dict = edit.remove_by_id(self, id_list_csv)
+        self.__update_data()
+
+    def rename_by_id(self, id_list_csv):
+        """Rename all the sequences with IDs on id_list_csv.
+        The id_list_csv FILE must be as one line = 'seq_id   new_taxon_name'. 
+
+        Args:
+            id_list_csv (str): ID list CSV or TXT file
+        """ 
+        self.access_dict = edit.rename_by_id(self, id_list_csv)
+        self.__update_data()
+
+    def group_by_id(self, shared_ext_csv):
+        """Group all the sequences with IDs on shared_ext_csv on a commune taxon name.
+        The taxon name will become the SA_id of the group. Only one amplicon will represent
+        the group after this command is runned. The shared_ext_csv FILE must be the one
+        generated with EXPORT shared ampl.
+
+        Args:
+            shared_ext_csv (str): shared_ext FILE generated with EXPORT shared ampl.
+        """ 
+        group = edit.group_by_id(self, shared_ext_csv)
+        self.access_dict = group[0]
+        self.seq_dict = group[1]
+        self.__update_data()
