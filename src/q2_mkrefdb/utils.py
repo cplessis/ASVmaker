@@ -11,9 +11,19 @@ def open_from_json(file_json):
 	return saved_variable
 
 def export_dict_csv(wanted_dict, output_file_name, separator):
+    """Dictionnary as :   'key : x' """
     with open(output_file_name, "w") as output_file:
         for key in wanted_dict:
             output_file.write(key+separator+str(wanted_dict[key])+"\n")
+
+def export_dict_csv2(wanted_dict, output_file_name, separator):
+    """Dictionnary as :   'key : {x, y, z}' """
+    with open(output_file_name, "w") as output_file:
+        for key in wanted_dict:
+            line = key
+            for subkey in wanted_dict[key]:
+                line += separator+subkey
+            output_file.write(line+"\n")
 
 def export_list_csv(wanted_list, output_file_name):
     with open(output_file_name, "w") as output_file:
