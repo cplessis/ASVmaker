@@ -157,7 +157,10 @@ def get_arguments():
                           default=None)
     subparser_export.add_argument('-sao',
                           '--shared_ampl_output',
-                          help="File name of the shared amplicons TXT output.",
+                          help=""""File name of the shared amplicons TXT output.
+                          And the threshold number of sequences sharing an amplicon.
+                          Example : -sao myfile 5""",
+                          nargs=2,
                           default=None)
     subparser_export.add_argument('-cdo',
                           '--complex_dict_output',
@@ -350,6 +353,30 @@ if action_type == "filter":
         output_saver.write("* 'REDUNDANT AMPLICONS' have been removed by 'TAXON'.\n")
         output_saver.write(data.get_info("after deleting redundant amplicons")+"\n")
 
+if action_type == "edit":
+    output_saver.write("\n\n\n\
+=============================================================================================\n\
+=========                            Edit Informations                              =========\n\
+=============================================================================================\n")
+    print("\n\n\n\
+------------------------------------\n\
+                EDIT                \n\
+------------------------------------\n")
+    remove = args.remove
+    rename = args.rename
+    group = args.group
+    if remove:
+        output_saver.write("* Sequences inside '%s' have been removed from DATABASE.\n"%remove)
+        data.remove_by_id(remove)
+        output_saver.write(data.get_info("removed sequences from %s"%remove)+"\n")
+    if rename:
+        output_saver.write("* Sequences inside '%s' have been renamed within DATABASE.\n"%rename)
+        data.rename_by_id(rename)
+        output_saver.write(data.get_info("renamed sequences from %s"%rename)+"\n")
+    if group:
+        output_saver.write("* Sequences inside '%s' have been grouped within DATABASE.\n"%group)
+        data.group_by_id(group)
+        output_saver.write(data.get_info("Grouped sequences from %s"%group)+"\n")
 
 output_saver.write("\n\n\n\
 =============================================================================================\n\
@@ -403,35 +430,15 @@ if action_type == "export":
 
     if shared_ampl_output:
         output_saver.write("* You have decided to 'EXPORT' your SHARED AMPLICONS file \
-            as '%s'.\n"%shared_ampl_output)
-        data.export_shared_ampli(shared_ampl_output)
+            as '%s'.\n"%shared_ampl_output[0])
+        data.export_shared_ampli(shared_ampl_output[0], int(shared_ampl_output[1]))
 
     if complex_dict_output:
         output_saver.write("* You have decided to 'EXPORT' your COMPLEX DICT file \
             as '%s'.\n"%complex_dict_output)
         data.export_complex_dict(complex_dict_output, "\t")
 
-if action_type == "edit":
-    output_saver.write("\n\n\n\
-=============================================================================================\n\
-=========                            Edit Informations                              =========\n\
-=============================================================================================\n")
-    print("\n\n\n\
-------------------------------------\n\
-                EDIT                \n\
-------------------------------------\n")
-    remove = args.remove
-    rename = args.rename
-    group = args.group
-    if remove:
-        output_saver.write("* Sequences inside '%s' have been removed from DATABASE.\n"%remove)
-        data.remove_by_id(remove)
-    if rename:
-        output_saver.write("* Sequences inside '%s' have been renamed within DATABASE.\n"%rename)
-        data.rename_by_id(rename)
-    if group:
-        output_saver.write("* Sequences inside '%s' have been grouped within DATABASE.\n"%group)
-        data.group_by_id(group)
+
 
 #---------------------------------------------------
 #                END
@@ -444,8 +451,7 @@ if action_type == "create":
 
 if action_type in ["create", "filter", "edit"]:
     output_database_json = args.output_database_json
-    output_saver.write("* DATABASE JSON file exported \
-        as '%s'.\n"%output_database_json)
+    output_saver.write("* DATABASE JSON file exported as '%s'.\n"%output_database_json)
     data.export_access_dict(output_database_json)
 
 if infos_file:
