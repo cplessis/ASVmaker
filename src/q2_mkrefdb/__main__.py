@@ -404,9 +404,9 @@ if action_type == "export":
         data.export_seq_fasta(seq_variants_output, "qiime")
 
     if seq_output_phylo:
-        output_saver.write("* You have decided to 'EXPORT' your ncbi format SEQUENCES VARIANTS \
+        output_saver.write("* SEQUENCES exported to PHYLO FASTA format \
             as %s.\n"%seq_output_phylo)
-        data.export_seq_fasta(seq_output_phylo, "ncbi")
+        data.export_seq_fasta(seq_output_phylo, "phylo")
 
     if amplicons_output:
         output_saver.write("* You have decided to 'EXPORT' your qiime format AMPLICONS \

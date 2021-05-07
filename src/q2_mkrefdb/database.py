@@ -541,7 +541,8 @@ class Database:
         """        
         if fasta_type == "qiime": self.__seq_qiime_fasta(output_file_name)
         elif fasta_type == "ncbi": self.__seq_ncbi_fasta(output_file_name)
-        else: print("Please reload this function with 'qiime' or 'ncbi' argument.")
+        elif fasta_type == "phylo": self.__seq_phylo_fasta(output_file_name)
+        else: print("Please reload this function with 'qiime', 'ncbi' or 'phylo' argument.")
   
     def __seq_ncbi_fasta(self, output_file_name):
         """Called by export_seq_fasta if 'ncbi' is specified.
@@ -568,6 +569,19 @@ class Database:
         with open(output_file_name, "w") as fasta_file:
             for access_nb in self.access_dict:
                 fasta_file.write(">"+access_nb+"\n"+self.get_sequence(access_nb)+"\n")
+        print("   ==> Sequences variants FASTA file susccessfully exported.")
+    
+    def __seq_phylo_fasta(self, output_file_name):
+        """Called by export_seq_fasta if 'phylo' is specified.
+        This function makes the file.
+
+        Args:
+            output_file_name (string): path to output file
+        """        
+        with open(output_file_name, "w") as fasta_file:
+            for access_nb in self.access_dict:
+                fasta_file.write(">"+access_nb+"_"+self.get_taxon(access_nb)+"\n"+\
+                    self.get_sequence(access_nb)+"\n")
         print("   ==> Sequences variants FASTA file susccessfully exported.")
         
     def export_taxon_list(self, output_file_name):
