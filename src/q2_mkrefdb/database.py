@@ -607,6 +607,7 @@ class Database:
         """        
         if fasta_type == "qiime": self.__ampli_qiime_fasta(output_file_name)
         elif fasta_type == "ncbi": self.__ampli_ncbi_fasta(output_file_name)
+        elif fasta_type == "phylo": self.__ampli_phylo_fasta(output_file_name)
         else: print("Please reload this function with 'qiime' or 'ncbi' argument.")
 
     def __ampli_ncbi_fasta(self, output_file_name):
@@ -634,6 +635,19 @@ class Database:
         with open(output_file_name, "w") as amplicon_file:
             for access_nb in self.access_dict:
                 amplicon_file.write(">"+access_nb+"\n"+self.get_amplicon(access_nb)+"\n")
+        print("   ==> Amplicon FASTA file susccessfully exported.")
+    
+    def __ampli_phylo_fasta(self, output_file_name):
+        """Called by export_ampli_fasta if 'phylo' is specified.
+        This function makes the file.
+
+        Args:
+            output_file_name (string): path to output file
+        """        
+        with open(output_file_name, "w") as amplicon_file:
+            for access_nb in self.access_dict:
+                amplicon_file.write(">"+access_nb+"_"+self.get_taxon(access_nb)+"\n"+\
+                    self.get_amplicon(access_nb)+"\n")
         print("   ==> Amplicon FASTA file susccessfully exported.")
 
     def export_shared_ampli(self, output_file_name, threshold):

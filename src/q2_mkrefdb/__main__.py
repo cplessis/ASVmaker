@@ -414,9 +414,9 @@ if action_type == "export":
         data.export_ampli_fasta(amplicons_output, "qiime")
 
     if ampl_output_phylo:
-        output_saver.write("* You have decided to 'EXPORT' your ncbi format AMPLICONS \
+        output_saver.write("* AMPLICONS exported to PHYLO FASTA format \
             as %s.\n"%ampl_output_phylo)
-        data.export_ampli_fasta(ampl_output_phylo, "ncbi")
+        data.export_ampli_fasta(ampl_output_phylo, "phylo")
 
     if taxonomy_output:
         output_saver.write("* You have decided to 'EXPORT' your TAXONOMY file \
