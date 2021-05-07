@@ -57,10 +57,10 @@ def del_na_amplicons(Database):
         t1 = time.time()
         print("\n   ==> Deletion done in %f seconds."%(t1 - t0))
         if len(temp_seq_dict) == 0: 
-                print("\n!! WARNING !! No amplicons have been generated from the database.\n\
-                Please check your PRIMERS parameters and sequences and CREATE a NEW database.\n\n\
-                    ==> STOPPED the PROGRAM before END.")
-                exit()
+            print("\n!! WARNING !! No amplicons have been generated from the database.\n\
+            Please check your PRIMERS parameters and sequences and CREATE a NEW database.\n\n\
+                ==> STOPPED the PROGRAM before END.")
+            exit()
         return temp_seq_dict
 
 def del_redund_ampli_glob(Database):
