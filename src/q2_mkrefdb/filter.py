@@ -127,6 +127,11 @@ def clean_dataset(Database, wanted_genus1, wanted_genus2, unverified_bool):
                 bar.next()            
             t1 = time.time()
             print("\n   ==> Dataset cleaned in %f seconds."%(t1 - t0))
+            if len(temp_dict) == 0: 
+                print("\n!! WARNING !! After cleaning the database there is no sequence left.\n\
+                Please check your GENUS parameter and run the command again.\n\n\
+                    ==> STOPPED the PROGRAM before END.")
+                exit()
             return temp_dict
 
 def group_by_complex(self):
