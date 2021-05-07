@@ -43,6 +43,7 @@ class Database:
         self.__make_amplicon_dict()
         self.__make_lineage_dict()
         self.complex_dict = self.__make_complex_dict()
+        self.sa_threshold = 1000
         return
 
     def import_db(self, database_json):
@@ -54,6 +55,7 @@ class Database:
         self.trim_primers = db["infos"]["trim_prim"]
         self.forward_primer_list = db["infos"]["fw_prim"]
         self.reverse_primer_list = db["infos"]["rv_prim"]
+        self.sa_threshold = db["infos"]["sa_threshold"]
         db.pop("infos")
         self.access_dict = db
         self.seq_dict = {}
@@ -309,7 +311,7 @@ class Database:
         "Maximum amplicons length : "+str(stats.max_amplicon_len(self))+"\n"+\
         "Minimum amplicons length : "+str(stats.min_amplicon_len(self))+"\n"+\
         "Mean amplicons length : "+str(stats.mean_amplicon_len(self))+"\n"+\
-        "Number of redundant amplicons : "+str(len(self.get_shared_amplicons(5)[0]))+"\n"+\
+        "Number of redundant amplicons : "+str(len(self.get_shared_amplicons(self.sa_threshold)[0]))+"\n"+\
         "****************************************\n"
         return message
 
@@ -420,6 +422,7 @@ class Database:
         checked_sequences = {}
         sa_number = 0
         sa_dict = {}
+        self.sa_threshold = threshold
         for access_nb in self.access_dict:
             amplicon = self.get_amplicon(access_nb)
             if  amplicon not in checked_sequences:
@@ -670,7 +673,8 @@ class Database:
             "rv_mis_tol":self.rv_mismatch_tol,
             "trim_prim":self.trim_primers,
             "fw_prim":self.forward_primer_list,
-            "rv_prim":self.reverse_primer_list}      
+            "rv_prim":self.reverse_primer_list,
+            "sa_threshold":self.sa_threshold}     
         utils.save_as_json(self.access_dict, output_file_name)
         print("   ==> Access_dict successfully exported.")
 
