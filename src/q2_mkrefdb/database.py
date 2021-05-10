@@ -203,8 +203,8 @@ class Database:
             if 'ORGANISM' in line :
                 self.access_dict[access_nb]["taxon"] = "_".join(line.split()[1:])
                 url = "https://www.ebi.ac.uk/ena/taxonomy/rest/scientific-name/"+"%20".join(line.split()[1:])
-        try: return utils.get_var_from_url(url, "json")[0]['lineage']
-        except: return "NA"
+                try: return utils.get_var_from_url(url, "json")[0]['lineage']
+                except: return "NA"
 
     def __make_complex_dict(self):
         """Create the complex dictionnary from the lineage informations.
