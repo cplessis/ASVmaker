@@ -592,7 +592,7 @@ class Database:
         """        
         taxon_list = []
         for taxon in self.taxon_dict:
-            taxon_list.append(taxon) 
+            taxon_list.append(taxon+"\t"+str(len(self.taxon_dict[taxon]))) 
         utils.export_list_csv(sorted(taxon_list), output_file_name)
         print("   ==> Taxon list susccessfully exported.")
 
