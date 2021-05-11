@@ -1,5 +1,4 @@
 from . import utils
-import q2_mkrefdb.database as database
 
 def phylo_annotation(Database, output_file):
     with open(output_file, "w") as file:
