@@ -1,4 +1,3 @@
-from os import sep
 import re, time
 from . import utils, filter, lineage, stats, edit, export
 from .pcr import amplify
