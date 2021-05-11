@@ -72,4 +72,6 @@ def get_var_from_url(url, var_type):
 
 # COLORS
 def random_color():
+    """Return a random tuple RGB (r, g, b) as (10, 235, 53) for example.
+    """
     return tuple([random.choice(range(256)), random.choice(range(256)), random.choice(range(256))])
