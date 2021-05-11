@@ -1,4 +1,4 @@
-import json, sys, os, urllib.request
+import json, sys, os, urllib.request, random
 from pathlib import Path
 
 def save_as_json(variable, file_json):
@@ -69,3 +69,7 @@ def get_var_from_url(url, var_type):
     with urllib.request.urlopen(url) as response:
         var = binary_to_variable(response.read(), var_type)
         return var
+
+# COLORS
+def random_color():
+    return tuple([random.choice(range(256)), random.choice(range(256)), random.choice(range(256))])
