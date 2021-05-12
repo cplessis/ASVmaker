@@ -40,6 +40,7 @@ class Database:
         self.seq_dict = self.__get_seq_from_fasta(fasta_file, True)
         self.access_dict = self.__make_access_dict()
         self.taxon_dict = self.__make_taxon_dict()
+        self.modified_taxon = set()
         self.__make_amplicon_dict()
         self.__make_lineage_dict()
         self.complex_dict = self.__make_complex_dict()
@@ -147,7 +148,6 @@ class Database:
         with FillingSquaresBar('Getting species lineages from EBI taxonomy online ressources ', \
             max= len(self.taxon_dict)) as bar:
                 t0 = time.time()  
-                self.__modified_taxon = set()
                 for taxon in self.taxon_dict:
                     name_list = taxon.split("_")
                     self.__get_lineage_norm(taxon, name_list)
@@ -171,16 +171,16 @@ class Database:
         if (taxon[-1] == ".") & (lineage == "NA"): 
             for access_nb in self.taxon_dict[taxon]:
                 lineage = self.__complete_lineage(access_nb, url)
-                if str(taxon+" => "+self.get_taxon(access_nb)) not in self.__modified_taxon:
-                    self.__modified_taxon.add(taxon+" => "+self.get_taxon(access_nb))
+                if str(taxon+" => "+self.get_taxon(access_nb)) not in self.modified_taxon:
+                    self.modified_taxon.add(taxon+" => "+self.get_taxon(access_nb))
                 if lineage == "NA": self.__na_tax_str += (taxon+"\n")
                 self.access_dict[access_nb]["lineage"] = lineage    
         else:
             for access_nb in self.taxon_dict[taxon]:
                 if lineage == "NA": 
                     lineage = self.__complete_lineage(access_nb, url)
-                    if str(taxon+" => "+self.get_taxon(access_nb)) not in self.__modified_taxon:
-                        self.__modified_taxon.add(taxon+" => "+self.get_taxon(access_nb))
+                    if str(taxon+" => "+self.get_taxon(access_nb)) not in self.modified_taxon:
+                        self.modified_taxon.add(taxon+" => "+self.get_taxon(access_nb))
                 if lineage == "NA": self.__na_tax_str += (taxon+"\n")
                 self.access_dict[access_nb]["lineage"] = lineage
 

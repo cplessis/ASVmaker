@@ -184,7 +184,7 @@ def export_modified_tax(self, output_file_name):
         Args:
             output_file_name (string): path to output file
         """        
-        utils.export_list_csv(self.__modified_taxon, output_file_name)
+        utils.export_list_csv(self.modified_taxon, output_file_name)
         print("   ==> Modified taxon list successfully exported.")
 
 def export_access_dict(self, output_file_name):
