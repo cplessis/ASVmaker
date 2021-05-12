@@ -108,19 +108,19 @@ class Database:
         new_seq_dict = dict(self.seq_dict)
         for seq_name in self.seq_dict:
             if re.search("[^ATCGatcg]", self.seq_dict[seq_name]) == None:
-                access_dict[self.__get_access_num(seq_name)] = \
+                access_dict[self.get_access_from_des(seq_name)] = \
                     {"name":seq_name, "sequence":self.seq_dict[seq_name], \
                         "taxon":seq_name.split()[1]+"_"+seq_name.split()[2]}
             else: new_seq_dict.pop(seq_name)
         self.seq_dict = new_seq_dict    
         return access_dict
 
-    def __update_data(self):
+    def update_data(self):
         """Update the information of the class.
         """        
         new_access_dict = {}
         for seq_name in self.seq_dict:
-            access_nb = self.__get_access_num(seq_name)
+            access_nb = self.get_access_from_des(seq_name)
             new_access_dict[access_nb] = self.access_dict[access_nb]
         self.access_dict = new_access_dict
         self.taxon_dict = self.__make_taxon_dict()
@@ -153,7 +153,7 @@ class Database:
                     self.__get_lineage_norm(taxon, name_list)
                     bar.next()
                 if len(self.__na_tax_str) > 0: print("\nThe following taxons have NO lineage : \n", self.__na_tax_str, "\n")
-                self.__update_data()
+                self.update_data()
                 t1 = time.time()
                 print("\n   ==> Got species lineages in %f seconds."%(t1 - t0))
  
@@ -237,9 +237,9 @@ class Database:
 
     def custom_complex(self, groups_file):
         self.access_dict = lineage.custom_group(self, groups_file)
-        self.__update_data()
+        self.update_data()
 
-    def __get_access_num(self, seq_name):
+    def get_access_from_des(self, seq_name):
         """Get the sequence accession number from the seqeunce name.
 
         Args:
@@ -266,9 +266,9 @@ class Database:
             try:
                 amplicon_seq = amplify(sequence, self.forward_primer_list[1], self.reverse_primer_list[1], \
                     self.fw_mismatch_tol, self.rv_mismatch_tol, self.trim_primers)
-                self.access_dict[self.__get_access_num(seq_name)]["amplicon"] = amplicon_seq
+                self.access_dict[self.get_access_from_des(seq_name)]["amplicon"] = amplicon_seq
             except ValueError:
-                self.access_dict[self.__get_access_num(seq_name)]["amplicon"] = "NA"
+                self.access_dict[self.get_access_from_des(seq_name)]["amplicon"] = "NA"
             spinner.next()
 
 #######################################################################################################################
@@ -459,37 +459,37 @@ class Database:
 
     def clean_dataset(self, wanted_genus1, wanted_genus2, unverified_bool):
         self.seq_dict = filter.clean_dataset(self, wanted_genus1, wanted_genus2, unverified_bool)
-        self.__update_data()
+        self.update_data()
     clean_dataset.__doc__ = filter.clean_dataset.__doc__
 
     def del_redund_seq_glob(self):
         self.seq_dict = filter.del_redund_seq_glob(self)
-        self.__update_data()
+        self.update_data()
     del_redund_seq_glob.__doc__ = filter.del_redund_seq_glob.__doc__
 
     def del_redund_seq_tax(self):
         self.seq_dict = filter.del_redund_seq_tax(self)
-        self.__update_data()
+        self.update_data()
     del_redund_seq_tax.__doc__ = filter.del_redund_seq_tax.__doc__
 
     def del_na_amplicons(self):
         self.seq_dict = filter.del_na_amplicons(self)
-        self.__update_data()
+        self.update_data()
     del_na_amplicons.__doc__ = filter.del_na_amplicons.__doc__
 
     def del_redund_ampli_glob(self):
         self.seq_dict = filter.del_redund_ampli_glob(self)
-        self.__update_data()
+        self.update_data()
     del_redund_ampli_glob.__doc__ = filter.del_redund_ampli_glob.__doc__
 
     def del_redund_ampli_tax(self):
         self.seq_dict = filter.del_redund_ampli_tax(self)
-        self.__update_data()
+        self.update_data()
     del_redund_ampli_tax.__doc__ = filter.del_redund_ampli_tax.__doc__
 
     def group_by_complex(self):
         self.access_dict = filter.group_by_complex(self)
-        self.__update_data()
+        self.update_data()
     group_by_complex.__doc__ = filter.group_by_complex.__doc__
 
 #######################################################################################################################
@@ -498,19 +498,19 @@ class Database:
 
     def remove_by_id(self, id_list_csv):        
         self.seq_dict = edit.remove_by_id(self, id_list_csv)
-        self.__update_data()
+        self.update_data()
     remove_by_id.__doc__ = edit.remove_by_id.__doc__
 
     def rename_by_id(self, id_list_csv):
         self.access_dict = edit.rename_by_id(self, id_list_csv)
-        self.__update_data()
+        self.update_data()
     rename_by_id.__doc__ = edit.rename_by_id.__doc__
 
     def group_by_id(self, shared_ext_csv):
         group = edit.group_by_id(self, shared_ext_csv)
         self.access_dict = group[0]
         self.seq_dict = group[1]
-        self.__update_data()
+        self.update_data()
     group_by_id.__doc__ = edit.group_by_id.__doc__
 
 #######################################################################################################################
