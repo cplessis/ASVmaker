@@ -43,6 +43,7 @@ It is mainly intended to be used with command lines with python. However, some m
 ├── LICENSE.txt
 ├── README.md
 ├── pyproject.toml
+├── requirements.txt
 ├── setup.cfg
 ├── src
 │   └── q2_mkrefdb
