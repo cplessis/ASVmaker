@@ -1,21 +1,25 @@
 # Table of contents
 
-
 - [Description](#description)
 - [Project Structure](#project-structure)
 - [Package installation](#package-installation)
-  + [From Python Index (Pypi)](#from-python-index--pypi-)
-  + [Conda environment](#conda-environment)
-  + [Python library directory](#python-library-directory)
+    + [From Python Index (Pypi)](#from-python-index--pypi-)
+    + [Conda environment](#conda-environment)
+    + [Python library directory](#python-library-directory)
 - [Command lines](#command-lines)
-  + [Calling the package](#calling-the-package)
-  + [Required parameters](#required-parameters)
-  + [Optionals parameters](#optionals-parameters)
-    + [Filtration](#filtration)
-    + [Export](#export)
+  * [CREATE](#create)
+    + [Required](#required)
+    + [Optional](#optional)
+  * [FILTER](#filter)
+    + [Required](#required-1)
+    + [Optional](#optional-1)
+  * [EDIT](#edit)
+    + [Required](#required-2)
+    + [Optional](#optional-2)
+  * [EXPORT](#export)
+    + [Required](#required-3)
+    + [Optional](#optional-3)
 - [Module for import usage](#module-for-import-usage)
-
-
 
 # Description
 
