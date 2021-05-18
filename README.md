@@ -44,8 +44,13 @@ It is mainly intended to be used with command lines with python. However, some m
 │   └── q2_mkrefdb
 │       ├── __init__.py
 │       ├── __main__.py
-│       ├── fastafilter.py
+│       ├── database.py
+│       ├── edit.py
+│       ├── filter.py
+│       ├── lineage.py
+│       ├── merge.py
 │       ├── pcr.py
+│       ├── stats.py
 │       └── utils.py
 └── tests
 ```
@@ -55,9 +60,14 @@ It is mainly intended to be used with command lines with python. However, some m
 * [setup](./setup.cfg) :: Use for Pypi
 * [src/q2_mkrefdb](./src/q2_mkrefdb) :: Package
   * [init](./src/q2_mkrefdb/__init__.py) :: Initiate Package when imported
-  * [main](./src/q2_mkrefdb/__main__.py) :: Used for command lines
-  * [fastafilter](./src/q2_mkrefdb/fastafilter.py) :: Main algorithm
+  * [main](./src/q2_mkrefdb/__main__.py) :: Use for command lines
+  * [database](./src/q2_mkrefdb/database.py) :: Main algorithm
+  * [edit](./src/q2_mkrefdb/edit.py) :: 
+  * [filter](./src/q2_mkrefdb/filter.py) :: 
+  * [lineage](./src/q2_mkrefdb/lineage.py) ::
+  * [merge](./src/q2_mkrefdb/merge.py) ::
   * [pcr](./src/q2_mkrefdb/pcr.py) :: Used in fastafliter
+  * [stats](./src/q2_mkrefdb/stats.py) ::
   * [utils](./src/q2_mkrefdb/utils.py) :: Used in pcr and fastafilter
 * [tests](./tests) :: Validation tests
 
@@ -92,17 +102,17 @@ import anymodule
 print(anymodule.__file__)
 ```
 
-Once the package is placed in the library directory you can call it like any other python package.
+Once the package has been placed in the library directory you can call it like any other python package.
 
 # Command lines
 
-### Calling the package
+## CREATE
 
 ``` shell
-python -m q2_mkrefb [args]
+python -m q2_mkrefb create [args]
 ```
 
-### Required parameters
+### Required
 
 ---
 
@@ -130,11 +140,7 @@ Each of the databases (ncbi, ebi, or ddjb) have its own format of description fo
 # File path to the forward primer FASTA file.
 ```
 
-   The primer FASTA file must have only one sequence. With a description and a sequence.  You need one FASTA file per primer.
-
-### Optionals parameters
-
-##### Filtration
+The primer FASTA file must have only one sequence. With a description and a sequence.  You need one FASTA file per primer.
 
 ----
 
@@ -153,7 +159,9 @@ Each of the databases (ncbi, ebi, or ddjb) have its own format of description fo
 # This option keep the primers on amplicons if specified. By default the primers are trimmed.
 ```
 
-The primers are by default removed from the amplicon. If this option is specified, they will be conserved. 
+ By default, the primers are removed from the amplicon. If this option is specified, they will be conserved. 
+
+### Optional
 
 ---
 
@@ -162,9 +170,9 @@ The primers are by default removed from the amplicon. If this option is specifie
 # Informations file in which all the files treatments are recorded.
 ```
 
-The INFOS_FILE save all the database information (number of sequences, amplicons, etc.) at every step of the analysis. As soon as the data are modified by a filtration, the actual state of the data is written on the file. 
+The INFOS_FILE save all the database information (number of sequences, amplicons, etc.) at every step of the analysis. As soon as the data are modified by a filtration, the actual state of the data is written on the file.
 
----
+___
 
 ```shell
 -dit, --displ_inf_terminal
@@ -176,12 +184,62 @@ The INFOS_FILE save all the database information (number of sequences, amplicons
 ---
 
 ```shell
+-mto, --modified_tax_output MODIFIED_TAX_OUTPUT
+# File name of the modified taxon list TXT output.
+```
+
+Export all the modified taxon in file with as first column the old name of taxon and as second column the new name of the taxon after lineage verification. 
+
+___
+
+___
+
+## FILTER
+
+```shell
+python -m q2_mkrefb filter [args]
+```
+
+### Required
+
+---
+
+```shell
+-i, --database_json DATABASE_JSON
+# Path to the database JSON file to treat.
+```
+
+The inputed DATABASE_JSON file must have been created with the CREATE option. This file contain all the informations about the database which will be filtered. It is the output of the -o, --output_database_json parameter. 
+
+---
+
+```shell
+-o, --output_database_json OUTPUT_DATABASE_JSON
+# File name of the access dictionnary JSON output.
+```
+
+Export the whole dictionnary of the database from the programm. This dictionnary is the last state of the database before exporting the files. In this file you will find all the information the database. The dictionnary is made as : {accession_number: {taxon: 'the genus_specie', sequence: 'full sequence', lineage: 'lineage', amplicon: 'amplicon sequence', description: 'the sequence description from the original fasta file' }}. The AccessDictionnary can be usefull to analyse statistics about the data.
+
+### Optional
+
+---
+
+```shell
 -g1, --genus1 GENUS1
 -g2, --genus2 GENUS2
 # Name of the first and second genus to keep. Ex: -g1 Fusarium -g2 Gibberella
 ```
 
- You can specify up to 2 genus to keep in your dataset. All the species which have a different Genus will be removed from the dataset. Be aware to write the genus with the right spelling and the word must start with an Uppercase. 
+You can specify up to 2 genus to keep in your dataset. All the species which have a different Genus will be removed from the dataset. Be aware to write the genus with the right spelling and the word must start with an Uppercase. 
+
+---
+
+```shell
+-cc, --custom_complex
+# File path to the custom complex CSV file.
+```
+
+The custom complex arg should be used to create customed complex/group. You need a custom complex CSV file presente as : ***column 1*** = 'new complex name' ***column 2*** = 'taxon name' . All the sequences with the 'taxon name' will be grouped as 'new complex name'. Then all the filtration steps will occur.
 
 ---
 
@@ -200,15 +258,6 @@ Some species are not well identified and can be classed as "Fusarium sp." for ex
 ```
 
  By default the species are grouped by complex. A complex is a group of closely related species. This information about species is taken from the lineage.  If you specify the `-tbc` arg the species will NOT be group by complex.
-
----
-
-```shell
--f, --filtering_type {taxon,global}
-# Filtering by taxon or globally
-```
-
- This arg is necessary if you want to filter your data. If you specify `taxon` all the sequences will be compared only in each taxon group. This option is better to keep the variabilty of sequences within the whole dataset. If you specify `global` the sequences will be compared all together without taxon distinction.
 
 ---
 
@@ -237,9 +286,123 @@ Some species are not well identified and can be classed as "Fusarium sp." for ex
 
 By default the sequences which can not amplify the region of interest are removed from the dataset. If this arg is specified they are conserved.
 
+---
 
+```shell
+-inf, --infos_file INFOS_FILE
+# Informations file in which all the files treatments are recorded.
+```
 
-##### Export
+The INFOS_FILE save all the database information (number of sequences, amplicons, etc.) at every step of the analysis. As soon as the data are modified by a filtration, the actual state of the data is written on the file.
+
+___
+
+```shell
+-dit, --displ_inf_terminal
+# Display information file in terminal if arg is specified.
+```
+
+ If you specify this parameter, all the database states will be printed in your shell during the analysis. This command can be specified or not independantbly from the `--infos_file` arg. 
+
+___
+
+___
+
+## EDIT
+
+```shell
+python -m q2_mkrefb edit [args]
+```
+
+### Required
+
+---
+
+```shell
+-i, --database_json DATABASE_JSON
+# Path to the database JSON file to treat.
+```
+
+The inputed DATABASE_JSON file must have been created with the CREATE option. This file contain all the informations about the database which will be filtered. It is the output of the -o, --output_database_json parameter. 
+
+---
+
+```shell
+-o, --output_database_json OUTPUT_DATABASE_JSON
+# File name of the access dictionnary JSON output.
+```
+
+Export the whole dictionnary of the database from the programm. This dictionnary is the last state of the database before exporting the files. In this file you will find all the information the database. The dictionnary is made as : {accession_number: {taxon: 'the genus_specie', sequence: 'full sequence', lineage: 'lineage', amplicon: 'amplicon sequence', description: 'the sequence description from the original fasta file' }}. The AccessDictionnary can be usefull to analyse statistics about the data.
+
+### Optional
+
+---
+
+```shell
+-rm, --remove REMOVE
+# Remove all the sequences with IDs on id_list_csv.
+```
+
+The CSV file must be as : ***column 1*** = 'seq_id' 
+
+---
+
+```shell
+-mv, --rename RENAME
+# Rename all the sequences with IDs on id_list_csv.
+```
+
+The CSV file must be as : ***column 1*** = 'seq_id'  ***column 2*** = 'new_taxon_name'
+
+---
+
+```shell
+-grp, --group GROUP
+# Path to the database JSON file to treat.
+```
+
+Group all the sequences with IDs on shared_ext_csv on a commune taxon name. The taxon name will become the SA_id of the group. Only one amplicon will represent the group after this command is runned. The shared_ext_csv FILE must be the one generated with EXPORT shared ampl.
+
+---
+
+```shell
+-inf, --infos_file INFOS_FILE
+# Informations file in which all the files treatments are recorded.
+```
+
+The INFOS_FILE save all the database information (number of sequences, amplicons, etc.) at every step of the analysis. As soon as the data are modified by a filtration, the actual state of the data is written on the file.
+
+___
+
+```shell
+-dit, --displ_inf_terminal
+# Display information file in terminal if arg is specified.
+```
+
+ If you specify this parameter, all the database states will be printed in your shell during the analysis. This command can be specified or not independantbly from the `--infos_file` arg. 
+
+___
+
+___
+
+## EXPORT
+
+```shell
+python -m q2_mkrefb export [args]
+```
+
+### Required
+
+---
+
+```shell
+-i, --database_json DATABASE_JSON
+# Path to the database JSON file to treat.
+```
+
+The inputed DATABASE_JSON file must have been created with the CREATE option. This file contain all the informations about the database which will be filtered. It is the output of the -o, --output_database_json parameter. 
+
+### Optional
 
 ____
 
@@ -248,7 +411,7 @@ ____
 # File name of the sequences variants FASTA output.
 ```
 
- Export a file with all the sequences variants as FASTA format with the related accession number as description. These are the full length sequences after all filtrations. One sequence is related to one amplicon.
+Export a file with all the sequences variants as FASTA format with the related accession number as description. These are the full length sequences after all filtrations. One sequence is related to one amplicon.
 
 ---
 
@@ -258,6 +421,15 @@ ____
 ```
 
 Export a file with all the amplicons as FASTA format with the related accession number as description. One amplicon is related to one full sequence. 
+
+---
+
+```shell
+-aop, --ampl_output_phylo AMPL_OUTPUT_PHYLO
+# File name of the amplicon variants FASTA output in NCBI format (for phylogeny).
+```
+
+Export a file with all the amplicons as FASTA format with the related accession number and taxon as description. This file should be used for phylogeny ([https://ngphylogeny.fr/](https://ngphylogeny.fr/)).
 
 ---
 
@@ -298,20 +470,20 @@ Export  a file with the list of all the complex names as first column and then a
 ---
 
 ```shell
--mto, --modified_tax_output MODIFIED_TAX_OUTPUT
-# File name of the modified taxon list TXT output.
+-inf, --infos_file INFOS_FILE
+# Informations file in which all the files treatments are recorded.
 ```
 
-Export all the modified taxon in file with as first column the old name of taxon and as second column the new name of the taxon after lineage verification. 
+The INFOS_FILE save all the database information (number of sequences, amplicons, etc.) at every step of the analysis. As soon as the data are modified by a filtration, the actual state of the data is written on the file.
 
----
+___
 
 ```shell
--ado, --access_dict_output ACCESS_DICT_OUTPUT
-# File name of the access dictionnary JSON output.
+-dit, --displ_inf_terminal
+# Display information file in terminal if arg is specified.
 ```
 
-  Export the whole dictionnary of the database from the programm. This dictionnary is the last state of the database before exporting the files. In this file you will find all the information the database. The dictionnary is made as : {accession_number: {taxon: 'the genus_specie', sequence: 'full sequence', lineage: 'lineage', amplicon: 'amplicon sequence', description: 'the sequence description from the original fasta file' }}. The AccessDictionnary can be usefull to analyse statistics about the data. 
+ If you specify this parameter, all the database states will be printed in your shell during the analysis. This command can be specified or not independantbly from the `--infos_file` arg. 
 
 # Module for import usage
 
