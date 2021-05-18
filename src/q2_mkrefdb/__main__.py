@@ -184,15 +184,15 @@ def get_arguments():
                           required=True)
     subparser_edit.add_argument('-rm',
                           '--remove',
-                          help="Path to the database JSON file to treat.",
+                          help="Remove all the sequences with IDs on id_list_csv.",
                           default=None)
     subparser_edit.add_argument('-mv',
                           '--rename',
-                          help="Path to the database JSON file to treat.",
+                          help="Rename all the sequences with IDs on id_list_csv.",
                           default=None)
     subparser_edit.add_argument('-grp',
                           '--group',
-                          help="Path to the database JSON file to treat.",
+                          help="Group all the sequences with IDs on shared_ext_csv on a commune taxon name.",
                           default=None)
     subparser_edit.add_argument('-o',
                           '--output_database_json',
@@ -302,18 +302,18 @@ if action_type == "filter":
 
     if taxonomy_by_complex == True:
         data.group_by_complex()
-        output_saver.write("* You have decided to 'GROUP TAXON by COMPLEX' in your dataset.\n")
+        output_saver.write("* TAXONS have been 'GROUPED by COMPLEX'.\n")
         output_saver.write(data.get_info("After grouping by complex \n"))
         output_saver.write("\n\
 =============================================================================================\n")
     if custom_complex: 
         data.custom_complex(custom_complex)
-        output_saver.write("* You have decided to use a 'CUSTOM TAXONOMY'.\n")
+        output_saver.write("* 'CUSTOM TAXONOMY' has been used with %s.\n"%custom_complex)
         output_saver.write(data.get_info("After grouping by complex with custom taxonomy \n"))
         output_saver.write("\n\
 =============================================================================================\n")
     if genus1 != "None":
-        output_saver.write("* You have decided to 'CLEAN UP' your dataset.\n")
+        output_saver.write("* DATASET has been 'CLEANED'.\n")
         genus_set = data.get_all_genus()
         if genus1 in genus_set:
             output_saver.write(genus1+" is in your dataset."+"\n")
@@ -325,25 +325,25 @@ if action_type == "filter":
             output_saver.write("WARNING : There is NO genus named "+genus2+" in your dataset."+"\n")
         data.clean_dataset(genus1, genus2, unverified)
         if unverified: 
-            output_saver.write("* You have decided to 'KEEP' the 'UNVERIFIED' and 'UNCULTURED' genus.\n")
+            output_saver.write("* 'UNVERIFIED' and 'UNCULTURED' genus have been 'KEPT'.\n")
         else: 
-            output_saver.write("* 'UNVERIFIED' and 'UNCULTURED' genus have been removed.\n")
+            output_saver.write("* 'UNVERIFIED' and 'UNCULTURED' genus have been 'REMOVED'.\n")
         output_saver.write(data.get_info("After Cleaning with : "+genus1+" -- "+genus2+" -- UNVERIFIED="+str(unverified))+"\n")
 
     if seq_without_ampl:
         output_saver.write("\n\
 =============================================================================================\n")
         data.del_na_amplicons()
-        output_saver.write("** 'SEQUENCES VARIANTS' have been removed if 'NO AMPLICONS'.\n")
+        output_saver.write("* 'SEQUENCES VARIANTS' have been removed if 'NO AMPLICONS'.\n")
         output_saver.write(data.get_info("after deleting sequences variants without amplicons")+"\n")
     else:
-        output_saver.write("** You decided to 'KEEP' the 'SEQUENCES VARIANTS' with 'NO AMPLICONS'.\n")
+        output_saver.write("* 'SEQUENCES VARIANTS' with 'NO AMPLICONS' have been 'KEPT'.\n")
 
     if redund_seq_variants:
         output_saver.write("\n\
 =============================================================================================\n")
         data.del_redund_seq_tax()
-        output_saver.write("** SEQUENCES VARIANTS have been removed by TAXON.\n")
+        output_saver.write("* SEQUENCES VARIANTS have been removed by TAXON.\n")
         
     output_saver.write(data.get_info("after deleting redundant sequence variant")+"\n")
     if redundant_amplicon:
@@ -368,11 +368,11 @@ if action_type == "edit":
     if remove:
         output_saver.write("* Sequences inside '%s' have been removed from DATABASE.\n"%remove)
         data.remove_by_id(remove)
-        output_saver.write(data.get_info("removed sequences from %s"%remove)+"\n")
+        output_saver.write(data.get_info("Removed sequences from %s"%remove)+"\n")
     if rename:
         output_saver.write("* Sequences inside '%s' have been renamed within DATABASE.\n"%rename)
         data.rename_by_id(rename)
-        output_saver.write(data.get_info("renamed sequences from %s"%rename)+"\n")
+        output_saver.write(data.get_info("Renamed sequences from %s"%rename)+"\n")
     if group:
         output_saver.write("* Sequences inside '%s' have been grouped within DATABASE.\n"%group)
         data.group_by_id(group)
@@ -399,43 +399,35 @@ if action_type == "export":
     seq_output_phylo = args.seq_output_phylo
 
     if seq_variants_output:
-        output_saver.write("* You have decided to 'EXPORT' your qiime format SEQUENCES VARIANTS \
-            as %s.\n"%seq_variants_output)
+        output_saver.write("* SEQUENCES VARIANTS exported as %s.\n"%seq_variants_output)
         data.export_seq_fasta(seq_variants_output, "qiime")
 
     if seq_output_phylo:
-        output_saver.write("* SEQUENCES exported to PHYLO FASTA format \
-            as %s.\n"%seq_output_phylo)
+        output_saver.write("* SEQUENCES exported to PHYLO FASTA format as %s.\n"%seq_output_phylo)
         data.export_seq_fasta(seq_output_phylo, "phylo")
 
     if amplicons_output:
-        output_saver.write("* You have decided to 'EXPORT' your qiime format AMPLICONS \
-            as %s.\n"%amplicons_output)
+        output_saver.write("* AMPLICONS export as %s.\n"%amplicons_output)
         data.export_ampli_fasta(amplicons_output, "qiime")
 
     if ampl_output_phylo:
-        output_saver.write("* AMPLICONS exported to PHYLO FASTA format \
-            as %s.\n"%ampl_output_phylo)
+        output_saver.write("* AMPLICONS exported to PHYLO FASTA format as %s.\n"%ampl_output_phylo)
         data.export_ampli_fasta(ampl_output_phylo, "phylo")
 
     if taxonomy_output:
-        output_saver.write("* You have decided to 'EXPORT' your TAXONOMY file \
-            as '%s'.\n"%taxonomy_output)
+        output_saver.write("* TAXONOMY file exported as '%s'.\n"%taxonomy_output)
         data.export_tax_id_txt(taxonomy_output, "\t")
 
     if taxon_list_output:
-        output_saver.write("* You have decided to 'EXPORT' your TAXON LIST file \
-            as '%s'.\n"%taxon_list_output)
+        output_saver.write("* TAXON LIST file exported as '%s'.\n"%taxon_list_output)
         data.export_taxon_list(taxon_list_output)
 
     if shared_ampl_output:
-        output_saver.write("* You have decided to 'EXPORT' your SHARED AMPLICONS file \
-            as '%s'.\n"%shared_ampl_output[0])
+        output_saver.write("* SHARED AMPLICONS file exported as '%s'.\n"%shared_ampl_output[0])
         data.export_shared_ampli(shared_ampl_output[0], int(shared_ampl_output[1]))
 
     if complex_dict_output:
-        output_saver.write("* You have decided to 'EXPORT' your COMPLEX DICT file \
-            as '%s'.\n"%complex_dict_output)
+        output_saver.write("* COMPLEX DICT file exported as '%s'.\n"%complex_dict_output)
         data.export_complex_dict(complex_dict_output, "\t")
 
 
@@ -445,8 +437,7 @@ if action_type == "export":
 #---------------------------------------------------
 if action_type == "create":
     if modified_tax_output:
-        output_saver.write("* You have decided to 'EXPORT' your MODIFIED TAX LIST file \
-            as '%s'.\n"%modified_tax_output)
+        output_saver.write("* MODIFIED TAX LIST file exported as '%s'.\n"%modified_tax_output)
         data.export_modified_tax(modified_tax_output)
 
 if action_type in ["create", "filter", "edit"]:
