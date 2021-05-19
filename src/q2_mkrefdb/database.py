@@ -23,7 +23,7 @@ class Database:
 
         Args:
             fasta_file (string): path to the FASTA file to treat
-            origin_database (string): 'ncbi', 'ebi' or 'ddbj'
+            origin_database (string): 'ncbi', 'ebi', 'ddbj' or rnaCentral
             forward_primer_fasta (string): path to the forward primer FASTA file
             reverse_primer_fasta (string): path to the reverse primer FASTA file
             fw_mismatch_tol (int, optional): forward primer mismatch tolerance for annealing. Defaults to 3.
@@ -170,21 +170,25 @@ class Database:
         except: lineage = "NA"
         if (taxon[-1] == ".") & (lineage == "NA"): 
             for access_nb in self.taxon_dict[taxon]:
-                lineage = self.__complete_lineage(access_nb, url)
+                if self.origin_database == "rnaCentral":
+                    lineage = self.__complete_lineage2(access_nb)
+                else: lineage = self.__complete_lineage(access_nb)
                 if str(taxon+" => "+self.get_taxon(access_nb)) not in self.modified_taxon:
                     self.modified_taxon.add(taxon+" => "+self.get_taxon(access_nb))
                 if lineage == "NA": self.__na_tax_str += (taxon+"\n")
                 self.access_dict[access_nb]["lineage"] = lineage    
         else:
             for access_nb in self.taxon_dict[taxon]:
-                if lineage == "NA": 
-                    lineage = self.__complete_lineage(access_nb, url)
+                if lineage == "NA":
+                    if self.origin_database == "rnaCentral":
+                        lineage = self.__complete_lineage2(access_nb)
+                    else: lineage = self.__complete_lineage(access_nb)
                     if str(taxon+" => "+self.get_taxon(access_nb)) not in self.modified_taxon:
                         self.modified_taxon.add(taxon+" => "+self.get_taxon(access_nb))
                 if lineage == "NA": self.__na_tax_str += (taxon+"\n")
                 self.access_dict[access_nb]["lineage"] = lineage
 
-    def __complete_lineage(self, access_nb, url):
+    def __complete_lineage(self, access_nb):
         """Third part of the _make_lineage_dict function, used if the specie is not found on the EBI.
         Research the specie on the NCBI database  with Entrez (longer than EBI) then search again the
         lineage on EBI. 
@@ -205,6 +209,23 @@ class Database:
                 url = "https://www.ebi.ac.uk/ena/taxonomy/rest/scientific-name/"+"%20".join(line.split()[1:])
                 try: return utils.get_var_from_url(url, "json")[0]['lineage']
                 except: return "NA"
+
+    def __complete_lineage2(self, access_nb):
+        xml_url = "https://www.ebi.ac.uk/ena/browser/api/xml/"+access_nb.split("_")[1]
+        response = utils.get_var_from_url(xml_url, "str")
+        start = response.find("taxon scientificName=") + len("taxon scientificName=")
+        end = response.find("<lineage>")
+        substring = response[start:end]
+        taxon = substring.split('"')[1].split()
+        print("\n",taxon)
+        if "UTF-8" not in taxon: 
+            self.access_dict[access_nb]["taxon"] = "_".join(taxon)
+            url = "https://www.ebi.ac.uk/ena/taxonomy/rest/scientific-name/"+"%20".join(taxon)
+            try:
+                return utils.get_var_from_url(url, "json")[0]['lineage']
+            except: 
+                return "NA"
+        else: return "NA"
 
     def __make_complex_dict(self):
         """Create the complex dictionnary from the lineage informations.
@@ -251,10 +272,12 @@ class Database:
         access_num = ""
         if self.origin_database == "ncbi":
             access_num = seq_name.split(" ")[0].strip(">")[:-2]
-        if self.origin_database == "embl":
+        if self.origin_database == "ebi":
             access_num = seq_name.split("|")[1]
         if self.origin_database == "ddbj":
             access_num = seq_name.split("|")[0].strip(">")
+        if self.origin_database == "rnaCentral":
+            access_num = seq_name.split()[0].strip(">")
         return access_num
 
     def __make_amplicon_dict(self):

@@ -22,7 +22,7 @@ def get_arguments():
                           required=True)
     subparser_create.add_argument('-db',
                           '--source_database',
-                          choices=['ncbi', 'ebi', 'ddbj'],
+                          choices=['ncbi', 'ebi', 'ddbj', 'rnaCentral'],
                           help="Name of the database from which the FASTA file was obtained.",
                           required=True)                          
     subparser_create.add_argument('-fp',

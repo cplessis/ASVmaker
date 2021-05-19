@@ -1,4 +1,4 @@
-import json, sys, os, urllib.request, random
+import json, sys, os, requests, random, urllib
 from pathlib import Path
 
 def save_as_json(variable, file_json):
@@ -63,12 +63,17 @@ class Logger(object):
 # Variable and Binary object
 def binary_to_variable(the_binary, var_type):
     if var_type == "json": return json.loads(the_binary.decode('utf-8'))
+    if var_type == "str": return the_binary.decode('utf-8')
 
 # ULR to Variable
 def get_var_from_url(url, var_type):
-    with urllib.request.urlopen(url) as response:
-        var = binary_to_variable(response.read(), var_type)
+    with requests.get(url) as response:
+        var = binary_to_variable(response.content, var_type)
         return var
+# def get_var_from_url(url, var_type):
+#     with urllib.request.urlopen(url) as response:
+#         var = binary_to_variable(response.read(), var_type)
+#         return var
 
 # COLORS
 def random_color():

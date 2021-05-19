@@ -148,6 +148,7 @@ def group_by_complex(self):
     with FillingSquaresBar('Assembling taxon by complex ', max= len(self.seq_dict)) as bar:
         for access_nb in self.access_dict:
             lineage = self.get_lineage(access_nb)
+            if lineage == "NA": continue
             if lineage.split("; ")[-2].split(" ")[-1] in {"complex","group"}:
                 taxon = ""
                 if lineage.split("; ")[-2].split(" ")[0] == "unclassified":

@@ -44,7 +44,8 @@ def group_by_id(Database, shared_ext_csv):
         for line in file.readlines(): id_set.add(line.strip("\n"))
         for sa_seq in id_set:
             access_nb = sa_seq.split()[1]
-            genus = Database.get_lineage(access_nb).split("; ")[-2]
+            try: genus = Database.get_lineage(access_nb).split("; ")[-2]
+            except IndexError: genus = Database.get_lineage(access_nb).split("_")[0]
             Database.access_dict[access_nb]["taxon"] = genus+"_"+sa_seq.split()[0]
             remove_list += sa_seq.split()[2:]
         for access_nb in Database.access_dict:
