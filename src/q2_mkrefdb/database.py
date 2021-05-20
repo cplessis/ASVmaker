@@ -151,6 +151,7 @@ class Database:
                 for taxon in self.taxon_dict:
                     name_list = taxon.split("_")
                     self.__get_lineage_norm(taxon, name_list)
+                    print("NEXTBAR")
                     bar.next()
                 if len(self.__na_tax_str) > 0: print("\nThe following taxons have NO lineage : \n", self.__na_tax_str, "\n")
                 self.update_data()
@@ -168,8 +169,11 @@ class Database:
         url = "https://www.ebi.ac.uk/ena/taxonomy/rest/scientific-name/"+"%20".join(name_list)
         try: lineage = utils.get_var_from_url(url, "json")[0]['lineage']
         except: lineage = "NA"
-        if (taxon[-1] == ".") & (lineage == "NA"): 
+        if (taxon[-1] == ".") & (lineage == "NA"): # If taxon end by a dot, then we look for lineage of each accession nb
+            n = 0
             for access_nb in self.taxon_dict[taxon]:
+                n += 1
+                print(taxon, n)
                 if self.origin_database == "rnaCentral":
                     lineage = self.__complete_lineage2(access_nb)
                 else: lineage = self.__complete_lineage(access_nb)
@@ -188,7 +192,7 @@ class Database:
                 if lineage == "NA": self.__na_tax_str += (taxon+"\n")
                 self.access_dict[access_nb]["lineage"] = lineage
 
-    def __complete_lineage(self, access_nb):
+    # def __complete_lineage(self, access_nb):
         """Third part of the _make_lineage_dict function, used if the specie is not found on the EBI.
         Research the specie on the NCBI database  with Entrez (longer than EBI) then search again the
         lineage on EBI. 
@@ -200,15 +204,52 @@ class Database:
         Returns:
             string: lineage if found, else 'NA'
         """        
-        Entrez.email = 'someuser@mail.com'
-        handle = Entrez.efetch(db="nucleotide", id=access_nb, rettype="gb", retmode="text")
-        result=handle.read().split('\n')
-        for line in result:
-            if 'ORGANISM' in line :
-                self.access_dict[access_nb]["taxon"] = "_".join(line.split()[1:])
-                url = "https://www.ebi.ac.uk/ena/taxonomy/rest/scientific-name/"+"%20".join(line.split()[1:])
-                try: return utils.get_var_from_url(url, "json")[0]['lineage']
-                except: return "NA"
+    #     Entrez.email = 'someuser@mail.com'
+    #     print("\nCOMPLETE LINEAGE", access_nb)
+    #     handle = Entrez.efetch(db="nucleotide", id=access_nb, rettype="gb", retmode="text")
+    #     result=handle.read().split('\n')
+    #     for line in result:
+    #         if 'ORGANISM' in line :
+    #             self.access_dict[access_nb]["taxon"] = "_".join(line.split()[1:])
+    #             url = "https://www.ebi.ac.uk/ena/taxonomy/rest/scientific-name/"+"%20".join(line.split()[1:])
+    #             try: 
+    #                 return utils.get_var_from_url(url, "json")[0]['lineage']
+    #             except:
+    #                 print("NA")
+    #                 return "NA"
+
+    def __complete_lineage(self, access_nb):
+        """Third part of the _make_lineage_dict function, used if the specie is not found on the EBI.
+        Research the specie on the NCBI database  with Entrez (longer than EBI) then search again the
+        lineage on EBI. 
+
+        Args:
+            access_nb (string): Sequence accession number related to the specie.
+            url (string): url to EBI website
+
+        Returns:
+            string: lineage if found, else 'NA'
+        """
+        xml_url = "https://www.ebi.ac.uk/ena/browser/api/text/%s?lineLimit=25"%access_nb
+        response = utils.get_var_from_url(xml_url, "str")
+        try: 
+            taxon = ""
+            lineage = ""
+            for line in response.split("\n"):
+                if line[:2] == "OS": taxon = "_".join(line.split()[1:])
+                if line[:2] == "OC": lineage += " ".join(line.split()[1:])+" "
+            self.access_dict[access_nb]["taxon"] = "_".join(taxon)
+            return lineage.rstrip(" .")+"; "
+        except:
+            Entrez.email = 'someuser@mail.com'
+            handle = Entrez.efetch(db="nucleotide", id=access_nb, rettype="gb", retmode="text")
+            result=handle.read().split('\n')
+            for line in result:
+                if 'ORGANISM' in line :
+                    self.access_dict[access_nb]["taxon"] = "_".join(line.split()[1:])
+                    url = "https://www.ebi.ac.uk/ena/taxonomy/rest/scientific-name/"+"%20".join(line.split()[1:])
+                    try: return utils.get_var_from_url(url, "json")[0]['lineage']
+                    except: return "NA" 
 
     def __complete_lineage2(self, access_nb):
         xml_url = "https://www.ebi.ac.uk/ena/browser/api/xml/"+access_nb.split("_")[1]
