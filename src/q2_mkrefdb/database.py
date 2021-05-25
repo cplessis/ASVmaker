@@ -539,6 +539,11 @@ class Database:
         self.update_data()
     remove_by_id.__doc__ = edit.remove_by_id.__doc__
 
+    def remove_by_taxon(self, tax_list_csv):
+        self.seq_dict = edit.remove_by_taxon(self, tax_list_csv)
+        self.update_data()
+    remove_by_taxon.__doc__ = edit.remove_by_taxon.__doc__
+
     def rename_by_id(self, id_list_csv):
         self.access_dict = edit.rename_by_id(self, id_list_csv)
         self.update_data()

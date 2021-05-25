@@ -186,6 +186,10 @@ def get_arguments():
                           '--remove',
                           help="Remove all the sequences with IDs on id_list_csv.",
                           default=None)
+    subparser_edit.add_argument('-rmt',
+                          '--remove_taxon',
+                          help="Remove all the sequences with Taxon on tax_list_csv.",
+                          default=None)
     subparser_edit.add_argument('-mv',
                           '--rename',
                           help="Rename all the sequences with IDs on id_list_csv.",
@@ -363,12 +367,17 @@ if action_type == "edit":
                 EDIT                \n\
 ------------------------------------\n")
     remove = args.remove
+    remove_taxon = args.remove_taxon
     rename = args.rename
     group = args.group
     if remove:
         output_saver.write("* Sequences inside '%s' have been removed from DATABASE.\n"%remove)
         data.remove_by_id(remove)
         output_saver.write(data.get_info("Removed sequences from %s"%remove)+"\n")
+    if remove_taxon:
+        output_saver.write("* Taxon inside '%s' have been removed from DATABASE.\n"%remove)
+        data.remove_by_taxon(remove_taxon)
+        output_saver.write(data.get_info("Removed sequences with Taxon from %s"%remove)+"\n")
     if rename:
         output_saver.write("* Sequences inside '%s' have been renamed within DATABASE.\n"%rename)
         data.rename_by_id(rename)

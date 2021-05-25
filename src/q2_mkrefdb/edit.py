@@ -14,6 +14,21 @@ def remove_by_id(Database, id_list_csv):
                 seq_dict[Database.get_name(access_nb)] = Database.get_sequence(access_nb)
     return seq_dict
 
+def remove_by_taxon(Database, tax_list_csv):
+    """Remove all the sequences with IDs on id_list_csv.
+        The tax_list_csv FILE must be as one line = 'Genus_specie'. 
+
+        Args:
+            tax_list_csv (str): taxon list CSV or TXT file
+        """ 
+    tax_set = set()
+    with open(tax_list_csv) as file:
+        for line in file.readlines(): tax_set.add(line.strip("\n"))
+        for taxon in tax_set:
+            for access_nb in Database.taxon_dict[taxon]:
+                Database.seq_dict.pop(Database.get_name(access_nb))
+    return Database.seq_dict
+
 def rename_by_id(Database, id_list_csv):
     """Rename all the sequences with IDs on id_list_csv.
         The id_list_csv FILE must be as one line = 'seq_id   new_taxon_name'. 
