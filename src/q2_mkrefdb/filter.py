@@ -101,7 +101,7 @@ def del_redund_ampli_tax(Database):
         print("\n   ==> Deletion done in %f seconds."%(t1 - t0))
         return seq_dict
 
-def clean_dataset(Database, wanted_genus1, wanted_genus2, unverified_bool):
+def clean_dataset2(Database, wanted_genus1, wanted_genus2, unverified_bool):
         """Keep in the dataset only the specified genus. The unverified bool remove all
         the species which are ended by '.' such as 'Fusarium sp.' if False is specified. 
 

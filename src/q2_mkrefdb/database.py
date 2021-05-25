@@ -127,7 +127,7 @@ class Database:
 
         Returns:
             dictionnary: The access_dict dictionnary
-        """        
+        """
         access_dict = {}
         new_seq_dict = dict(self.seq_dict)
         for seq_name in self.seq_dict:
@@ -193,7 +193,6 @@ class Database:
                 for taxon in self.taxon_dict:
                     name_list = taxon.split("_")
                     self.__get_lineage_norm(taxon, name_list)
-                    print("NEXTBAR")
                     bar.next()
                 if len(self.__na_tax_str) > 0: print("\nThe following taxons have NO lineage : \n", self.__na_tax_str, "\n")
                 self.update_data()
@@ -231,7 +230,6 @@ class Database:
             n = 0
             for access_nb in self.taxon_dict[taxon]:
                 n += 1
-                print(taxon, n)
                 if self.origin_database == "rnaCentral":
                     lineage = self.__complete_lineage2(access_nb)
                 else: lineage = self.__complete_lineage(access_nb)
@@ -290,7 +288,6 @@ class Database:
         end = response.find("<lineage>")
         substring = response[start:end]
         taxon = substring.split('"')[1].split()
-        print("\n",taxon)
         if "UTF-8" not in taxon: 
             self.access_dict[access_nb]["taxon"] = "_".join(taxon)
             url = "https://www.ebi.ac.uk/ena/taxonomy/rest/scientific-name/"+"%20".join(taxon)
