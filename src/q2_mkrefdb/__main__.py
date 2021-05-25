@@ -22,7 +22,7 @@ def get_arguments():
                           required=True)
     subparser_create.add_argument('-db',
                           '--source_database',
-                          choices=['ncbi', 'ebi', 'ddbj', 'rnaCentral'],
+                          choices=['ncbi', 'ebi', 'ddbj', 'rnaCentral', 'silva', 'unite'],
                           help="Name of the database from which the FASTA file was obtained.",
                           required=True)                          
     subparser_create.add_argument('-fp',
@@ -273,8 +273,12 @@ if action_type == "create":
                 Create              \n\
 ------------------------------------\n")
     # Init input data: FASTA FILE from NCBI, EBI or DDBJ
-    data.create(args.sequences_input, args.source_database, args.forward_primer, args.reverse_primer, \
-        args.fw_mismatch_tol, args.rv_mismatch_tol, args.trim_primers)
+    if args.source_database in {'unite', 'silva'}:
+        data.create2(args.sequences_input, args.source_database, args.forward_primer, args.reverse_primer, \
+            args.fw_mismatch_tol, args.rv_mismatch_tol, args.trim_primers)
+    else: 
+        data.create(args.sequences_input, args.source_database, args.forward_primer, args.reverse_primer, \
+            args.fw_mismatch_tol, args.rv_mismatch_tol, args.trim_primers)
     write_db_infos(data)
     output_saver.write(data.get_info("init data")+"\n")
     modified_tax_output = args.modified_tax_output

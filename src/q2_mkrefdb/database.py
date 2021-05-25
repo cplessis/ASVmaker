@@ -47,6 +47,25 @@ class Database:
         self.sa_threshold = 1000
         return
 
+    def create2(self, fasta_file, origin_database, forward_primer_fasta, reverse_primer_fasta, \
+        fw_mismatch_tol = 3, rv_mismatch_tol = 3, trim_primers = True):            
+        self.file_name = fasta_file.rstrip(".fasta")
+        self.origin_database = origin_database
+        self.fw_mismatch_tol = fw_mismatch_tol
+        self.rv_mismatch_tol = rv_mismatch_tol
+        self.trim_primers = trim_primers
+        self.forward_primer_list = self.__get_seq_from_fasta(forward_primer_fasta, False)
+        self.reverse_primer_list = self.__get_seq_from_fasta(reverse_primer_fasta, False)
+        self.seq_dict = self.__get_seq_from_fasta(fasta_file, True)
+        self.access_dict = self.__make_access_dict2()
+        self.taxon_dict = self.__make_taxon_dict()
+        self.modified_taxon = set()
+        self.__make_amplicon_dict()
+        self.__make_lineage_dict2()
+        self.complex_dict = self.__make_complex_dict()
+        self.sa_threshold = 1000
+        return
+
     def import_db(self, database_json):
         db = utils.open_from_json(database_json)
         self.file_name = db["infos"]["file_name"]
@@ -81,13 +100,17 @@ class Database:
         seq_list = []
         with open(fasta_file) as file:
             for line in file.readlines():
-                line = line.rstrip("\n")
+                line = line.rstrip("\n").replace("U", "T")
                 if line == "": pass
                 elif (line[0] == ">") & (bool_multiple_seq == True):
-                    if line.split(" ")[1] not in {"UNVERIFIED:", "Uncultured"}:
+                    try:
+                        if line.split(" ")[1] not in {"UNVERIFIED:", "Uncultured"}:
+                            seq_dict[line] = ""
+                            seq_ref = line
+                        else: seq_ref = "pass"
+                    except IndexError:
                         seq_dict[line] = ""
                         seq_ref = line
-                    else: seq_ref = "pass"
                 elif (line[0] == ">") & (bool_multiple_seq == False):
                     seq_list.append(line)
                     seq_ref = line
@@ -114,6 +137,25 @@ class Database:
                         "taxon":seq_name.split()[1]+"_"+seq_name.split()[2]}
             else: new_seq_dict.pop(seq_name)
         self.seq_dict = new_seq_dict    
+        return access_dict
+
+    def __make_access_dict2(self):
+        access_dict = {}
+        new_seq_dict = dict(self.seq_dict)
+        for seq_name in self.seq_dict:
+            taxon =""
+            if self.origin_database == "silva":
+                taxon = "_".join(seq_name.split(";")[-1].split()[:2])
+                if (taxon not in {"unidentified", "metagenome", "uncultured"}) \
+                    & taxon[0].islower():
+                    taxon = seq_name.split(";")[-2]+"_"+taxon.split("_")[0]
+            if self.origin_database == "unite":
+                taxon = "_".join(seq_name.split("|")[1].split(";")[-1].split("_")[2:4])
+            if taxon.split("_")[0] not in {"unidentified", "metagenome", "uncultured"}:
+                access_dict[self.get_access_from_des(seq_name)] = \
+                    {"name":seq_name, "sequence":self.seq_dict[seq_name], "taxon":taxon}
+            else: new_seq_dict.pop(seq_name)
+        self.seq_dict = new_seq_dict
         return access_dict
 
     def update_data(self):
@@ -154,6 +196,22 @@ class Database:
                     print("NEXTBAR")
                     bar.next()
                 if len(self.__na_tax_str) > 0: print("\nThe following taxons have NO lineage : \n", self.__na_tax_str, "\n")
+                self.update_data()
+                t1 = time.time()
+                print("\n   ==> Got species lineages in %f seconds."%(t1 - t0))
+    
+    def __make_lineage_dict2(self):
+        with FillingSquaresBar('Getting species lineages from EBI taxonomy online ressources ', \
+            max= len(self.taxon_dict)) as bar:
+                t0 = time.time()  
+                for taxon in self.taxon_dict:
+                    for access_nb in self.taxon_dict[taxon]:
+                        if self.origin_database == "silva":
+                            lineage = self.get_name(access_nb).split()[1].split(";")[:-1]
+                        if self.origin_database == "unite":
+                            lineage = self.get_name(access_nb).split("|")[1].split(";")[:-1]
+                        self.access_dict[access_nb]["lineage"] = "; ".join(lineage)+"; "
+                    bar.next()
                 self.update_data()
                 t1 = time.time()
                 print("\n   ==> Got species lineages in %f seconds."%(t1 - t0))
@@ -293,6 +351,10 @@ class Database:
             access_num = seq_name.split("|")[0].strip(">")
         if self.origin_database == "rnaCentral":
             access_num = seq_name.split()[0].strip(">")
+        if self.origin_database == "unite":
+            access_num = seq_name.split("|")[0].strip(">")
+        if self.origin_database == "silva":
+            access_num = seq_name.split(".")[0].strip(">")
         return access_num
 
     def __make_amplicon_dict(self):
@@ -383,7 +445,7 @@ class Database:
 
         Returns:
             string: sequence name (description).
-        """        
+        """
         return self.access_dict[access_number]["name"]
 
     def get_taxon(self, access_number):

@@ -139,6 +139,37 @@ def clean_dataset(Database, wanted_genus1, wanted_genus2, unverified_bool):
                 exit()
             return temp_dict
 
+def clean_dataset(Database, wanted_genus1, wanted_genus2, unverified_bool):
+        """Keep in the dataset only the specified genus. The unverified bool remove all
+        the species which are ended by '.' such as 'Fusarium sp.' if False is specified. 
+
+        Args:
+            wanted_genus1 (string): genus to keep 1
+            wanted_genus2 (string): genus to keep 2
+            unverified_bool (bool): False to to remove unverfied ('.'), else True.  
+        """      
+        t0 = time.time()
+        with FillingSquaresBar('Cleaning dataset ', max= len(Database.seq_dict)) as bar:
+            seq_dict = {}
+            for access in Database.access_dict:
+                taxname_list = Database.get_taxon(access).split("_")
+                if len(taxname_list) > 1:
+                    if taxname_list[0] in {wanted_genus1, wanted_genus2}:
+                        if ((unverified_bool == False) & (taxname_list[1][-1] != ".")) \
+                            or unverified_bool:
+                            seq_dict[Database.get_name(access)] = Database.get_sequence(access)
+                    elif (unverified_bool) & (taxname_list[1] in {wanted_genus1, wanted_genus2}):
+                        seq_dict[Database.get_name(access)] = Database.get_sequence(access)
+                bar.next()
+            t1 = time.time()
+            print("\n   ==> Dataset cleaned in %f seconds."%(t1 - t0))
+            if len(seq_dict) == 0: 
+                print("\n!! WARNING !! After cleaning the database there is no sequence left.\n\
+                Please check your GENUS parameter and run the command again.\n\n\
+                    ==> STOPPED the PROGRAM before END.")
+                exit()
+            return seq_dict
+
 def group_by_complex(self):
     """Change the lineage and taxon of all species which are in a species complex.
     The taxon name become the complex name and the lineage stop at this level. 
