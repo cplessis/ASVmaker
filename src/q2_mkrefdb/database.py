@@ -100,7 +100,7 @@ class Database:
         seq_list = []
         with open(fasta_file) as file:
             for line in file.readlines():
-                line = line.rstrip("\n").replace("U", "T")
+                line = line.rstrip("\n").replace("U", "T").upper()
                 if line == "": pass
                 elif (line[0] == ">") & (bool_multiple_seq == True):
                     try:
