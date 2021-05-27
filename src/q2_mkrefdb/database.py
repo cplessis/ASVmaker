@@ -169,6 +169,12 @@ class Database:
         self.taxon_dict = self.__make_taxon_dict()
         self.complex_dict = self.__make_complex_dict()
 
+    def update_data2(self):
+        """Update the information of the class.
+        """
+        self.taxon_dict = self.__make_taxon_dict()
+        self.complex_dict = self.__make_complex_dict()
+
     def __make_taxon_dict(self):
         """Create the taxon dictionnary.
 
