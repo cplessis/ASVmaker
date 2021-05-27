@@ -101,7 +101,7 @@ def del_redund_ampli_tax(Database):
         print("\n   ==> Deletion done in %f seconds."%(t1 - t0))
         return seq_dict
 
-def clean_dataset2(Database, wanted_genus1, wanted_genus2, unverified_bool):
+def clean_dataset1(Database, wanted_genus1, wanted_genus2, unverified_bool):
         """Keep in the dataset only the specified genus. The unverified bool remove all
         the species which are ended by '.' such as 'Fusarium sp.' if False is specified. 
 
@@ -139,7 +139,7 @@ def clean_dataset2(Database, wanted_genus1, wanted_genus2, unverified_bool):
                 exit()
             return temp_dict
 
-def clean_dataset(Database, wanted_genus1, wanted_genus2, unverified_bool):
+def clean_dataset2(Database, wanted_genus1, wanted_genus2, unverified_bool):
         """Keep in the dataset only the specified genus. The unverified bool remove all
         the species which are ended by '.' such as 'Fusarium sp.' if False is specified. 
 
@@ -169,6 +169,39 @@ def clean_dataset(Database, wanted_genus1, wanted_genus2, unverified_bool):
                     ==> STOPPED the PROGRAM before END.")
                 exit()
             return seq_dict
+
+def clean_dataset(Database, wanted_genus1, wanted_genus2, unverified_bool):
+        t0 = time.time()
+        with FillingSquaresBar('Cleaning dataset ', max= len(Database.seq_dict)) as bar:
+            seq_dict = {}
+            for access in Database.access_dict:
+                seq_name_list = Database.get_taxon(access).split("_")
+                print(seq_name_list, access)
+                if len(Database.get_taxon(access).split("_")) > 1:
+                    if seq_name_list[0] == wanted_genus1:
+                        if (unverified_bool == False) & (seq_name_list[1][-1] != "."):
+                            seq_dict[Database.get_name(access)] = Database.get_sequence(access)
+                        elif unverified_bool == True:
+                            seq_dict[Database.get_name(access)] = Database.get_sequence(access)
+                    elif (unverified_bool == True) & (seq_name_list[1] == wanted_genus1):
+                        seq_dict[Database.get_name(access)] = Database.get_sequence(access)
+                    elif seq_name_list[0] == wanted_genus2:
+                        if (unverified_bool == False) & (seq_name_list[1][-1] != "."):                        
+                            seq_dict[Database.get_name(access)] = Database.get_sequence(access)
+                        elif unverified_bool == True:
+                            seq_dict[Database.get_name(access)] = Database.get_sequence(access)
+                    elif (unverified_bool == True) & (seq_name_list[1] == wanted_genus2):
+                        seq_dict[Database.get_name(access)] = Database.get_sequence(access)
+                bar.next()            
+            t1 = time.time()
+            print("\n   ==> Dataset cleaned in %f seconds."%(t1 - t0))
+            if len(seq_dict) == 0: 
+                print("\n!! WARNING !! After cleaning the database there is no sequence left.\n\
+                Please check your GENUS parameter and run the command again.\n\n\
+                    ==> STOPPED the PROGRAM before END.")
+                exit()
+            return seq_dict
+
 
 def group_by_complex(self):
     """Change the lineage and taxon of all species which are in a species complex.
