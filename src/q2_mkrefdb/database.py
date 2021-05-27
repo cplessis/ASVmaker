@@ -134,8 +134,7 @@ class Database:
             if re.search("[^ATCGatcg]", self.seq_dict[seq_name]) == None:
                 access_dict[self.get_access_from_des(seq_name)] = \
                     {"name":seq_name, "sequence":self.seq_dict[seq_name], \
-                        "taxon":seq_name.split()[1]+"_"+seq_name.split()[2], \
-                            "SAids": set()}
+                        "taxon":seq_name.split()[1]+"_"+seq_name.split()[2]}
             else: new_seq_dict.pop(seq_name)
         self.seq_dict = new_seq_dict    
         return access_dict
