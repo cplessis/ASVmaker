@@ -100,7 +100,7 @@ class Database:
         seq_list = []
         with open(fasta_file) as file:
             for line in file.readlines():
-                line = line.rstrip("\n").replace("U", "T").upper()
+                line = line.rstrip("\n")
                 if line == "": pass
                 elif (line[0] == ">") & (bool_multiple_seq == True):
                     try:
@@ -115,8 +115,8 @@ class Database:
                     seq_list.append(line)
                     seq_ref = line
                 elif seq_ref != "pass":
-                    if bool_multiple_seq == True: seq_dict[seq_ref] += line
-                    else: seq_list.append(line)
+                    if bool_multiple_seq == True: seq_dict[seq_ref] += line.replace("U", "T").upper()
+                    else: seq_list.append(line.replace("U", "T").upper())
         if bool_multiple_seq == True: answer = seq_dict
         else: answer = seq_list
         return answer
@@ -134,7 +134,8 @@ class Database:
             if re.search("[^ATCGatcg]", self.seq_dict[seq_name]) == None:
                 access_dict[self.get_access_from_des(seq_name)] = \
                     {"name":seq_name, "sequence":self.seq_dict[seq_name], \
-                        "taxon":seq_name.split()[1]+"_"+seq_name.split()[2]}
+                        "taxon":seq_name.split()[1]+"_"+seq_name.split()[2], \
+                            "SAids": set()}
             else: new_seq_dict.pop(seq_name)
         self.seq_dict = new_seq_dict    
         return access_dict
@@ -305,9 +306,9 @@ class Database:
         """        
         complex_dict = {}
         for access_nb in self.access_dict:
-            if self.get_lineage(access_nb) != "NA":
+            if self.get_lineage(access_nb) not in {"NA", None, "; "}:
                 complex_name = self.get_lineage(access_nb).split("; ")[-2]
-                if self.get_taxon(access_nb).split("_")[-1] in {"complex", "group"}:
+                if self.get_taxon(access_nb).split("_")[-1] in {"complex", "group", "clade"}:
                     complex_name = self.access_dict[access_nb]["taxon"]
                     taxon = "_".join(self.get_name(access_nb).split()[1:3])
                     if  complex_name not in complex_dict:
@@ -523,14 +524,14 @@ class Database:
         for access_nb in self.access_dict:
             amplicon = self.get_amplicon(access_nb)
             if  amplicon not in checked_sequences:
-                checked_sequences[amplicon] = {access_nb}
+                checked_sequences[amplicon] = {access_nb+"|"+self.get_taxon(access_nb)}
             else:
-                checked_sequences[amplicon].add(access_nb)
+                checked_sequences[amplicon].add(access_nb+"|"+self.get_taxon(access_nb))
         for amplicon in checked_sequences:
             if threshold > len(checked_sequences[amplicon]) > 1:
                 shared_amplicon = ""
                 for access_nb in checked_sequences[amplicon]:
-                    shared_amplicon += access_nb+"_"+self.get_taxon(access_nb)+"  <--->  "
+                    shared_amplicon += access_nb+"  <--->  "
                 shared_ampli_list.append(shared_amplicon)
             elif len(checked_sequences[amplicon]) > threshold:
                 sa_number += 1 
