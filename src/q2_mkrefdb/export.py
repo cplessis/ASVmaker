@@ -28,6 +28,7 @@ def export_tax_id_txt(self, output_file_name, separator):
         """        
         with open(output_file_name, "w") as taxon_file:
             for access_nb in self.access_dict:
+                print(access_nb)
                 lineage = self.get_lineage(access_nb)
                 if lineage == "NA": lineage = ""
                 taxon_file.write(access_nb+separator+lineage+self.get_taxon(access_nb)+"\n")

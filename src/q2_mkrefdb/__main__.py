@@ -1,4 +1,5 @@
 import argparse, sys, getpass, datetime, platform
+import database
 from . import database as db
 from . import utils
 
@@ -211,8 +212,38 @@ def get_arguments():
                           help="Display information file in terminal if arg is specified.",
                           action = 'store_true',
                           default=False)
-
-
+    #---------------------------------------------------
+    #                MERGE
+    #---------------------------------------------------
+    subparser_edit.add_argument('-i',
+                          '--database_json',
+                          help="Path to the database JSON file to treat.",
+                          required=True)
+    subparser_edit.add_argument('-i2',
+                          '--database_json2',
+                          help="Path to the second database JSON file to treat.",
+                          required=True)
+    subparser_edit.add_argument('-sa1',
+                          '--shared_amplicons1',
+                          help="Path to the first shared_amplicons_ext TXT FILE to treat.",
+                          required=True)
+    subparser_edit.add_argument('-sa2',
+                          '--shared_amplicons2',
+                          help="Path to the second shared_amplicons_ext TXT FILE to treat.",
+                          required=True)
+    subparser_edit.add_argument('-o',
+                          '--output_database_json',
+                          help="File name of the access dictionnary JSON output.",
+                          required=True)
+    subparser_edit.add_argument('-inf',
+                          '--infos_file',
+                          help="Informations file in which all the files treatments are recorded.",
+                          default=None)
+    subparser_edit.add_argument('-dit',
+                          '--displ_inf_terminal',
+                          help="Display information file in terminal if arg is specified.",
+                          action = 'store_true',
+                          default=False)
 
     args = parser.parse_args()
     return args
@@ -226,6 +257,7 @@ if "source_database" in args_dict: action_type = "create"
 if "genus1" in args_dict: action_type = "filter"
 if "seq_variants_output" in args_dict: action_type = "export"
 if "remove" in args_dict: action_type = "edit"
+if "database_json2" in args_dict: action_type = "merge"
 
 print("\n\n\n\
 =============================================================================================\n\
@@ -285,7 +317,7 @@ if action_type == "create":
     
 
 # Initiate if the FILTER or EXPORT subparser is called
-if action_type in ["filter", "export", "edit"]:
+if action_type in ["filter", "export", "edit", "merge"]:
     data.import_db(args.database_json)
     write_db_infos(data)
     output_saver.write(data.get_info("init data")+"\n")
@@ -391,6 +423,28 @@ if action_type == "edit":
         data.group_by_id(group)
         output_saver.write(data.get_info("Grouped sequences from %s"%group)+"\n")
 
+if action_type == "merge":
+    output_saver.write("\n\n\n\
+=============================================================================================\n\
+=========                            Merge Informations                              =========\n\
+=============================================================================================\n")
+    print("\n\n\n\
+------------------------------------\n\
+                MERGE               \n\
+------------------------------------\n")
+    json2 = args.database_json2
+    sa1 = args.shared_amplicons1
+    sa2 = args.shared_amplicons2
+    output_database = args.output_database_json
+    db2 = db.Database()
+    db2.import_db(json2)
+    output_saver.write(data.get_info(json2+" INFOS")+"\n")
+    data.merge(db2, sa1, sa2, output_database)
+    output_saver.write("\n\
+=============================================================================================\n")
+    output_saver.write("* "+args.database_json+" & "+json2+" have been MERGED.\n")
+    output_saver.write(data.get_info(output_database+" INFOS")+"\n")
+
 output_saver.write("\n\n\n\
 =============================================================================================\n\
 =========                            Export Informations                            =========\n\
@@ -443,8 +497,6 @@ if action_type == "export":
         output_saver.write("* COMPLEX DICT file exported as '%s'.\n"%complex_dict_output)
         data.export_complex_dict(complex_dict_output, "\t")
 
-
-
 #---------------------------------------------------
 #                END
 #---------------------------------------------------
@@ -453,7 +505,7 @@ if action_type == "create":
         output_saver.write("* MODIFIED TAX LIST file exported as '%s'.\n"%modified_tax_output)
         data.export_modified_tax(modified_tax_output)
 
-if action_type in ["create", "filter", "edit"]:
+if action_type in ["create", "filter", "edit", "merge"]:
     output_database_json = args.output_database_json
     output_saver.write("* DATABASE JSON file exported as '%s'.\n"%output_database_json)
     data.export_access_dict(output_database_json)

@@ -1,5 +1,5 @@
 import re, time
-from . import utils, filter, lineage, stats, edit, export
+from . import utils, filter, lineage, stats, edit, export, merge
 from .pcr import amplify
 from progress.bar import FillingSquaresBar
 from progress.spinner import PixelSpinner
@@ -620,6 +620,14 @@ class Database:
         self.seq_dict = group[1]
         self.update_data()
     group_by_id.__doc__ = edit.group_by_id.__doc__
+
+#######################################################################################################################
+#################         MERGE          ##############################################################################
+#######################################################################################################################
+
+    def merge(self, Database2, sa_file1, sa_file2, output_Database):
+        merge.merge(self, sa_file1, Database2, sa_file2, output_Database)
+    merge.__doc__ = merge.merge.__doc__
 
 #######################################################################################################################
 #################         EXPORT         ##############################################################################
