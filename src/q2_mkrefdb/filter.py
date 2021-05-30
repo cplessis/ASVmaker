@@ -178,14 +178,14 @@ def clean_dataset(Database, wanted_genus1, wanted_genus2, unverified_bool):
                 seq_name_list = Database.get_taxon(access).split("_")
                 if len(Database.get_taxon(access).split("_")) > 1:
                     if seq_name_list[0] == wanted_genus1:
-                        if (unverified_bool == False) & (seq_name_list[1][-1] != "."):
+                        if (unverified_bool == False) & (seq_name_list[1][-1] != ".") & (seq_name_list[1] != "sp"):
                             seq_dict[Database.get_name(access)] = Database.get_sequence(access)
                         elif unverified_bool == True:
                             seq_dict[Database.get_name(access)] = Database.get_sequence(access)
                     elif (unverified_bool == True) & (seq_name_list[1] == wanted_genus1):
                         seq_dict[Database.get_name(access)] = Database.get_sequence(access)
                     elif seq_name_list[0] == wanted_genus2:
-                        if (unverified_bool == False) & (seq_name_list[1][-1] != "."):                        
+                        if (unverified_bool == False) & (seq_name_list[1][-1] != ".") & (seq_name_list[1] != "sp"):                        
                             seq_dict[Database.get_name(access)] = Database.get_sequence(access)
                         elif unverified_bool == True:
                             seq_dict[Database.get_name(access)] = Database.get_sequence(access)
