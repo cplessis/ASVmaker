@@ -176,7 +176,6 @@ def clean_dataset(Database, wanted_genus1, wanted_genus2, unverified_bool):
             seq_dict = {}
             for access in Database.access_dict:
                 seq_name_list = Database.get_taxon(access).split("_")
-                print(seq_name_list, access)
                 if len(Database.get_taxon(access).split("_")) > 1:
                     if seq_name_list[0] == wanted_genus1:
                         if (unverified_bool == False) & (seq_name_list[1][-1] != "."):

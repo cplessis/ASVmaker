@@ -1,5 +1,6 @@
 import re, time
-from . import utils, filter, lineage, stats, edit, export, merge
+from . import utils, filter, lineage, stats, edit, export
+from . import merge as mg
 from .pcr import amplify
 from progress.bar import FillingSquaresBar
 from progress.spinner import PixelSpinner
@@ -38,30 +39,12 @@ class Database:
         self.forward_primer_list = self.__get_seq_from_fasta(forward_primer_fasta, False)
         self.reverse_primer_list = self.__get_seq_from_fasta(reverse_primer_fasta, False)
         self.seq_dict = self.__get_seq_from_fasta(fasta_file, True)
-        self.access_dict = self.__make_access_dict()
+        if origin_database in {"silva", "unite"}: self.access_dict = self.__make_access_dict2()
+        else: self.access_dict = self.__make_access_dict()
         self.taxon_dict = self.__make_taxon_dict()
         self.modified_taxon = set()
         self.__make_amplicon_dict()
         self.__make_lineage_dict()
-        self.complex_dict = self.__make_complex_dict()
-        self.sa_threshold = 1000
-        return
-
-    def create2(self, fasta_file, origin_database, forward_primer_fasta, reverse_primer_fasta, \
-        fw_mismatch_tol = 3, rv_mismatch_tol = 3, trim_primers = True):            
-        self.file_name = fasta_file.rstrip(".fasta")
-        self.origin_database = origin_database
-        self.fw_mismatch_tol = fw_mismatch_tol
-        self.rv_mismatch_tol = rv_mismatch_tol
-        self.trim_primers = trim_primers
-        self.forward_primer_list = self.__get_seq_from_fasta(forward_primer_fasta, False)
-        self.reverse_primer_list = self.__get_seq_from_fasta(reverse_primer_fasta, False)
-        self.seq_dict = self.__get_seq_from_fasta(fasta_file, True)
-        self.access_dict = self.__make_access_dict2()
-        self.taxon_dict = self.__make_taxon_dict()
-        self.modified_taxon = set()
-        self.__make_amplicon_dict()
-        self.__make_lineage_dict2()
         self.complex_dict = self.__make_complex_dict()
         self.sa_threshold = 1000
         return
@@ -205,21 +188,21 @@ class Database:
                 t1 = time.time()
                 print("\n   ==> Got species lineages in %f seconds."%(t1 - t0))
     
-    def __make_lineage_dict2(self):
-        with FillingSquaresBar('Getting species lineages from EBI taxonomy online ressources ', \
-            max= len(self.taxon_dict)) as bar:
-                t0 = time.time()  
-                for taxon in self.taxon_dict:
-                    for access_nb in self.taxon_dict[taxon]:
-                        if self.origin_database == "silva":
-                            lineage = self.get_name(access_nb).split()[1].split(";")[:-1]
-                        if self.origin_database == "unite":
-                            lineage = self.get_name(access_nb).split("|")[1].split(";")[:-1]
-                        self.access_dict[access_nb]["lineage"] = "; ".join(lineage)+"; "
-                    bar.next()
-                self.update_data()
-                t1 = time.time()
-                print("\n   ==> Got species lineages in %f seconds."%(t1 - t0))
+    # def __make_lineage_dict2(self):
+    #     with FillingSquaresBar('Getting species lineages from EBI taxonomy online ressources ', \
+    #         max= len(self.taxon_dict)) as bar:
+    #             t0 = time.time()  
+    #             for taxon in self.taxon_dict:
+    #                 for access_nb in self.taxon_dict[taxon]:
+    #                     if self.origin_database == "silva":
+    #                         lineage = self.get_name(access_nb).split()[1].split(";")[:-1]
+    #                     if self.origin_database == "unite":
+    #                         lineage = self.get_name(access_nb).split("|")[1].split(";")[:-1]
+    #                     self.access_dict[access_nb]["lineage"] = "; ".join(lineage)+"; "
+    #                 bar.next()
+    #             self.update_data()
+    #             t1 = time.time()
+    #             print("\n   ==> Got species lineages in %f seconds."%(t1 - t0))
  
     def __get_lineage_norm(self, taxon, name_list):
         """Used in __make_lineage_dict function. Find the lineage of a specie from EBI. 
@@ -238,7 +221,8 @@ class Database:
                 n += 1
                 if self.origin_database == "rnaCentral":
                     lineage = self.__complete_lineage2(access_nb)
-                else: lineage = self.__complete_lineage(access_nb)
+                elif access_nb[:3] != "UDB": lineage = self.__complete_lineage(access_nb)
+                else: lineage = "NA"
                 if str(taxon+" => "+self.get_taxon(access_nb)) not in self.modified_taxon:
                     self.modified_taxon.add(taxon+" => "+self.get_taxon(access_nb))
                 if lineage == "NA": self.__na_tax_str += (taxon+"\n")
@@ -248,7 +232,8 @@ class Database:
                 if lineage == "NA":
                     if self.origin_database == "rnaCentral":
                         lineage = self.__complete_lineage2(access_nb)
-                    else: lineage = self.__complete_lineage(access_nb)
+                    elif access_nb[:3] != "UDB": lineage = self.__complete_lineage(access_nb)
+                    else: lineage = "NA"
                     if str(taxon+" => "+self.get_taxon(access_nb)) not in self.modified_taxon:
                         self.modified_taxon.add(taxon+" => "+self.get_taxon(access_nb))
                 if lineage == "NA": self.__na_tax_str += (taxon+"\n")
@@ -267,23 +252,23 @@ class Database:
             string: lineage if found, else 'NA'
         """
         xml_url = "https://www.ebi.ac.uk/ena/browser/api/text/%s?lineLimit=25"%access_nb
-        response = utils.get_var_from_url(xml_url, "str")
         try: 
             taxon = ""
             lineage = ""
+            response = utils.get_var_from_url(xml_url, "str")
             for line in response.split("\n"):
-                if line[:2] == "OS": taxon = "_".join(line.split()[1:])
+                if line[:2] == "OS": taxon = "_".join(line.split()[1:3])
                 if line[:2] == "OC": lineage += " ".join(line.split()[1:])+" "
-            self.access_dict[access_nb]["taxon"] = "_".join(taxon)
+            self.access_dict[access_nb]["taxon"] = taxon
             return lineage.rstrip(" .")+"; "
-        except:
+        except UnicodeDecodeError:
             Entrez.email = 'someuser@mail.com'
             handle = Entrez.efetch(db="nucleotide", id=access_nb, rettype="gb", retmode="text")
             result=handle.read().split('\n')
             for line in result:
                 if 'ORGANISM' in line :
-                    self.access_dict[access_nb]["taxon"] = "_".join(line.split()[1:])
-                    url = "https://www.ebi.ac.uk/ena/taxonomy/rest/scientific-name/"+"%20".join(line.split()[1:])
+                    self.access_dict[access_nb]["taxon"] = "_".join(line.split()[1:3])
+                    url = "https://www.ebi.ac.uk/ena/taxonomy/rest/scientific-name/"+"%20".join(line.split()[1:3])
                     try: return utils.get_var_from_url(url, "json")[0]['lineage']
                     except: return "NA" 
 
@@ -626,8 +611,8 @@ class Database:
 #######################################################################################################################
 
     def merge(self, Database2, sa_file1, sa_file2, output_Database):
-        merge.merge(self, sa_file1, Database2, sa_file2, output_Database)
-    merge.__doc__ = merge.merge.__doc__
+        mg.merge(self, sa_file1, Database2, sa_file2, output_Database)
+    merge.__doc__ =  mg.merge.__doc__
 
 #######################################################################################################################
 #################         EXPORT         ##############################################################################

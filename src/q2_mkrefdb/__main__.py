@@ -1,5 +1,4 @@
 import argparse, sys, getpass, datetime, platform
-import database
 from . import database as db
 from . import utils
 
@@ -13,6 +12,7 @@ def get_arguments():
     subparser_filter = subparsers.add_parser("filter")
     subparser_export = subparsers.add_parser("export")
     subparser_edit = subparsers.add_parser("edit")
+    subparser_merge = subparsers.add_parser("merge")
     
     #---------------------------------------------------
     #                  CREATE
@@ -215,31 +215,31 @@ def get_arguments():
     #---------------------------------------------------
     #                MERGE
     #---------------------------------------------------
-    subparser_edit.add_argument('-i',
+    subparser_merge.add_argument('-i',
                           '--database_json',
                           help="Path to the database JSON file to treat.",
                           required=True)
-    subparser_edit.add_argument('-i2',
+    subparser_merge.add_argument('-i2',
                           '--database_json2',
                           help="Path to the second database JSON file to treat.",
                           required=True)
-    subparser_edit.add_argument('-sa1',
+    subparser_merge.add_argument('-sa1',
                           '--shared_amplicons1',
                           help="Path to the first shared_amplicons_ext TXT FILE to treat.",
                           required=True)
-    subparser_edit.add_argument('-sa2',
+    subparser_merge.add_argument('-sa2',
                           '--shared_amplicons2',
                           help="Path to the second shared_amplicons_ext TXT FILE to treat.",
                           required=True)
-    subparser_edit.add_argument('-o',
+    subparser_merge.add_argument('-o',
                           '--output_database_json',
                           help="File name of the access dictionnary JSON output.",
                           required=True)
-    subparser_edit.add_argument('-inf',
+    subparser_merge.add_argument('-inf',
                           '--infos_file',
                           help="Informations file in which all the files treatments are recorded.",
                           default=None)
-    subparser_edit.add_argument('-dit',
+    subparser_merge.add_argument('-dit',
                           '--displ_inf_terminal',
                           help="Display information file in terminal if arg is specified.",
                           action = 'store_true',
@@ -305,12 +305,8 @@ if action_type == "create":
                 Create              \n\
 ------------------------------------\n")
     # Init input data: FASTA FILE from NCBI, EBI or DDBJ
-    if args.source_database in {'unite', 'silva'}:
-        data.create2(args.sequences_input, args.source_database, args.forward_primer, args.reverse_primer, \
-            args.fw_mismatch_tol, args.rv_mismatch_tol, args.trim_primers)
-    else: 
-        data.create(args.sequences_input, args.source_database, args.forward_primer, args.reverse_primer, \
-            args.fw_mismatch_tol, args.rv_mismatch_tol, args.trim_primers)
+    data.create(args.sequences_input, args.source_database, args.forward_primer, args.reverse_primer, \
+        args.fw_mismatch_tol, args.rv_mismatch_tol, args.trim_primers)
     write_db_infos(data)
     output_saver.write(data.get_info("init data")+"\n")
     modified_tax_output = args.modified_tax_output
