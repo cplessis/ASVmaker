@@ -1,4 +1,4 @@
-import time
+import time, re
 from progress.bar import FillingSquaresBar
 from pydna.dseqrecord import Dseqrecord
 
@@ -51,7 +51,7 @@ def del_na_amplicons(Database):
     with FillingSquaresBar('Deleting NA amplicons ', max= len(Database.access_dict)) as bar:
         temp_seq_dict = {}
         for access_nb in Database.access_dict:
-            if Database.get_amplicon(access_nb) != "NA":
+            if Database.get_amplicon(access_nb) not in {"NA", "\n", "", "\t", " "}:
                 temp_seq_dict[Database.get_name(access_nb)] = Database.get_sequence(access_nb)
             bar.next()
         t1 = time.time()
@@ -178,14 +178,18 @@ def clean_dataset(Database, wanted_genus1, wanted_genus2, unverified_bool):
                 seq_name_list = Database.get_taxon(access).split("_")
                 if len(Database.get_taxon(access).split("_")) > 1:
                     if seq_name_list[0] == wanted_genus1:
-                        if (unverified_bool == False) & (seq_name_list[1][-1] != ".") & (seq_name_list[1] != "sp"):
+                        if (unverified_bool == False) & (seq_name_list[1][-1] != ".") & \
+                            (seq_name_list[1] not in {"sp", "uncultured", "unidentified"}) & \
+                                (not re.search("unclassified", Database.access_dict[access]["lineage"])):
                             seq_dict[Database.get_name(access)] = Database.get_sequence(access)
                         elif unverified_bool == True:
                             seq_dict[Database.get_name(access)] = Database.get_sequence(access)
                     elif (unverified_bool == True) & (seq_name_list[1] == wanted_genus1):
                         seq_dict[Database.get_name(access)] = Database.get_sequence(access)
                     elif seq_name_list[0] == wanted_genus2:
-                        if (unverified_bool == False) & (seq_name_list[1][-1] != ".") & (seq_name_list[1] != "sp"):                        
+                        if (unverified_bool == False) & (seq_name_list[1][-1] != ".") & \
+                            (seq_name_list[1] not in {"sp", "uncultured", "unidentified"}) & \
+                                (not re.search("unclassified", Database.access_dict[access]["lineage"])):                        
                             seq_dict[Database.get_name(access)] = Database.get_sequence(access)
                         elif unverified_bool == True:
                             seq_dict[Database.get_name(access)] = Database.get_sequence(access)
