@@ -377,29 +377,30 @@ class Database:
         "===> "+title.upper()+"\n"+\
         "File name : "+self.file_name+"\n\n"+\
         "--------------SEQUENCES---------------------\n"+\
-        "Number of sequences : "+str(len(self.seq_dict))+"\n"+ \
-        "Maximum sequences length : "+str(stats.max_seq_len(self))+"\n"+\
-        "Minimum sequences length : "+str(stats.min_seq_len(self))+"\n"+\
-        "Mean sequences length : "+str(stats.mean_seq_len(self))+"\n\n"+\
+        "S Number of sequences : "+str(len(self.seq_dict))+"\n"+ \
+        "S Maximum sequences length : "+str(stats.max_seq_len(self))+"\n"+\
+        "S Minimum sequences length : "+str(stats.min_seq_len(self))+"\n"+\
+        "S Mean sequences length : "+str(stats.mean_seq_len(self))+"\n\n"+\
         "---------------TAXONS-----------------------\n"+\
-        "Number of different taxons : "+str(len(self.taxon_dict))+"\n"+\
-        "Maximum number of sequences per taxon : "+str(stats.max_nb_seq_tax(self))+"\n"+\
-        "Minimum number of sequences per taxon : "+str(stats.min_nb_seq_tax(self))+"\n"+\
-        "Mean number of sequences per taxon : "+str(stats.mean_nb_seq_tax(self))+"\n\n"+\
+        "T Number of different taxons : "+str(len(self.taxon_dict))+"\n"+\
+        "T Maximum number of sequences per taxon : "+str(stats.max_nb_seq_tax(self))+"\n"+\
+        "T Minimum number of sequences per taxon : "+str(stats.min_nb_seq_tax(self))+"\n"+\
+        "T Mean number of sequences per taxon : "+str(stats.mean_nb_seq_tax(self))+"\n"+\
+        "T Number of SAs taxons : "+str(len(self.get_SAs()))+"\n\n"+\
         "---------------COMPLEXS---------------------\n"+\
-        "Number of differents complex : "+str(len(self.complex_dict))+"\n"+\
-        "Maximum number of taxons per complex : "+str(stats.max_tax_complex(self))+"\n"+\
-        "Minimum number of taxons per complex : "+str(stats.min_tax_complex(self))+"\n"+\
-        "Mean number of taxons per complex : "+str(stats.mean_tax_complex(self))+"\n"+\
-        "Maximum number of sequences per complex : "+str(stats.max_seq_complex(self))+"\n"+\
-        "Minimum number of sequences per complex : "+str(stats.min_seq_complex(self))+"\n"+\
-        "Mean number of sequences per complex : "+str(stats.mean_seq_complex(self))+"\n\n"+\
+        "C Number of differents complex : "+str(len(self.complex_dict))+"\n"+\
+        "C Maximum number of taxons per complex : "+str(stats.max_tax_complex(self))+"\n"+\
+        "C Minimum number of taxons per complex : "+str(stats.min_tax_complex(self))+"\n"+\
+        "C Mean number of taxons per complex : "+str(stats.mean_tax_complex(self))+"\n"+\
+        "C Maximum number of sequences per complex : "+str(stats.max_seq_complex(self))+"\n"+\
+        "C Minimum number of sequences per complex : "+str(stats.min_seq_complex(self))+"\n"+\
+        "C Mean number of sequences per complex : "+str(stats.mean_seq_complex(self))+"\n\n"+\
         "--------------AMPLICONS---------------------\n"+\
-        "Number of amplicons : "+str(stats.get_amplicon_nb(self))+"\n"+\
-        "Maximum amplicons length : "+str(stats.max_amplicon_len(self))+"\n"+\
-        "Minimum amplicons length : "+str(stats.min_amplicon_len(self))+"\n"+\
-        "Mean amplicons length : "+str(stats.mean_amplicon_len(self))+"\n"+\
-        "Number of redundant amplicons : "+str(len(self.get_shared_amplicons(self.sa_threshold)[0]))+"\n"+\
+        "A Number of amplicons : "+str(stats.get_amplicon_nb(self))+"\n"+\
+        "A Maximum amplicons length : "+str(stats.max_amplicon_len(self))+"\n"+\
+        "A Minimum amplicons length : "+str(stats.min_amplicon_len(self))+"\n"+\
+        "A Mean amplicons length : "+str(stats.mean_amplicon_len(self))+"\n"+\
+        "A Number of redundant amplicons : "+str(len(self.get_shared_amplicons(self.sa_threshold)[0]))+"\n"+\
         "****************************************\n"
         return message
 
