@@ -403,6 +403,31 @@ class Database:
         "****************************************\n"
         return message
 
+    def get_infos_dict(self):
+        return {
+            "nb seq" : len(self.seq_dict),
+            "max seq len" : stats.max_seq_len(self),
+            "min seq len" : stats.min_seq_len(self),
+            "mean seq len" : stats.mean_seq_len(self),
+            "nb tax" : len(self.taxon_dict),
+            "max seq nb / tax" : stats.max_nb_seq_tax(self),
+            "min seq nb / tax": stats.min_nb_seq_tax(self),
+            "mean seq nb / tax" : stats.mean_nb_seq_tax(self),
+            "nb SA" : len(self.get_SAs()),
+            "nb complex" : len(self.complex_dict),
+            "max tax nb / complex" : stats.max_tax_complex(self),
+            "min tax nb /complex" : stats.min_tax_complex(self),
+            "mean tax nb /complex" : stats.mean_tax_complex(self),
+            "max seq nb / complex" : stats.max_seq_complex(self),
+            "min seq nb /complex" : stats.min_seq_complex(self),
+            "mean seq nb / complex" : stats.mean_seq_complex(self),
+            "nb ampl" : stats.get_amplicon_nb(self),
+            "max ampl len" : stats.max_amplicon_len(self),
+            "min ampl len" : stats.min_amplicon_len(self),
+            "mean ampl len" : stats.mean_amplicon_len(self),
+            "nb redund ampl" : len(self.get_shared_amplicons(self.sa_threshold)[0]),
+        }
+
     def get_sequence(self, access_number):
         """Get sequence from the accession number.
 
