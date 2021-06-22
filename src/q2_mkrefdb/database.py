@@ -649,8 +649,12 @@ class Database:
 #######################################################################################################################
 
     def merge(self, Database2, sa_file1, sa_file2, output_Database):
-        mg.merge(self, sa_file1, Database2, sa_file2, output_Database)
+        mg.merge(self,Database2, sa_file1, sa_file2, output_Database)
     merge.__doc__ =  mg.merge.__doc__
+
+    def merge_all(dir_path, s_or_g, outputDB):
+        mg.merge_all(dir_path, s_or_g, outputDB)
+    merge_all.__doc__ =  mg.merge_all.__doc__
 
 #######################################################################################################################
 #################         EXPORT         ##############################################################################
