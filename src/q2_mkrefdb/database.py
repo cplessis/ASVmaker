@@ -480,6 +480,18 @@ class Database:
             set: all taxons
         """        
         return {taxon for taxon in self.taxon_dict}
+    
+    def get_SAs(self):
+        """Get the set of all SA taxons.
+
+        Returns:
+            set: all SA taxons
+        """
+        SAs = set()
+        for taxon in self.taxon_dict:
+            if taxon.split("_")[-1][:2] == "SA":
+                SAs.add(taxon)
+        return SAs
 
     def get_genus(self, access_number):
         """Get the genus from accession number.
