@@ -218,6 +218,7 @@ class Database:
         if (taxon[-1] == ".") & (lineage == "NA"): # If taxon end by a dot, then we look for lineage of each accession nb
             n = 0
             for access_nb in self.taxon_dict[taxon]:
+                print("OK --> ", access_nb)
                 n += 1
                 if self.origin_database == "rnaCentral":
                     lineage = self.__complete_lineage2(access_nb)
@@ -229,6 +230,7 @@ class Database:
                 self.access_dict[access_nb]["lineage"] = lineage    
         else:
             for access_nb in self.taxon_dict[taxon]:
+                print(" . or NA --> ", access_nb)
                 if lineage == "NA":
                     if self.origin_database == "rnaCentral":
                         lineage = self.__complete_lineage2(access_nb)

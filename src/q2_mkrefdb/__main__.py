@@ -13,6 +13,7 @@ def get_arguments():
     subparser_export = subparsers.add_parser("export")
     subparser_edit = subparsers.add_parser("edit")
     subparser_merge = subparsers.add_parser("merge")
+    subparser_merge_all = subparsers.add_parser("merge-all")
     
     #---------------------------------------------------
     #                  CREATE
@@ -244,6 +245,17 @@ def get_arguments():
                           help="Display information file in terminal if arg is specified.",
                           action = 'store_true',
                           default=False)
+    #---------------------------------------------------
+    #                MERGE ALL
+    #---------------------------------------------------
+    subparser_merge.add_argument('-i',
+                          '--directory_path',
+                          help="Path to the directory containaing all databases to merge.",
+                          required=True)
+    subparser_merge.add_argument('-o',
+                          '--output_name',
+                          help="Output name of the JSON merged-database.",
+                          required=True)
 
     args = parser.parse_args()
     return args
@@ -258,6 +270,7 @@ if "genus1" in args_dict: action_type = "filter"
 if "seq_variants_output" in args_dict: action_type = "export"
 if "remove" in args_dict: action_type = "edit"
 if "database_json2" in args_dict: action_type = "merge"
+if "directory_path" in args_dict: action_type = "merge-all"
 
 print("\n\n\n\
 =============================================================================================\n\
@@ -440,6 +453,26 @@ if action_type == "merge":
 =============================================================================================\n")
     output_saver.write("* "+args.database_json+" & "+json2+" have been MERGED.\n")
     output_saver.write(data.get_info(output_database+" INFOS")+"\n")
+
+if action_type == "merge-all":
+    output_saver.write("\n\n\n\
+=============================================================================================\n\
+=========                            Merge-All Informations                              =========\n\
+=============================================================================================\n")
+    print("\n\n\n\
+------------------------------------\n\
+                MERGE-all           \n\
+------------------------------------\n")
+    from . import merge
+    directory_path = args.directory_path
+    output_name = args.output_name
+    merge.merge_all(directory_path, "g", output_name)
+    mergedb = db.Database()
+    mergedb.import_db(output_name)
+    output_saver.write("\n\
+=============================================================================================\n")
+    output_saver.write("* All de databases in "+directory_path+" have been MERGED together.\n")
+    output_saver.write(mergedb.get_info(output_name+" INFOS")+"\n")
 
 output_saver.write("\n\n\n\
 =============================================================================================\n\
