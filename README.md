@@ -8,17 +8,24 @@
     + [Python library directory](#python-library-directory)
 - [Command lines](#command-lines)
   * [CREATE](#create)
-    + [Required](#required)
-    + [Optional](#optional)
-  * [FILTER](#filter)
     + [Required](#required-1)
     + [Optional](#optional-1)
-  * [EDIT](#edit)
+  * [FILTER](#filter)
     + [Required](#required-2)
     + [Optional](#optional-2)
-  * [EXPORT](#export)
+  * [EDIT](#edit)
     + [Required](#required-3)
     + [Optional](#optional-3)
+  * [EXPORT](#export)
+    + [Required](#required-4)
+    + [Optional](#optional-4)
+  * [MERGE](#merge)
+    * [Required](#required-5)
+    * [Optional](#optional-5)
+  * [MERGE ALL](#merge-all)
+    * [Required](#required-6)
+    * [Optional](#optional-6)
+  
 - [Module for import usage](#module-for-import-usage)
 
 # Description
@@ -32,7 +39,7 @@ ATCACCATCGATATTGCTCTCTGGAAGTTCGAGACTCCTCGCTACTATGTCACCGTCATTGGTATGTTGT
 CGCTCATGCCTCGTTCTCCCTTTATTCGTACTAACATATCACTCAGACGCTCCC
 ```
 
-It is mainly intended to be used with command lines with python. However, some modules can be used for other python projects by import. Most of the database creation is automatically done, only a few commands are left to the user. After the creation of the files, a manual verification should be done. A usage example is available [here](https://github.com/cplessis/Fusarium-EF1A-Q2_RefDb) in which we create a reference database for the  Fusarium EF1 alpha gene. 
+It is mainly intended to be used with command lines with python. However, some modules can be used for other python projects by import. Most of the database creation is automatically done, only a few commands are left to the user. After the creation of the files, a manual verification should be done. A usage example is available [here](https://github.com/cplessis/Fusarium-EF1A-Q2_RefDb) in which we create a reference database for the  Fusarium EF1 alpha gene.
 
 
 
@@ -80,7 +87,7 @@ It is mainly intended to be used with command lines with python. However, some m
 
 # Package installation
 
-### From Python Index (Pypi)
+## From Python Index (Pypi)
 
 The package is available on  [pypi](https://pypi.org/). This installation method is the easiest one. 
 
@@ -94,11 +101,11 @@ OR
 python -m pip install q2_mkrefdb
 ```
 
-### Conda environment
+## Conda environment
 
 Installing a package directly with Pypi can cause some version conflicts. Also, the use of this package is generally linked to the use of [Qiime2](https://qiime2.org/). You will therefore find a Conda environment [here](https://github.com/cplessis/Fusarium-EF1A-Q2_RefDb) which will contain all the necessary packages as well as the version of Qiime2 which corresponds to the analyses we carried out in the tutorial [Fusarium-EF1A-Q2_RefDb](https://github.com/cplessis/Fusarium-EF1A-Q2_RefDb).
 
-### Python library directory
+## Python library directory
 
 If you would like to install the package offline, you can use this slightly less "conventional" method. Start by downloading the "q2_mkrefdb" directory from [src](./src). Once you have the directory (package), place it in your python library with the other packages you already use with python. Usually a large part of the python packages are in the "site-packages" directory. You can find the location of this directory by running the following command with `python` (where `anymodule` is the name of the module of your choice):
 
@@ -110,6 +117,22 @@ print(anymodule.__file__)
 Once the package has been placed in the library directory you can call it like any other python package.
 
 # Command lines
+
+```shell
+-inf, --infos_file INFOS_FILE
+# Informations file in which all the files treatments are recorded.
+```
+
+The INFOS_FILE save all the database information (number of sequences, amplicons, etc.) at every step of the analysis. As soon as the data are modified by a filtration, the actual state of the data is written on the file.
+
+___
+
+```shell
+-dit, --displ_inf_terminal
+# Display information file in terminal if arg is specified.
+```
+
+ If you specify this parameter, all the database states will be printed in your shell during the analysis. This command can be specified or not independantbly from the `--infos_file` arg. 
 
 ## CREATE
 
@@ -167,24 +190,6 @@ The primer FASTA file must have only one sequence. With a description and a sequ
  By default, the primers are removed from the amplicon. If this option is specified, they will be conserved. 
 
 ### Optional
-
----
-
-```shell
--inf, --infos_file INFOS_FILE
-# Informations file in which all the files treatments are recorded.
-```
-
-The INFOS_FILE save all the database information (number of sequences, amplicons, etc.) at every step of the analysis. As soon as the data are modified by a filtration, the actual state of the data is written on the file.
-
-___
-
-```shell
--dit, --displ_inf_terminal
-# Display information file in terminal if arg is specified.
-```
-
- If you specify this parameter, all the database states will be printed in your shell during the analysis. This command can be specified or not independantbly from the `--infos_file` arg. 
 
 ---
 
@@ -291,24 +296,6 @@ Some species are not well identified and can be classed as "Fusarium sp." for ex
 
 By default the sequences which can not amplify the region of interest are removed from the dataset. If this arg is specified they are conserved.
 
----
-
-```shell
--inf, --infos_file INFOS_FILE
-# Informations file in which all the files treatments are recorded.
-```
-
-The INFOS_FILE save all the database information (number of sequences, amplicons, etc.) at every step of the analysis. As soon as the data are modified by a filtration, the actual state of the data is written on the file.
-
-___
-
-```shell
--dit, --displ_inf_terminal
-# Display information file in terminal if arg is specified.
-```
-
- If you specify this parameter, all the database states will be printed in your shell during the analysis. This command can be specified or not independantbly from the `--infos_file` arg. 
-
 ___
 
 ___
@@ -368,23 +355,7 @@ The CSV file must be as : ***column 1*** = 'seq_id'  ***column 2*** = 'new_taxon
 
 Group all the sequences with IDs on shared_ext_csv on a commune taxon name. The taxon name will become the SA_id of the group. Only one amplicon will represent the group after this command is runned. The shared_ext_csv FILE must be the one generated with EXPORT shared ampl.
 
----
 
-```shell
--inf, --infos_file INFOS_FILE
-# Informations file in which all the files treatments are recorded.
-```
-
-The INFOS_FILE save all the database information (number of sequences, amplicons, etc.) at every step of the analysis. As soon as the data are modified by a filtration, the actual state of the data is written on the file.
-
-___
-
-```shell
--dit, --displ_inf_terminal
-# Display information file in terminal if arg is specified.
-```
-
- If you specify this parameter, all the database states will be printed in your shell during the analysis. This command can be specified or not independantbly from the `--infos_file` arg. 
 
 ___
 
@@ -472,27 +443,33 @@ Export a file with the sequences which have exactly the same amplicon. One line 
 
 Export  a file with the list of all the complex names as first column and then a dictionnary as second column with all the accession number (related to ASV) and species of this complex.
 
----
+## MERGE
 
 ```shell
--inf, --infos_file INFOS_FILE
-# Informations file in which all the files treatments are recorded.
+python -m q2_mkrefb export [args]
 ```
 
-The INFOS_FILE save all the database information (number of sequences, amplicons, etc.) at every step of the analysis. As soon as the data are modified by a filtration, the actual state of the data is written on the file.
+### Required
 
-___
+### Optional
+
+## MERGE ALL
 
 ```shell
--dit, --displ_inf_terminal
-# Display information file in terminal if arg is specified.
+python -m q2_mkrefb export [args]
 ```
 
- If you specify this parameter, all the database states will be printed in your shell during the analysis. This command can be specified or not independantbly from the `--infos_file` arg. 
+### Required
+
+
+
+### Optional
+
+
 
 # Module for import usage
 
-More informations will be available soon...
+More information will be available soon...
 
 
 
