@@ -248,14 +248,23 @@ def get_arguments():
     #---------------------------------------------------
     #                MERGE ALL
     #---------------------------------------------------
-    subparser_merge.add_argument('-i',
+    subparser_merge_all.add_argument('-i',
                           '--directory_path',
                           help="Path to the directory containaing all databases to merge.",
                           required=True)
-    subparser_merge.add_argument('-o',
+    subparser_merge_all.add_argument('-o',
                           '--output_name',
                           help="Output name of the JSON merged-database.",
                           required=True)
+    subparser_merge_all.add_argument('-inf',
+                          '--infos_file',
+                          help="Informations file in which all the files treatments are recorded.",
+                          default=None)
+    subparser_merge_all.add_argument('-dit',
+                          '--displ_inf_terminal',
+                          help="Display information file in terminal if arg is specified.",
+                          action = 'store_true',
+                          default=False)
 
     args = parser.parse_args()
     return args
