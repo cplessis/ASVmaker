@@ -14,7 +14,19 @@ def get_arguments():
     subparser_edit = subparsers.add_parser("edit")
     subparser_merge = subparsers.add_parser("merge")
     subparser_merge_all = subparsers.add_parser("merge-all")
-    
+
+    #---------------------------------------------------
+    #                  ALL
+    #---------------------------------------------------
+    parser.add_argument('-inf',
+                      '--infos_file',
+                      help="Informations file in which all the files treatments are recorded.",
+                      default=None)
+    parser.add_argument('-dit',
+                          '--displ_inf_terminal',
+                          help="Display information file in terminal if arg is specified.",
+                          action = 'store_true',
+                          default=False)
     #---------------------------------------------------
     #                  CREATE
     #---------------------------------------------------
@@ -58,15 +70,6 @@ def get_arguments():
                           '--output_database_json',
                           help="File name of the access dictionnary JSON output.",
                           required=True)
-    subparser_create.add_argument('-inf',
-                          '--infos_file',
-                          help="Informations file in which all the files treatments are recorded.",
-                          default=None)
-    subparser_create.add_argument('-dit',
-                          '--displ_inf_terminal',
-                          help="Display information file in terminal if arg is specified.",
-                          action = 'store_true',
-                          default=False)
     #---------------------------------------------------
     #                  FILTER
     #---------------------------------------------------
@@ -117,15 +120,6 @@ def get_arguments():
                           '--output_database_json',
                           help="File name of the access dictionnary JSON output.",
                           required=True)
-    subparser_filter.add_argument('-inf',
-                          '--infos_file',
-                          help="Informations file in which all the files treatments are recorded.",
-                          default=None)
-    subparser_filter.add_argument('-dit',
-                          '--displ_inf_terminal',
-                          help="Display information file in terminal if arg is specified.",
-                          action = 'store_true',
-                          default=False)
     #---------------------------------------------------
     #                EXPORT
     #---------------------------------------------------
@@ -168,15 +162,6 @@ def get_arguments():
                           '--complex_dict_output',
                           help="File name of the complex dictionnary TXT output.",
                           default=None)
-    subparser_export.add_argument('-inf',
-                          '--infos_file',
-                          help="Informations file in which all the files treatments are recorded.",
-                          default=None)
-    subparser_export.add_argument('-dit',
-                          '--displ_inf_terminal',
-                          help="Display information file in terminal if arg is specified.",
-                          action = 'store_true',
-                          default=False)
     #---------------------------------------------------
     #                EDIT
     #---------------------------------------------------
@@ -204,15 +189,6 @@ def get_arguments():
                           '--output_database_json',
                           help="File name of the access dictionnary JSON output.",
                           required=True)
-    subparser_edit.add_argument('-inf',
-                          '--infos_file',
-                          help="Informations file in which all the files treatments are recorded.",
-                          default=None)
-    subparser_edit.add_argument('-dit',
-                          '--displ_inf_terminal',
-                          help="Display information file in terminal if arg is specified.",
-                          action = 'store_true',
-                          default=False)
     #---------------------------------------------------
     #                MERGE
     #---------------------------------------------------
@@ -236,15 +212,6 @@ def get_arguments():
                           '--output_database_json',
                           help="File name of the access dictionnary JSON output.",
                           required=True)
-    subparser_merge.add_argument('-inf',
-                          '--infos_file',
-                          help="Informations file in which all the files treatments are recorded.",
-                          default=None)
-    subparser_merge.add_argument('-dit',
-                          '--displ_inf_terminal',
-                          help="Display information file in terminal if arg is specified.",
-                          action = 'store_true',
-                          default=False)
     #---------------------------------------------------
     #                MERGE ALL
     #---------------------------------------------------
@@ -256,15 +223,6 @@ def get_arguments():
                           '--output_name',
                           help="Output name of the JSON merged-database.",
                           required=True)
-    subparser_merge_all.add_argument('-inf',
-                          '--infos_file',
-                          help="Informations file in which all the files treatments are recorded.",
-                          default=None)
-    subparser_merge_all.add_argument('-dit',
-                          '--displ_inf_terminal',
-                          help="Display information file in terminal if arg is specified.",
-                          action = 'store_true',
-                          default=False)
 
     args = parser.parse_args()
     return args
