@@ -76,7 +76,7 @@ def merge_all(dir_path, s_or_g, outputDB):
             merge_g(all_dbs, curr_db, sa_dict)
     
     all_dbs.update_data2()    
-    all_dbs.export_ampli_fasta(outputDB.rstrip(".json")+"_ampli.fasta", "qiime")
+    all_dbs.export_ampli_fasta(outputDB.rstrip(".json")+"-ampli.fasta", "qiime")
     all_dbs.export_access_dict(outputDB)
     with open(outputDB.rstrip(".json")+"-SA_ext.txt", "w") as sa_file3:
         for sa in sa_dict:
