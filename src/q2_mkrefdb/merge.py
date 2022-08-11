@@ -1,5 +1,5 @@
 import os
-import q2_mkrefdb.database as db
+import . import database as db
 
 def __check_primers(db1, db2):
     if db1.trim_primers != db2.trim_primers:
