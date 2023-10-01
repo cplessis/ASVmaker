@@ -33,12 +33,11 @@ pip install asvmaker
 ```
 
 # Usage
+ASVmaker is designed to be used by modules : ![Drag Racing](res/usage_steps.jpg)
 
-## 1. Create database
 
 ### 1.1. Retrieve fasta files from a general database
-
-From websites ...
+The first step involves downloading a FASTA file for a specific genus of interest from a general database : Silva, Unite, RNAcentral, ENA, NCBI or DDBJ. This file contains the genomic data necessary for subsequent analysis. 
 
 
 ```shell
@@ -49,6 +48,7 @@ SEQ=$3
 
 
 ### 1.2. Create the initial database
+Next, ASVmaker enables the creation of a genus-specific database by using the downloaded FASTA file. Each sequence lineage is verified by accession number through the European Nucleotide Archive API if possible and through the NCBI Entrez API if the ENA one doesn't match. Users must specify primers to be used during the simulation of the amplification process, allowing for precise targeting of the desired genomic regions and ASV creation.
 
 ```shell
 #  INIT DATABASE
@@ -64,6 +64,7 @@ python3 -m asvmaker \
     -o database/${DB}/${GENUS}_${DB}_create.json
 ```
 ### 1.3. Filter the sequences
+To enhance the quality and specificity of the analysis, ASVmaker provides the functionality to filter out redundant amplicons and exclude unwanted taxonomy. Redundant amplicons are ASVs sharing the same taxonomy. Unwanted taxonomy or species that are not of interest (e.g. : “sp.” or “aff.”) can also be filtered out, ensuring a more focused analysis on the target genus. 
 
 ```shell
 #  FILTER DATABASE
@@ -84,6 +85,8 @@ python3 -m asvmaker \
 
 ### 1.4. Create SA taxons
 
+ASVmaker creates Shared Amplicon (SA) groups, which involve clustering identical ASVs which have different taxonomies. This grouping allows for a comprehensive understanding of the taxonomic diversity within the selected ASV, providing valuable precisions into the composition and dynamics of microbial communities.
+
 ```shell
 #  EDIT DATABASE
 python3 -m asvmaker \
@@ -102,6 +105,8 @@ python3 -m asvmaker \
 ```
 
 ## 2. Merge databases
+
+Moreover, ASVmaker offers the option to merge ASV specific databases from different general databases, providing flexibility to combine data from various sources. This merging process allows for a more comprehensive dataset, enabling comparative analysis and broader insights into the studied genus.
 
 ```shell
 #  MERGE DATABASES
