@@ -3,7 +3,7 @@
 - [Package installation](#package-installation)
 - [Usage](#usage)
   - [Create database](#create-database)
-  - [Merge merge databases](#merge-merge-databases)
+  - [Merge databases](#merge-databases)
 - [References](#references)
 
 # Description
@@ -30,10 +30,15 @@ pip install asvmaker
 
 # Usage
 
-
 ## Create database
 
-## Merge merge databases
+1) Retrieve fasta files from a general database
+2) Create the initial database
+3) Filter the sequences
+4) Create SA taxons
+
+
+## Merge databases
 
 
 # References
