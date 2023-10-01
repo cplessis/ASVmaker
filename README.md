@@ -2,7 +2,6 @@
 - [Description](#description)
 - [Package installation](#package-installation)
 - [Usage](#usage)
-  - [1. Create database](#1-create-database)
     - [1.1. Retrieve fasta files from a general database](#11-retrieve-fasta-files-from-a-general-database)
     - [1.2. Create the initial database](#12-create-the-initial-database)
     - [1.3. Filter the sequences](#13-filter-the-sequences)
@@ -33,7 +32,7 @@ pip install asvmaker
 ```
 
 # Usage
-ASVmaker is designed to be used by modules : ![Drag Racing](res/usage_steps.jpg)
+ASVmaker is designed to be used by modules : ![Drag Racing](res/usage_steps.png)
 
 
 ### 1.1. Retrieve fasta files from a general database
