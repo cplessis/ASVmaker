@@ -1,6 +1,4 @@
-# Table of contents
-
-- [Table of contents](#table-of-contents)
+**Table of content**
 - [Description](#description)
 - [Package installation](#package-installation)
 - [Usage](#usage)
