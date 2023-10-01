@@ -3,6 +3,10 @@
 - [Package installation](#package-installation)
 - [Usage](#usage)
   - [Create database](#create-database)
+    - [1. Retrieve fasta files from a general database](#1-retrieve-fasta-files-from-a-general-database)
+    - [2. Create the initial database](#2-create-the-initial-database)
+    - [3. Filter the sequences](#3-filter-the-sequences)
+    - [4. Create SA taxons](#4-create-sa-taxons)
   - [Merge databases](#merge-databases)
 - [References](#references)
 
@@ -32,10 +36,10 @@ pip install asvmaker
 
 ## Create database
 
-1) Retrieve fasta files from a general database
-2) Create the initial database
-3) Filter the sequences
-4) Create SA taxons
+### 1. Retrieve fasta files from a general database
+### 2. Create the initial database
+### 3. Filter the sequences
+### 4. Create SA taxons
 
 
 ## Merge databases
