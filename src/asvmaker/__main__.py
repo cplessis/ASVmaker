@@ -3,7 +3,7 @@ from . import database as db
 from . import utils
 
 __doc__ =  """This package is released and maintained by the Research and Development Institute 
-for Agri-Environnement (IRDA - Quebec). More informations at https://github.com/cplessis/q2_mkrefdb."""
+for Agri-Environnement (IRDA - Quebec). More informations at https://github.com/cplessis/asvmaker."""
 
 def get_arguments():
     parser = argparse.ArgumentParser(description=__doc__)  
