@@ -40,8 +40,11 @@ The first step involves downloading a FASTA file for a specific genus of interes
 
 
 ```shell
+# The genus of interest
 GENUS=$1
+# The name of the database. Pick among : ncbi,ebi,ddbj,rnaCentral,silva,unite
 DB=$2
+# Fasta file to proceed
 SEQ=$3
 ```
 
