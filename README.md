@@ -36,7 +36,9 @@ ASVmaker is designed to be used by modules : ![Drag Racing](res/usage_steps.png)
 
 
 ### 1.1. Retrieve fasta files from a general database
-The first step involves downloading a FASTA file for a specific genus of interest from a general database : Silva, Unite, RNAcentral, ENA, NCBI or DDBJ. This file contains the genomic data necessary for subsequent analysis. 
+The first step involves downloading a FASTA file for a specific genus of interest from a general database : Silva, Unite, RNAcentral, ENA, NCBI or DDBJ. This file contains the genomic data necessary for subsequent analysis.
+
+If you work from the Silva or UNITE fasta file, we recommand to extract genus sequences with `grep -A 1 "Genus" filename.fasta`. By this, ASVmaker will process your data quicker. CAUTION : fasta file sequences from Silva are multiligned. Use the following script to flatten the sequence on one single line : [flatten.sh](samples/flatten.sh)
 
 
 ```shell
