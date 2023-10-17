@@ -101,7 +101,7 @@ for sample in readsTable.columns:
         if i in taxoPathDB:
             PathDBTaxo.append(taxoPathDB[i])
         else: PathDBTaxo.append("unidentified")
-    data[sample]["PathDB Taxonomy"] = PathDBTaxo
+    data[sample]["Specific DB Taxonomy"] = PathDBTaxo
     
     # Filtre des null
     for row in data[sample].index:
