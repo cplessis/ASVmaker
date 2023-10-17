@@ -7,6 +7,7 @@
     - [1.3. Filter the sequences](#13-filter-the-sequences)
     - [1.4. Create SA taxons](#14-create-sa-taxons)
   - [2. Merge databases](#2-merge-databases)
+- [Qiime example](#qiime-example)
 - [References](#references)
 
 # Description
@@ -131,6 +132,21 @@ python3 -m asvmaker \
     -aop database/all/${GENUS}_asv.fasta
 ```
 
+# Qiime example
+
+When a ASVmaker specific database has been created, it is possible to use it as a complementary database
+for Qiime2 ASV taxonomic identification.
+
+Here we present a method to use an ITS specific database created with ASVmaker on 38 Fungi pathogen genera.
+This method invloves a first identifification with Qiime2 and a complementary step with the ASVmaker specific database.
+
+In order to run such analysis, 3 files are required (+ FASTQ to analyse):
+- A UNITE classifier : [UNITE8.3_classifier.qza](./samples/qiime_example/ref/UNITE8.3_classifier.qza)
+- The ASVmaker ITS specific database `phylo.fasta` file : [PathDB_BITS_2021.6-phylo.fasta](./samples/qiime_example/ref/PathDB_BITS_2021.6-phylo.fasta)
+- A list of all the unique whole taxonomy for each genera in the ASVmaker specific database:
+[Genus_Fungi_taxo.txt](./samples/qiime_example/ref/Genus_Fungi_taxo.txt)
+
+A bash script ([ITS.sh](./samples/qiime_example/ITS.sh)) make a taxonomic attribution with Qiime2 and complete the identification with the ASVmaker specific database. Then, the results are exported as table for each sample. If the Genus detected is in the genera list, a columns `isPatho` gives details about it.
 
 # References
-Article in revision. 
+Article in revision.

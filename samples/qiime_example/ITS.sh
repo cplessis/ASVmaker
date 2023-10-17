@@ -1,5 +1,5 @@
 #==============================================
-#          Parametres
+#          Parameters
 #==============================================
 
 INPUT_FASTQ=$1
@@ -19,19 +19,19 @@ echo "Classifier : "  $CLASSIFIER
 
 
 #==============================================
-#          Analyse Qiime
+#          Qiime Analysis
 #==============================================
 
 
-# Importation des fichiers fastQ
-#qiime tools import \
-#  --type 'SampleData[PairedEndSequencesWithQuality]' \
-#  --input-path $INPUT_FASTQ \
-#  --input-format CasavaOneEightSingleLanePerSampleDirFmt \
-#  --output-path $OUTPUT_PATH/demux-paired-end.qza
+# Import FASTQ files
+qiime tools import \
+ --type 'SampleData[PairedEndSequencesWithQuality]' \
+ --input-path $INPUT_FASTQ \
+ --input-format CasavaOneEightSingleLanePerSampleDirFmt \
+ --output-path $OUTPUT_PATH/demux-paired-end.qza
 
 
-# Trim des primers dans les fastQ importés
+# Trim primers
 qiime cutadapt trim-paired \
     --p-cores 6 \
     --i-demultiplexed-sequences $OUTPUT_PATH/demux-paired-end.qza \
@@ -55,7 +55,7 @@ qiime tools export \
   --input-path $OUTPUT_PATH/rep-seqs-all.qza \
   --output-path $OUTPUT_PATH
 
-# Exportation en TSV
+# Export to TSV
 qiime tools export \
   --input-path $OUTPUT_PATH/table.qza \
   --output-path $OUTPUT_PATH
@@ -71,20 +71,20 @@ qiime feature-classifier classify-sklearn \
   --i-reads $OUTPUT_PATH/rep-seqs-all.qza \
   --o-classification $OUTPUT_PATH/taxo-all.qza
 
-#Exportation en TSV
+#Exportation to TSV
 qiime tools export \
   --input-path $OUTPUT_PATH/taxo-all.qza \
   --output-path $OUTPUT_PATH
 
 #==============================================
-#   Transfo en json + Transfert vers DB
+#   ASV identification by ASVmaker specific database
 #==============================================
 
 python3 ./pathoPipeline/tools/qiime2csv.py \
     --outdir $OUTPUT_PATH \
     --kingdom k__Fungi \
     --dna-sequences $OUTPUT_PATH/dna-sequences.fasta \
-    --pathdb-phylo $REF_PATH/$REF_DB \
-    --pathdb-taxo $REF_PATH/$REF_DB_TAXO \
+    --asv-db-phylo $REF_PATH/$REF_DB \
+    --asv-db-taxo $REF_PATH/$REF_DB_TAXO \
     --taxonomy $OUTPUT_PATH/taxonomy.tsv \
     --table $OUTPUT_PATH/table.tsv
