@@ -147,15 +147,23 @@ In order to run such analysis, 3 files are required (+ FASTQ to analyse):
 [Genus_Fungi_taxo.txt](./samples/qiime_example/ref/Genus_Fungi_taxo.txt)
 
 A bash script ([ITS.sh](./samples/qiime_example/ITS.sh)) makes a taxonomic attribution with Qiime2 and completes the identification with the ASVmaker specific database. Then, the results are exported as a table for each sample. If the detected genus is in the genera list, a column `isPatho` gives details about it.
+Columns description :
+- #OTU ID : Qiime2 sequence identifier
+- Reads Count : number of reads in the sample
+- Relative Abundance : number of reads on total sum of reads in the sample
+- Kingdom,Phylum Class, Order, Family, Genus, Species : UNITE taxonomy identification
+- Unite Confidence : UNITE classifier identification confidence
+- isPatho : taxon in pathogenes list
+- Specific DB Taxonomy : taxonomy from ASVmaker specific database
 
 **Results table example :**
-| #Seq ID                          | Reads Count | Relative Abundance   | Kingdom  | Phylum        | Class              | Order            | Family                            | Genus               | Species                           | Unite Confidence   | isPatho | Specific DB Taxonomy                                        |
+| #OTU ID                          | Reads Count | Relative Abundance   | Kingdom  | Phylum        | Class              | Order            | Family                            | Genus               | Species                           | Unite Confidence   | isPatho | Specific DB Taxonomy                                        |
 | -------------------------------- | ----------- | -------------------- | -------- | ------------- | ------------------ | ---------------- | --------------------------------- | ------------------- | --------------------------------- | ------------------ | ------- | ----------------------------------------------------------- |
-| f369e7040d6a8ec809b813c86388be98 | 10696.0     | 0.2546545402599876   | k__Fungi | p__Ascomycota | c__Sordariomycetes | o__Glomerellales | f__Plectosphaerellaceae           | g__Plectosphaerella | s__Plectosphaerella_oratosquillae | 0.9858436283038672 | no      | URS00007C0054_145972_Colletotrichum_pisi                    |
-| 21f34d539e27a351f59580aa39b530a9 | 7481.0      | 0.17811056616351603  | k__Fungi | p__Ascomycota | c__Sordariomycetes | o__Glomerellales | f__Plectosphaerellaceae           | g__Verticillium     | s__Verticillium_nubilum           | 0.9981024689843628 | yes     | URS0002135E36_27337_Verticillium_SA1                        |
-| c6e89cb4cb1459d20e8b29086b6579e0 | 10275.0     | 0.2446312080377125   | k__Fungi | p__Ascomycota | c__Sordariomycetes | o__Glomerellales | f__Glomerellaceae                 | g__Colletotrichum   | s__Colletotrichum_coccodes        | 0.9982691073091507 | yes     | URS00001143FA_27358_Colletotrichum_coccodes                 |
-| 23567ef88155066ea14693411a25e131 | 61.0        | 0.001452311794676444 | k__Fungi | p__Ascomycota | c__Dothideomycetes | o__Pleosporales  | f__Pleosporaceae                  | g__Alternaria       | s__Alternaria_angustiovoidea      | 0.7681297203386827 | yes     | URS00002006C5_474922_Colletotrichum_gloeosporioides_complex |
-| 6cd9621117c8968bade94e1b2f69bd6b | 385.0       | 0.009166230179515261 | k__Fungi | p__Ascomycota | c__Sordariomycetes | o__Hypocreales   | f__Hypocreales_fam_Incertae_sedis | g__Acremonium       | s__Acremonium_furcatum            | 0.7784985803462298 | no      | URS00004BE307_27337_Verticillium_dahliae                    |
+| f369e7040d6a8ec809b813c86388be98 | 10696     | 0.2546545402599876   | k__Fungi | p__Ascomycota | c__Sordariomycetes | o__Glomerellales | f__Plectosphaerellaceae           | g__Plectosphaerella | s__Plectosphaerella_oratosquillae | 0.9858436283038672 | no      | URS00007C0054_145972_Colletotrichum_pisi                    |
+| 21f34d539e27a351f59580aa39b530a9 | 7481      | 0.17811056616351603  | k__Fungi | p__Ascomycota | c__Sordariomycetes | o__Glomerellales | f__Plectosphaerellaceae           | g__Verticillium     | s__Verticillium_nubilum           | 0.9981024689843628 | yes     | URS0002135E36_27337_Verticillium_SA1                        |
+| c6e89cb4cb1459d20e8b29086b6579e0 | 10275     | 0.2446312080377125   | k__Fungi | p__Ascomycota | c__Sordariomycetes | o__Glomerellales | f__Glomerellaceae                 | g__Colletotrichum   | s__Colletotrichum_coccodes        | 0.9982691073091507 | yes     | URS00001143FA_27358_Colletotrichum_coccodes                 |
+| 23567ef88155066ea14693411a25e131 | 61        | 0.001452311794676444 | k__Fungi | p__Ascomycota | c__Dothideomycetes | o__Pleosporales  | f__Pleosporaceae                  | g__Alternaria       | s__Alternaria_angustiovoidea      | 0.7681297203386827 | yes     | URS00002006C5_474922_Colletotrichum_gloeosporioides_complex |
+| 6cd9621117c8968bade94e1b2f69bd6b | 385       | 0.009166230179515261 | k__Fungi | p__Ascomycota | c__Sordariomycetes | o__Hypocreales   | f__Hypocreales_fam_Incertae_sedis | g__Acremonium       | s__Acremonium_furcatum            | 0.7784985803462298 | no      | URS00004BE307_27337_Verticillium_dahliae                    |
 |                                  |             |                      |          |               |                    |                  |                                   |                     |                                   |                    |         |                                                             |
 
 # References
