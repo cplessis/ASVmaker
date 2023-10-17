@@ -141,7 +141,7 @@ Here we present a method to use an ITS specific database created with ASVmaker o
 This method invloves a first identifification with Qiime2 and a complementary step with the ASVmaker specific database.
 
 In order to run such analysis, 3 files are required (+ FASTQ to analyse):
-- A UNITE classifier : [UNITE8.3_classifier.qza](./samples/qiime_example/ref/UNITE8.3_classifier.qza)
+- A UNITE classifier : [UNITE8.3_classifier.qza]([./samples/qiime_example/ref/UNITE8.3_classifier.qza](https://github.com/colinbrislawn/unite-train/releases/download/8.3-qiime2-2021.11-demo/unite_ver8_99_all_10.05.2021.qza))
 - The ASVmaker ITS specific database `phylo.fasta` file : [PathDB_BITS_2021.6-phylo.fasta](./samples/qiime_example/ref/PathDB_BITS_2021.6-phylo.fasta)
 - A list of all the unique whole taxonomy for each genera in the ASVmaker specific database:
 [Genus_Fungi_taxo.txt](./samples/qiime_example/ref/Genus_Fungi_taxo.txt)
