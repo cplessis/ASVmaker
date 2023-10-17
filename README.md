@@ -148,13 +148,13 @@ In order to run such analysis, 3 files are required (+ FASTQ to analyse):
 
 A bash script ([ITS.sh](./samples/qiime_example/ITS.sh)) makes a taxonomic attribution with Qiime2 and completes the identification with the ASVmaker specific database. Then, the results are exported as a table for each sample. If the detected genus is in the genera list, a column `isPatho` gives details about it.
 Columns description :
-- #OTU ID : Qiime2 sequence identifier
-- Reads Count : number of reads in the sample
-- Relative Abundance : number of reads on total sum of reads in the sample
-- Kingdom,Phylum Class, Order, Family, Genus, Species : UNITE taxonomy identification
-- Unite Confidence : UNITE classifier identification confidence
-- isPatho : taxon in pathogenes list
-- Specific DB Taxonomy : taxonomy from ASVmaker specific database
+- *#OTU ID* : Qiime2 sequence identifier
+- *Reads Count* : number of reads in the sample
+- *Relative Abundance* : number of reads on total sum of reads in the sample
+- *Kingdom,Phylum Class, Order, Family, Genus, Species* : UNITE taxonomy identification
+- *Unite Confidence* : UNITE classifier identification confidence
+- *isPatho* : taxon in pathogenes list
+- *Specific DB Taxonomy* : taxonomy from ASVmaker specific database
 
 **Results table example :**
 | #OTU ID                          | Reads Count | Relative Abundance   | Kingdom  | Phylum        | Class              | Order            | Family                            | Genus               | Species                           | Unite Confidence   | isPatho | Specific DB Taxonomy                                        |
