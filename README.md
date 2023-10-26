@@ -167,4 +167,4 @@ Columns description :
 |                                  |             |                      |          |               |                    |                  |                                   |                     |                                   |                    |         |                                                             |
 
 # References
-Article in revision.
+Please cite : Plessis, C.; Jeanne, T.; Dionne, A.; Vivancos, J.; Droit, A.; Hogue, R. ASVmaker: A New Tool to Improve Taxonomic Identifications for Amplicon Sequencing Data. Plants 2023, 12, 3678. https://doi.org/10.3390/plants12213678
